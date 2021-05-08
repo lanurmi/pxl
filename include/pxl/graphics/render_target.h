@@ -21,7 +21,7 @@ namespace pxl
 		int width() const;
 		int height() const;
 		virtual void clear(const pxl::Color& color) = 0;
-		virtual TextureRef getTexture() const = 0;
+		virtual TextureRef texture() const = 0;
 	protected:
 		RenderTarget() = default;
 	};

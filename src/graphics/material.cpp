@@ -172,7 +172,7 @@ void pxl::Material::setFloat(string name, const float* values, i64 length)
 	}
 }
 
-pxl::TextureRef pxl::Material::getTexture(int slot, int index) const
+pxl::TextureRef pxl::Material::texture(int slot, int index) const
 {
 	int s = 0;
 	int offset = 0;

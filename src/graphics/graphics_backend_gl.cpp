@@ -1023,7 +1023,7 @@ public:
 			_id = 0;
 		}
 	}
-	pxl::TextureRef getTexture() const override
+	pxl::TextureRef texture() const override
 	{
 		return _texture;
 	}
@@ -1112,7 +1112,7 @@ void pxl::GraphicsBackend::render(const DrawCall& call)
 	auto mesh = std::dynamic_pointer_cast<GLMesh>(call.mesh);
 
 	s_gl.UseProgram(shader->getId());
-	auto data = call.material->getFloats();
+	auto data = call.material->floats();
 	int texture_slot = 0;
 	int gl_texture_slot = 0;
 	GLint texture_ids[64];
@@ -1129,7 +1129,7 @@ void pxl::GraphicsBackend::render(const DrawCall& call)
 		{
 			for (int n = 0; n < uniform.array_length; n++)
 			{
-				auto tex = std::dynamic_pointer_cast<GLTexture>(call.material->getTexture(texture_slot, n));
+				auto tex = std::dynamic_pointer_cast<GLTexture>(call.material->texture(texture_slot, n));
 				auto sampler = call.material->getSampler(texture_slot, n);
 				s_gl.ActiveTexture(GL_TEXTURE0 + gl_texture_slot);
 				if (tex)

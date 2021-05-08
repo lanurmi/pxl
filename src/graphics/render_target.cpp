@@ -9,10 +9,10 @@ pxl::RenderTargetRef pxl::RenderTarget::create(int width, int height)
 
 int pxl::RenderTarget::width() const
 {
-	return getTexture()->width();
+	return texture()->width();
 }
 
 int pxl::RenderTarget::height() const
 {
-	return getTexture()->height();
+	return texture()->height();
 }
