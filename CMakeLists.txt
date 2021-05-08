@@ -41,6 +41,9 @@ add_library(pxl
 	
 	src/utils/content.cpp
 	src/utils/input_binding.cpp
+	src/utils/scene.cpp
+	src/utils/entity.cpp
+	src/utils/component.cpp
 )
 
 target_include_directories(pxl
