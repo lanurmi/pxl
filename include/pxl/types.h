@@ -6,6 +6,7 @@
 #include <vector>
 #include <stack>
 #include <map>
+#include <set>
 
 namespace pxl
 {
@@ -24,6 +25,9 @@ namespace pxl
 	template<class T, class E>
 	using map = std::map<T,E>;
 
+	template<class T>
+	using set = std::set<T>;
+
 	using i8 = int8_t;
 	using i16 = int16_t;
 	using i32 = int32_t;
@@ -37,5 +41,11 @@ namespace pxl
 	string to_string(T v)
 	{
 		return std::to_string(v);
+	}
+
+	template<class T>
+	void remove_all(vector<T>& from, T value)
+	{
+		from.erase(std::remove(from.begin(), from.end(), value), from.end());
 	}
 }
