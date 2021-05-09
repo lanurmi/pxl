@@ -17,5 +17,6 @@ namespace pxl
 		Func onEnd;
 		Func onUpdate;
 		Func onDraw;
+		std::function<void(const string&)> onLog;
 	};
 }

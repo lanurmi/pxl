@@ -43,6 +43,20 @@ namespace pxl
 		return std::to_string(v);
 	}
 
+	template<typename ... Args>
+	string string_format(const string& format, Args ... args)
+	{
+		int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1;
+		if (size_s <= 0) {
+			assert(0);
+			return "";
+		}
+		auto size = static_cast<size_t>(size_s);
+		auto buf = std::make_unique<char[]>(size);
+		std::snprintf(buf.get(), size, format.c_str(), args ...);
+		return string(buf.get(), buf.get() + size - 1);
+	}
+
 	template<class T>
 	void remove_all(vector<T>& from, T value)
 	{

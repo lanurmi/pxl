@@ -25,6 +25,7 @@ void pxl::PlatformBackend::init(const pxl::Config& config)
 {
 	if (SDL_Init(SDL_INIT_VIDEO |SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC) < 0)
 	{
+		pxl::log().error("Could not load png image");
 		assert(0);
 		return;
 	}
@@ -45,6 +46,7 @@ void pxl::PlatformBackend::init(const pxl::Config& config)
 	s_window = SDL_CreateWindow(config.title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.width, config.height, flags);
 	if (s_window == nullptr)
 	{
+		pxl::log().error("Window creation failed");
 		assert(0);
 		return;
 	}
@@ -305,6 +307,7 @@ void* pxl::PlatformBackend::glCreateContext()
 	void* pointer = SDL_GL_CreateContext(s_window);
 	if (pointer == nullptr)
 	{
+		pxl::log().error("OpenGL Context creation failed");
 		assert(0);
 	}
 	return pointer;

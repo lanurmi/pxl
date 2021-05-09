@@ -9,10 +9,8 @@ pxl::Content::Content(const string &contentFolder) : _content_folder(contentFold
 
 pxl::TextureRef pxl::Content::LoadTexture(const string& file)
 {
-
 	auto pathToContent = pxl::path::combine(pxl::platform().applicationPath(), _content_folder);
 	auto pathToFile = pxl::path::combine(pathToContent, file);
-
 	auto it = _loaded_textures.find(file);
 	if (it != _loaded_textures.end())
 	{
@@ -23,7 +21,9 @@ pxl::TextureRef pxl::Content::LoadTexture(const string& file)
 		auto texture = pxl::Texture::create(pxl::Image(pathToFile));
 		if (texture == nullptr)
 		{
-			assert(0);//err
+			pxl::log().error("Texture load failed");
+			assert(0);
+			return nullptr;
 		}
 		else
 		{

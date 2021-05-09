@@ -39,6 +39,11 @@ pxl::MouseBackend& pxl::Engine::mouse()
 	return _mouse;
 }
 
+pxl::Log& pxl::Engine::log()
+{
+	return _log;
+}
+
 pxl::Vec2 pxl::Engine::drawSize() const
 {
 	return _platform.drawSize();
@@ -113,16 +118,19 @@ void pxl::Engine::start(const pxl::Config& config)
 	u64 fps_update = time_last + time::ticks_per_second;
 	
 	Fps fps;
-#ifdef PXLDEBUG
+//#ifdef PXLDEBUG
 	fps.onFps = [this](int fps)
 	{
 
 		_platform.setTitle(to_string(fps));
 
 	};
-#endif	
+//#endif
+	_log.onLog = config.onLog;
+
 	while (!s_end)
 	{
+
 		auto time_curr = _platform.ticks();
 		pxl::time::ticks = time_curr;
 		auto time_diff = time_curr - time_last;
@@ -130,7 +138,6 @@ void pxl::Engine::start(const pxl::Config& config)
 		pxl::time::true_delta = (double)time_diff / pxl::time::ticks_per_second;
 
 		fps.update();
-
 		_platform.update();
 
 		if (config.fixed_update)
@@ -185,9 +192,9 @@ void pxl::Engine::start(const pxl::Config& config)
 	{
 		config.onEnd();
 	}
+
 	_graphics.unbind(_platform);
 	_platform.shutdown();
-
 }
 
 void pxl::Engine::end()
@@ -223,4 +230,9 @@ pxl::KeyboardBackend& pxl::keyboard()
 pxl::MouseBackend& pxl::mouse()
 {
 	return pxl::Engine::instance().mouse();
+}
+
+pxl::Log& pxl::log()
+{
+	return pxl::Engine::instance().log();
 }

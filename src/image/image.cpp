@@ -1,5 +1,5 @@
 #include <pxl/image/image.h>
-#include <pxl/platforms/platform_backend.h>
+#include <pxl/engine.h>
 #include <assert.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -20,6 +20,7 @@ static pxl::Color* loadJPEG(const pxl::string& path, int *w, int *h)
 	auto data = stbi_load(path.c_str(), w, h, &comp, STBI_rgb);
 	if (data == nullptr)
 	{
+		pxl::log().error("Could not load rgb image");
 		assert(0);
 	}
 	auto size = (*w) * (*h);
@@ -46,6 +47,7 @@ static pxl::Color* loadPNG(const pxl::string& path, int* w, int* h)
 	auto data = stbi_load(path.c_str(), w, h, &comp, STBI_rgb_alpha);
 	if (data == nullptr)
 	{
+		pxl::log().error("Could not load png image");
 		assert(0);
 	}
 	auto size = (*w) * (*h);

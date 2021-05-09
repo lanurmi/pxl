@@ -8,7 +8,7 @@
 #include <pxl/input/gamepad_backend.h>
 #include <pxl/input/keyboard_backend.h>
 #include <pxl/input/mouse_backend.h>
-#include <pxl/utils/input_binding.h>
+#include <pxl/log.h>
 
 namespace pxl
 {
@@ -22,6 +22,7 @@ namespace pxl
 		GamepadsBackend& gamepads();
 		KeyboardBackend& keyboard();
 		MouseBackend& mouse();
+		Log& log();
 		Vec2 drawSize() const;
 		Vec2 size() const;
 		string applicationPath() const;
@@ -34,6 +35,7 @@ namespace pxl
 		GraphicsBackend _graphics;
 		GamepadsBackend _gamepads;
 		KeyboardBackend _keyboard;
+		Log _log;
 		MouseBackend _mouse;
 	};
 
@@ -43,4 +45,5 @@ namespace pxl
 	GamepadsBackend& gamepads();
 	KeyboardBackend& keyboard();
 	MouseBackend& mouse();
+	Log& log();
 }

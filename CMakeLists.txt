@@ -12,6 +12,7 @@ add_library(pxl
 	src/engine.cpp
 	src/config.cpp
 	src/time.cpp
+	src/log.cpp
 	
 	src/platforms/platform_backend_sdl.cpp
 		
@@ -44,7 +45,7 @@ add_library(pxl
 	src/utils/scene.cpp
 	src/utils/entity.cpp
 	src/utils/component.cpp
-)
+ )
 
 target_include_directories(pxl
 	PUBLIC

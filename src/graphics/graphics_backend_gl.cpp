@@ -542,6 +542,7 @@ void pxl::GraphicsBackend::bind(pxl::PlatformBackend& platform)
 	s_gl.context = platform.glCreateContext();
 	if (s_gl.context == nullptr)
 	{
+		pxl::log().error("Could not create gl context");
 		assert(0);
 	}
 	platform.glBindContext(s_gl.context);
@@ -618,6 +619,7 @@ public:
 		}
 		else
 		{
+			pxl::log().error("Invalid texture format");
 			assert(0);
 		}
 
@@ -724,6 +726,7 @@ public:
 			if (log_length > 0)
 			{
 				s_gl.DeleteShader(vertex_shader);
+				pxl::log().error("Vertex shader compilation failed");
 				assert(0);
 				return;
 			}
@@ -737,6 +740,7 @@ public:
 			if (log_length > 0)
 			{
 				s_gl.DeleteShader(pixel_shader);
+				pxl::log().error("Fragment shader compilation failed");
 				assert(0);
 				return;
 			}
@@ -755,6 +759,7 @@ public:
 
 		if (log_length > 0)
 		{
+			pxl::log().error("Shader program link failed");
 			assert(0);
 			return;
 		}
@@ -842,6 +847,7 @@ public:
 				}
 				else
 				{
+					pxl::log().error("Invalid uniform type");
 					valid_uniforms = false;
 					assert(0);
 					break;
@@ -885,6 +891,7 @@ pxl::ShaderRef pxl::GraphicsBackend::createShader(const pxl::ShaderData& data) c
 	auto shader = new GLShader(data);
 	if (shader->getId() <= 0)
 	{
+		pxl::log().error("Shader creation failed");
 		delete shader;
 		assert(0);
 		return nullptr;
@@ -993,6 +1000,7 @@ pxl::MeshRef pxl::GraphicsBackend::createMesh() const
 	auto mesh = new GLMesh();
 	if (mesh->getId() <= 0)
 	{
+		pxl::log().error("Mesh creation failed");
 		delete mesh;
 		assert(0);
 		return nullptr;
@@ -1053,6 +1061,7 @@ pxl::RenderTargetRef pxl::GraphicsBackend::createRenderTarget(int width, int hei
 	auto target = new GLRenderTarget(width, height);
 	if (target->getId() <= 0)
 	{
+		pxl::log().error("Render target creation failed");
 		assert(0);
 		delete target;
 		return nullptr;

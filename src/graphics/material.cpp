@@ -1,4 +1,5 @@
 #include <pxl/graphics/material.h>
+#include <pxl/engine.h>
 #include <assert.h>
 
 static int calcUniformSize(const pxl::UniformInfo& uniform)
@@ -13,6 +14,7 @@ static int calcUniformSize(const pxl::UniformInfo& uniform)
 		case pxl::UniformType::Mat3x2: components = 6; break;
 		case pxl::UniformType::Mat4x4: components = 16; break;
 		default:
+			pxl::log().error("Invalid uniform type");
 			assert(0);
 			break;
 	}
@@ -73,6 +75,7 @@ void pxl::Material::setTexture(string name, const TextureRef& texture)
 		offset += u.array_length;
 		if (offset >= _textures.size())
 		{
+			pxl::log().error("Could not set texture");
 			assert(0);
 			break;
 		}
@@ -116,6 +119,7 @@ void pxl::Material::setSampler(string name, const TextureSampler& sampler)
 		offset += u.array_length;
 		if (offset >= _textures.size())
 		{
+			pxl::log().error("Could not set texture sampler");
 			assert(0);
 			break;
 		}
@@ -160,6 +164,7 @@ void pxl::Material::setFloat(string name, const float* values, i64 length)
 		{
 			if (length > uniformSize)
 			{
+				pxl::log().error("Too many uniform floats");
 				assert(0);
 				length = uniformSize;
 			}
