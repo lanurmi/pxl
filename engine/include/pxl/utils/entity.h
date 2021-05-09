@@ -7,7 +7,7 @@
 
 namespace pxl
 {
-	constexpr int s_max_component_types = 512;
+	constexpr int s_max_component_types = 256;
 
 	class Scene;
 	class Component;

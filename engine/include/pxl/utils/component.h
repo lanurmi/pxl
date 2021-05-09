@@ -30,6 +30,7 @@ namespace pxl
 		const T* get() const;
 		u16 typeId() const;
 		virtual void destroyed() {}
+		Entity* entity();
 	private:
 		u16 _type;
 		Entity* _entity;

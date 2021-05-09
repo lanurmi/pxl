@@ -8,6 +8,7 @@
 #include <pxl/input/gamepad_backend.h>
 #include <pxl/input/keyboard_backend.h>
 #include <pxl/input/mouse_backend.h>
+#include <pxl/utils/scene_manager.h>
 #include <pxl/log.h>
 
 namespace pxl
@@ -22,6 +23,7 @@ namespace pxl
 		GamepadsBackend& gamepads();
 		KeyboardBackend& keyboard();
 		MouseBackend& mouse();
+		SceneManager& sceneManager();
 		Log& log();
 		Vec2 drawSize() const;
 		Vec2 size() const;
@@ -37,6 +39,7 @@ namespace pxl
 		KeyboardBackend _keyboard;
 		Log _log;
 		MouseBackend _mouse;
+		SceneManager _scene_manager;
 	};
 
 	Engine& engine();
@@ -45,5 +48,6 @@ namespace pxl
 	GamepadsBackend& gamepads();
 	KeyboardBackend& keyboard();
 	MouseBackend& mouse();
+	SceneManager& sceneManager();
 	Log& log();
 }

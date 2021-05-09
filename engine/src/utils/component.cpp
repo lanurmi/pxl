@@ -13,3 +13,8 @@ u16 Component::typeId() const
 {
 	return _type;
 }
+
+Entity* Component::entity()
+{
+	return _entity;
+}

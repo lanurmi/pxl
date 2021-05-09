@@ -46,7 +46,7 @@ namespace pxl
 	public:
 		Batch();
 		Batch(const Batch& other) = delete;
-		Batch& operator=(const Batch& other) = delete;
+	//	Batch& operator=(const Batch& other) = delete;
 		~Batch();
 		void begin(const RenderTargetRef& target, const pxl::Color &clearColor);
 		void end();

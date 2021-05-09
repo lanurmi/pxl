@@ -4,7 +4,12 @@
 
 using namespace pxl;
 
-Scene::Scene() : _current_max_component_type_id(0)
+Scene::Scene() : clear_color(pxl::Color::black), _current_max_component_type_id(0)
+{
+
+}
+
+Scene::~Scene()
 {
 
 }
@@ -29,12 +34,19 @@ void Scene::destroy(Component* component)
 
 void Scene::destroy(Entity* entity)
 {
-
+	if (entity != nullptr && entity->scene() == this)
+	{
+		for (auto it : entity->_components)
+		{
+			destroy(it);
+		}
+		_remove_entities.insert(entity);
+	}
 }
 
-void Scene::update()
+void Scene::clearRemoveSets()
 {
-	//Clean up removed components
+	// delete components
 	for (auto it : _remove_components)
 	{
 		// Remove from entity
@@ -51,17 +63,43 @@ void Scene::update()
 		{
 			remove_all(_updateable_components, updateable);
 		}
+		delete it;
 	}
+
+	// delete entities
+	for (auto it : _remove_entities)
+	{
+		remove_all(_entities, it);
+		delete it;
+	}
+
+}
+
+void Scene::end()
+{
+	for (auto it : _entities)
+	{
+		destroy(it);
+	}
+	clearRemoveSets();
+}
+
+void Scene::update()
+{
+	clearRemoveSets();
+
 	for (auto it : _updateable_components)
 	{
 		it->update();
 	}
 }
 
-void Scene::draw(Batch &batch)
+void Scene::draw()
 {
+	batch.begin(nullptr, clear_color);
 	for (auto it : _drawable_components)
 	{
 		it->draw(batch);
 	}
+	batch.end();
 }

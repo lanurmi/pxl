@@ -2,6 +2,7 @@
 #include <pxl/math/calc.h>
 #include <pxl/utils/entity.h>
 #include <pxl/utils/component.h>
+#include <pxl/graphics/batch.h>
 
 namespace pxl
 {
@@ -10,22 +11,27 @@ namespace pxl
 	{
 	public:
 		Scene();
-
+		virtual ~Scene();
+		pxl::Color clear_color;
 		Entity* createEntity(const pxl::Vec2& position);
 		template<class T>
 		T* add(Entity* entity, T&& component);
-		void update();
-		void draw(Batch& batch);
 		void destroy(Component* component);
 		void destroy(Entity* entity);
-		
+		virtual void begin() {};
+		virtual void update();
+		virtual void draw();
+		virtual void end();
 	private:
+		void clearRemoveSets();
+		Batch batch;
 		u16 _current_max_component_type_id;
 		vector<Entity*> _entities;
 		vector<Component*> _components[s_max_component_types];
 		vector<IDrawable*> _drawable_components;
 		vector<IUpdateable*> _updateable_components;
 		set<Component*> _remove_components;
+		set<Entity*> _remove_entities;
 	};
 
 	template<class T>

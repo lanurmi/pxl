@@ -39,6 +39,11 @@ pxl::MouseBackend& pxl::Engine::mouse()
 	return _mouse;
 }
 
+pxl::SceneManager& pxl::Engine::sceneManager()
+{
+	return _scene_manager;
+}
+
 pxl::Log& pxl::Engine::log()
 {
 	return _log;
@@ -108,10 +113,6 @@ void pxl::Engine::start(const pxl::Config& config)
 	
 	_graphics.bind(_platform);
 	_platform.vsync(config.vertical_sync);
-	if (config.onBegin != nullptr)
-	{
-		config.onBegin();
-	}
 
 	u64 time_last = _platform.ticks();
 	u64 time_accumulator = 0;
@@ -126,7 +127,6 @@ void pxl::Engine::start(const pxl::Config& config)
 
 	};
 //#endif
-	_log.onLog = config.onLog;
 
 	while (!s_end)
 	{
@@ -164,35 +164,21 @@ void pxl::Engine::start(const pxl::Config& config)
 				time_accumulator -= time_target;
 
 				inputUpdate();
-				if (config.onUpdate != nullptr)
-				{
-					config.onUpdate();
-				}
+				_scene_manager.update();
 			}
 		}
 		else
 		{
 			pxl::time::delta = (double)time_diff / pxl::time::ticks_per_second;
 			inputUpdate();
-			if (config.onUpdate != nullptr)
-			{
-				config.onUpdate();
-			}
+			_scene_manager.update();
 		}
 
-		if (config.onDraw != nullptr)
-		{
-			config.onDraw();
-		}
-
+		_scene_manager.draw();
 		_platform.present();
 	}
 
-	if (config.onEnd != nullptr)
-	{
-		config.onEnd();
-	}
-
+	_scene_manager.end();
 	_graphics.unbind(_platform);
 	_platform.shutdown();
 }
@@ -235,4 +221,9 @@ pxl::MouseBackend& pxl::mouse()
 pxl::Log& pxl::log()
 {
 	return pxl::Engine::instance().log();
+}
+
+pxl::SceneManager& pxl::sceneManager()
+{
+	return pxl::Engine::instance().sceneManager();
 }
