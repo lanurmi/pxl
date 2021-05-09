@@ -7,9 +7,10 @@ namespace pxl
 	class Content
 	{
 	public:
-		Content();
+		Content(const string &contentFolder);
 		TextureRef LoadTexture(const string& file);
 	private:
+		string _content_folder;
 		map<string, TextureRef> _loaded_textures;
 	};
 }
