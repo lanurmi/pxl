@@ -49,6 +49,16 @@ pxl::Vec2 pxl::Engine::size() const
 	return _platform.size();
 }
 
+pxl::string pxl::Engine::applicationPath() const
+{
+	return _platform.applicationPath();
+}
+
+pxl::string pxl::Engine::userPath() const
+{
+	return _platform.userPath();
+}
+
 void pxl::Engine::inputUpdate()
 {
 	_mouse.update();

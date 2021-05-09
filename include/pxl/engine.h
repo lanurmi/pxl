@@ -24,6 +24,8 @@ namespace pxl
 		MouseBackend& mouse();
 		Vec2 drawSize() const;
 		Vec2 size() const;
+		string applicationPath() const;
+		string userPath() const;
 		void end();
 	private:
 		Engine();
