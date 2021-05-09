@@ -66,6 +66,32 @@ void pxl::Engine::inputUpdate()
 	_gamepads.update();
 }
 
+class Fps
+{
+public:
+	Fps() : _fps_update(0), _frame_counter(0)
+	{
+		_fps_update = pxl::time::ticks + pxl::time::ticks_per_second;
+	}
+	void update()
+	{
+		_frame_counter++;
+		if (pxl::time::ticks >= _fps_update)
+		{
+			if (onFps != nullptr)
+			{
+				onFps(_frame_counter);
+			}
+			_frame_counter = 0;
+			_fps_update = pxl::time::ticks + pxl::time::ticks_per_second;
+		}
+	}
+	std::function<void(int)> onFps;
+private:
+	int _frame_counter;
+	pxl::u64 _fps_update;
+};
+
 void pxl::Engine::start(const pxl::Config& config)
 {
 	s_end = false;
@@ -85,6 +111,16 @@ void pxl::Engine::start(const pxl::Config& config)
 	u64 time_last = _platform.ticks();
 	u64 time_accumulator = 0;
 	u64 fps_update = time_last + time::ticks_per_second;
+	
+	Fps fps;
+#ifdef PXLDEBUG
+	fps.onFps = [this](int fps)
+	{
+
+		_platform.setTitle(to_string(fps));
+
+	};
+#endif	
 	while (!s_end)
 	{
 		auto time_curr = _platform.ticks();
@@ -93,13 +129,7 @@ void pxl::Engine::start(const pxl::Config& config)
 		time_last = time_curr;
 		pxl::time::true_delta = (double)time_diff / pxl::time::ticks_per_second;
 
-#ifdef PXLDEBUG
-		if (time_curr >= fps_update)
-		{
-			fps_update = time_curr + time::ticks_per_second;
-			_platform.setTitle(to_string(1.0f / pxl::time::true_delta));
-		}
-#endif
+		fps.update();
 
 		_platform.update();
 
