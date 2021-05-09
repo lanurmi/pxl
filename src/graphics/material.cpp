@@ -201,7 +201,7 @@ pxl::TextureRef pxl::Material::texture(int slot, int index) const
 	return nullptr;
 }
 
-pxl::TextureSampler pxl::Material::getSampler(int slot, int index) const
+pxl::TextureSampler pxl::Material::sampler(int slot, int index) const
 {
 	int s = 0;
 	int offset = 0;

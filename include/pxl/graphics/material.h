@@ -25,9 +25,9 @@ namespace pxl
 		void setSampler(string name, const TextureSampler& sampler);
 		void setSampler(int slot, const TextureSampler& sampler);
 		void setFloat(string name, const float* values, i64 length);
-		ShaderRef getShader() const { return _shader; }
+		ShaderRef shader() const { return _shader; }
 		TextureRef texture(int slot, int index) const;
-		TextureSampler getSampler(int slot, int index) const;
+		TextureSampler sampler(int slot, int index) const;
 		const float* floats() { return _floats.data(); }
 	private:
 		Material(const ShaderRef& shader);

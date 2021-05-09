@@ -1108,7 +1108,7 @@ void pxl::GraphicsBackend::render(const DrawCall& call)
 	setView(call.renderTarget, call.viewport);
 
 
-	auto shader = std::dynamic_pointer_cast<GLShader>(call.material->getShader());
+	auto shader = std::dynamic_pointer_cast<GLShader>(call.material->shader());
 	auto mesh = std::dynamic_pointer_cast<GLMesh>(call.mesh);
 
 	s_gl.UseProgram(shader->getId());
@@ -1130,7 +1130,7 @@ void pxl::GraphicsBackend::render(const DrawCall& call)
 			for (int n = 0; n < uniform.array_length; n++)
 			{
 				auto tex = std::dynamic_pointer_cast<GLTexture>(call.material->texture(texture_slot, n));
-				auto sampler = call.material->getSampler(texture_slot, n);
+				auto sampler = call.material->sampler(texture_slot, n);
 				s_gl.ActiveTexture(GL_TEXTURE0 + gl_texture_slot);
 				if (tex)
 				{
