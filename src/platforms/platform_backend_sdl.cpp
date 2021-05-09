@@ -354,6 +354,12 @@ pxl::string pxl::path::extension(const pxl::string& path)
 	return filePath.extension().u8string();
 }
 
+pxl::string pxl::path::combine(const string lowerPath, const string upperPath)
+{
+	std::filesystem::path path(lowerPath);
+	path.append(upperPath);
+	return path.u8string();
+}
 //file
 
 bool pxl::file::exists(const string& path)

@@ -40,6 +40,7 @@ namespace pxl
 	namespace path
 	{
 		string extension(const string& path);
+		string combine(const string lowerPath, const string upperPath);
 	}
 	namespace file
 	{
