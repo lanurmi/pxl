@@ -3,6 +3,8 @@
 
 namespace pxl
 {
+	class PlatformBackend;
+
 	constexpr int s_max_mouse_buttons = 16;
 	enum class MouseButton
 	{
@@ -21,10 +23,11 @@ namespace pxl
 		bool released(MouseButton button);
 		Vec2 position();
 		Vec2 drawPosition();
-		//
+	private:
+		void update();
 		void onButtonDown(MouseButton key);
 		void onButtonUp(MouseButton key);
 		void onMousePosition(const pxl::Vec2& position);
-		void update();
+		friend class PlatformBackend;
 	};
 }

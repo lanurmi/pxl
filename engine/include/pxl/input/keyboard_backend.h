@@ -4,6 +4,8 @@
 
 namespace pxl
 {
+	class PlatformBackend;
+
 	class KeyboardBackend
 	{
 	public:
@@ -11,9 +13,10 @@ namespace pxl
 		bool pressed(Key key);
 		bool down(Key key);
 		bool released(Key key);
-		//
+	private:
+		void update();
 		void onKeyDown(Key key);
 		void onKeyUp(Key key);
-		void update();
+		friend class pxl::PlatformBackend;
 	};
 }

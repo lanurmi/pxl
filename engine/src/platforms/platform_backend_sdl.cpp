@@ -246,6 +246,13 @@ void pxl::PlatformBackend::update()
 	}
 }
 
+void pxl::PlatformBackend::inputUpdate()
+{
+	pxl::mouse().update();
+	pxl::gamepads().update();
+	pxl::keyboard().update();
+}
+
 void pxl::PlatformBackend::rumble(int index, float time, float strength)
 {
 	assert(strength >= 0.0f && strength <= 1.0f);

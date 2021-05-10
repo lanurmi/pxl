@@ -26,6 +26,7 @@ namespace pxl
 		Vec2 position() const;
 		//gamepads
 		void rumble(int index, float time, float strength);
+		void inputUpdate();
 		//Paths
 		string applicationPath() const;
 		string userPath() const;

@@ -69,13 +69,6 @@ pxl::string pxl::Engine::userPath() const
 	return _platform.userPath();
 }
 
-void pxl::Engine::inputUpdate()
-{
-	_mouse.update();
-	_keyboard.update();
-	_gamepads.update();
-}
-
 class Fps
 {
 public:
@@ -162,8 +155,7 @@ void pxl::Engine::start(const pxl::Config& config)
 			while (time_accumulator >= time_target)
 			{
 				time_accumulator -= time_target;
-
-				inputUpdate();
+				_platform.inputUpdate();
 				_scene_manager.update();
 			}
 		}
