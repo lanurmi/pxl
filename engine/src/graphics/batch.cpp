@@ -193,6 +193,7 @@ void pxl::Batch::newBatch()
 		newBatch.elements = 0;
 		newBatch.blend = _blend_stack.back();
 		newBatch.sampler = _samplerStack.back();
+		newBatch.flip_vertically = cBatch.flip_vertically;
 		_batches.push_back(newBatch);
 	}
 }
