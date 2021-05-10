@@ -19,6 +19,12 @@ namespace pxl
 		virtual void draw(Batch &batch) = 0;
 	};
 
+	class IDebugDrawable
+	{
+	public:
+		virtual void debugDraw(Batch& batch) = 0;
+	};
+
 	class Component
 	{
 	public:

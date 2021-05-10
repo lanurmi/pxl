@@ -64,6 +64,10 @@ void Scene::clearRemoveSets()
 		{
 			remove_all(_drawable_components, drawable);
 		}
+		if (auto debugDrawable = dynamic_cast<IDebugDrawable*>(it))
+		{
+			remove_all(_debug_drawable_components, debugDrawable);
+		}
 		if (auto updateable = dynamic_cast<IUpdateable*>(it))
 		{
 			remove_all(_updateable_components, updateable);
@@ -123,6 +127,10 @@ void Scene::draw()
 	for (auto it : _drawable_components)
 	{
 		it->draw(batch);
+	}
+	for (auto it : _debug_drawable_components)
+	{
+		it->debugDraw(batch);
 	}
 	batch.end();
 }
