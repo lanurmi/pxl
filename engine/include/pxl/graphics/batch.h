@@ -62,6 +62,7 @@ namespace pxl
 		//draw
 		void triangle(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Color& color);
 		void rectangle(const Rect& rect, const Color& color);
+		void hollowRectangle(const Rect& rect, const Color& color);
 		void line(const Vec2& from, const Vec2& to, int lineSize, const Color& color);
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color);
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Color& color);

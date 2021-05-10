@@ -246,6 +246,16 @@ void pxl::Batch::rectangle(const Rect& rect, const Color& color)
 	pushQuad(position, pxl::Vec2(position.x + size.x, position.y), pxl::Vec2(position.x + size.x, position.y + size.x), pxl::Vec2(position.x, position.y + size.x), color);
 }
 
+void pxl::Batch::hollowRectangle(const Rect& rect, const Color& color)
+{
+	setTexture(nullptr);
+	line(rect.topLeft(), rect.topRight(), 1, color);
+	line(rect.bottomLeft(), rect.bottomRight(), 1, color);
+
+	line(rect.topLeft(), rect.bottomLeft(), 1, color);
+	line(rect.topRight(), rect.bottomRight(), 1, color);
+}
+
 void pxl::Batch::pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Vec2& p3, const Color& color)
 {
 	
