@@ -34,6 +34,11 @@ pxl::KeyboardBackend& pxl::Engine::keyboard()
 	return _keyboard;
 }
 
+pxl::Bindings& pxl::Engine::bindings()
+{
+	return _bindings;
+}
+
 pxl::MouseBackend& pxl::Engine::mouse()
 {
 	return _mouse;
@@ -95,7 +100,7 @@ private:
 	pxl::u64 _fps_update;
 };
 
-void pxl::Engine::start(const pxl::Config& config)
+void pxl::Engine::begin(const pxl::Config& config)
 {
 	s_end = false;
 	_platform.init(config);
@@ -156,13 +161,15 @@ void pxl::Engine::start(const pxl::Config& config)
 			{
 				time_accumulator -= time_target;
 				_platform.inputUpdate();
+				_bindings.update();
 				_scene_manager.update();
 			}
 		}
 		else
 		{
 			pxl::time::delta = (double)time_diff / pxl::time::ticks_per_second;
-			inputUpdate();
+			_platform.inputUpdate();
+			_bindings.update();
 			_scene_manager.update();
 		}
 
@@ -203,6 +210,11 @@ pxl::GamepadsBackend& pxl::gamepads()
 pxl::KeyboardBackend& pxl::keyboard()
 {
 	return pxl::Engine::instance().keyboard();
+}
+
+pxl::Bindings& pxl::bindings()
+{
+	return pxl::Engine::instance().bindings();
 }
 
 pxl::MouseBackend& pxl::mouse()
