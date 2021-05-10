@@ -39,3 +39,8 @@ void SceneManager::end()
 	delete _next_scene;
 	delete _current_scene;
 }
+
+const Scene* SceneManager::scene()
+{
+	return _current_scene;
+}
