@@ -22,11 +22,20 @@ public:
 	void begin() override
 	{
 		pxl::Scene::begin();
+
+		//yellow bacground
 		clear_color = pxl::Color::yellow;
+
+		// entity holds components
 		auto entity = createEntity(pxl::Vec2(rand()%800, 100));
+
+		// component does things (in this case draws texture)
 		auto component = entity->add(HelloWorldComponent());
 		component->texture = content.LoadTexture("helloworld.png");
-		esc.bind(pxl::Key::Escape);
+		
+		//escape key does things
+		esc = pxl::bindings().CreateInput();
+		esc->bind(pxl::Key::Escape);
 	}
 	void end() override
 	{
@@ -34,14 +43,14 @@ public:
 	}
 	void update()
 	{
-		esc.update();
-		if (esc.pressed())
+		if (esc->pressed())
 		{
-			pxl::sceneManager().set(HelloWorldScene());
+			//escape pressed, close the app
+			pxl::engine().end();
 		}
 	}
 private:
-	pxl::InputBinding esc;
+	pxl::InputBindingRef esc;
 	pxl::Content content;
 	pxl::TextureRef tex;
 	pxl::Batch batch;
@@ -63,7 +72,7 @@ int main()
 	config.height = 720;
 
 	// start
-	pxl::engine().start(config);
+	pxl::engine().begin(config);
 
 	return 0;
 }
