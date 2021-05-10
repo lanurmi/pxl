@@ -18,6 +18,10 @@ namespace pxl
 		T* add(Entity* entity, T&& component);
 		void destroy(Component* component);
 		void destroy(Entity* entity);
+
+		template<class T>
+		vector<T*>& all();
+
 		virtual void begin();
 		virtual void update();
 		virtual void draw();
@@ -30,6 +34,7 @@ namespace pxl
 		vector<Entity*> _entities;
 		vector<Component*> _components[s_max_component_types];
 		vector<IDrawable*> _drawable_components;
+		vector<IDebugDrawable*> _debug_drawable_components;
 		vector<IUpdateable*> _updateable_components;
 		set<Component*> _remove_components;
 		set<Entity*> _remove_entities;
@@ -43,9 +48,13 @@ namespace pxl
 		c->_entity = entity;
 		c->_type = pxl::Component::findTypeId<T>();
 		_current_max_component_type_id = calc::max(_current_max_component_type_id, c->_type + 1);
-		if (auto renderable = dynamic_cast<IDrawable*>(c))
+		if (auto drawabla = dynamic_cast<IDrawable*>(c))
 		{
-			_drawable_components.push_back(renderable);
+			_drawable_components.push_back(drawabla);
+		}
+		if (auto debugDrawable = dynamic_cast<IDebugDrawable*>(c))
+		{
+			_debug_drawable_components.push_back(debugDrawable);
 		}
 		if (auto updateable = dynamic_cast<IUpdateable*>(c))
 		{
@@ -55,5 +64,12 @@ namespace pxl
 		entity->_components.push_back(c);
 		pxl::log().message(string_format("component %d added to entity", c->typeId()));
 		return c;
+	}
+
+	template<class T>
+	vector<T*>& Scene::all()
+	{
+		auto typeId = pxl::Component::findTypeId<T>();
+		return _components[typeId];
 	}
 }

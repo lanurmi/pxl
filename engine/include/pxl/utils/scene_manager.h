@@ -11,6 +11,7 @@ namespace pxl
 		void update();
 		void draw();
 		void end();
+		const Scene* scene();
 	private:
 		Scene* _current_scene;
 		Scene* _next_scene;
