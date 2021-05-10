@@ -63,4 +63,23 @@ namespace pxl
 	{
 		from.erase(std::remove(from.begin(), from.end(), value), from.end());
 	}
+
+	class Grid
+	{
+	public:
+		Grid(int width, int height, i16 initialValue);
+		Grid();
+		~Grid();
+		void set(int x, int y, i16 value);
+		void set(int index, i16 value);
+		void setAll(i16 value);
+		i16 get(int x, int y) const;
+		i16 get(int index) const;
+		int width() const;
+		int height() const;
+	private:
+		int _width;
+		int _height;
+		i16* _data;
+	};
 }
