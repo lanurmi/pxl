@@ -217,9 +217,9 @@ void pxl::Batch::setTexture(const TextureRef& texture)
 			newBatch();
 		}
 	}
-	currentBatch().texture = texture;;
-	currentBatch().flip_vertically = pxl::graphics().features().origin_bottom_left && texture && texture->isRenderTarget();
-
+	auto& batch = currentBatch();
+	batch.texture = texture;
+	batch.flip_vertically = pxl::graphics().features().origin_bottom_left && texture && texture->isRenderTarget();
 }
 
 void pxl::Batch::triangle(const pxl::Vec2& p0, const pxl::Vec2& p1, const pxl::Vec2& p2, const pxl::Color& color)
@@ -250,16 +250,20 @@ void pxl::Batch::rectangle(const Rect& rect, const Color& color)
 void pxl::Batch::hollowRectangle(const Rect& rect, const Color& color)
 {
 	setTexture(nullptr);
-	line(rect.topLeft(), rect.topRight(), 1, color);
-	line(rect.bottomLeft(), rect.bottomRight(), 1, color);
+	//tl tr
+	auto tl = rect.topLeft();
+	auto tr = rect.topRight();
+	auto bl = rect.bottomLeft();
 
-	line(rect.topLeft(), rect.bottomLeft(), 1, color);
-	line(rect.topRight(), rect.bottomRight(), 1, color);
+	pushQuad(Rect(tl.x, tl.y, rect.width, 1), color);
+	pushQuad(Rect(bl.x, bl.y, rect.width, 1), color);
+	pushQuad(Rect(tl.x,tl.y, 1, rect.height), color);
+	pushQuad(Rect(tr.x, tr.y, 1, rect.height), color);
+
 }
 
 void pxl::Batch::pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Vec2& p3, const Color& color)
 {
-	
 	auto& mat = currentMatrix();
 	auto idx = _vertices.size();
 	_indices.emplace_back(idx + 0);
