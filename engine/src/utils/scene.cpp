@@ -89,11 +89,13 @@ void Scene::clearRemoveSets()
 	if (deleted_components > 0)
 	{
 		pxl::log().message(string_format("deleted %d components", deleted_components));
+		_remove_components.clear();
 	}
 
 	if (deleted_entities > 0)
 	{
 		pxl::log().message(string_format("deleted %d entities", deleted_entities));
+		_remove_entities.clear();
 	}
 }
 
