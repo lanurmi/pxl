@@ -11,7 +11,7 @@ Component::Component()
 
 u16 Component::typeId() const
 {
-	return _type;
+	return _typeId;
 }
 
 Entity* Component::entity()

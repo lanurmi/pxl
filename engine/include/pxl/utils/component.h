@@ -38,7 +38,7 @@ namespace pxl
 		virtual void destroyed() {}
 		Entity* entity();
 	private:
-		u16 _type;
+		u16 _typeId;
 		Entity* _entity;
 
 		friend class Scene;
