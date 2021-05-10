@@ -7,6 +7,7 @@
 #include <stack>
 #include <map>
 #include <set>
+#include <assert.h>
 
 namespace pxl
 {

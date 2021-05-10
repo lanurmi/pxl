@@ -2,6 +2,7 @@
 #include <pxl/utils/content.h>
 #include <pxl/utils/scene.h>
 #include <pxl/graphics/batch.h>
+#include <pxl/utils/input_binding.h>
 
 class HelloWorldComponent : public pxl::Component, public pxl::IDrawable
 {
@@ -17,15 +18,30 @@ public:
 class HelloWorldScene : public pxl::Scene
 {
 public:
-	HelloWorldScene() : pxl::Scene(), content("content") {}
+	HelloWorldScene() : pxl::Scene("Hello World Scene"), content("content") {}
 	void begin() override
 	{
+		pxl::Scene::begin();
 		clear_color = pxl::Color::yellow;
-		auto entity = createEntity(pxl::Vec2(100, 100));
+		auto entity = createEntity(pxl::Vec2(rand()%800, 100));
 		auto component = entity->add(HelloWorldComponent());
 		component->texture = content.LoadTexture("helloworld.png");
+		esc.bind(pxl::Key::Escape);
+	}
+	void end() override
+	{
+		pxl::Scene::end();
+	}
+	void update()
+	{
+		esc.update();
+		if (esc.pressed())
+		{
+			pxl::sceneManager().set(HelloWorldScene());
+		}
 	}
 private:
+	pxl::InputBinding esc;
 	pxl::Content content;
 	pxl::TextureRef tex;
 	pxl::Batch batch;

@@ -10,7 +10,7 @@ namespace pxl
 	class Scene
 	{
 	public:
-		Scene();
+		Scene(const string &name);
 		virtual ~Scene();
 		pxl::Color clear_color;
 		Entity* createEntity(const pxl::Vec2& position);
@@ -18,12 +18,13 @@ namespace pxl
 		T* add(Entity* entity, T&& component);
 		void destroy(Component* component);
 		void destroy(Entity* entity);
-		virtual void begin() {};
+		virtual void begin();
 		virtual void update();
 		virtual void draw();
 		virtual void end();
 	private:
 		void clearRemoveSets();
+		string _name;
 		Batch batch;
 		u16 _current_max_component_type_id;
 		vector<Entity*> _entities;
@@ -50,6 +51,9 @@ namespace pxl
 		{
 			_updateable_components.push_back(updateable);
 		}
+
+		entity->_components.push_back(c);
+		pxl::log().message(string_format("component %d added to entity", c->typeId()));
 		return c;
 	}
 }
