@@ -15,7 +15,6 @@ public:
 };
 
 static MouseState s_mouseState;
-static MouseState s_lastMouseState;
 static MouseState s_nextMouseState;
 
 
@@ -77,7 +76,6 @@ void pxl::MouseBackend::onMousePosition(const pxl::Vec2& position)
 
 void pxl::MouseBackend::update()
 {
-	s_lastMouseState = s_mouseState;
 	s_mouseState = s_nextMouseState;
 
 	for (int i = 0; i < pxl::s_max_mouse_buttons; i++)

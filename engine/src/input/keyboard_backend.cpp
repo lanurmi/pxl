@@ -15,11 +15,9 @@ public:
 
 static KeyboardState s_keyboardState;
 static KeyboardState s_nextKeyboardState;
-static KeyboardState s_lastKeyboardState;
 
 void pxl::KeyboardBackend::update()
 {
-	s_lastKeyboardState = s_keyboardState;
 	s_keyboardState = s_nextKeyboardState;
 
 	for (int i = 0; i < s_max_keyboard_keys; i++)
