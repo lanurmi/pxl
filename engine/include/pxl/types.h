@@ -80,6 +80,6 @@ namespace pxl
 	private:
 		int _width;
 		int _height;
-		i16* _data;
+		vector<i16> _data;
 	};
 }

@@ -4,18 +4,17 @@ using namespace pxl;
 
 Grid::Grid(int width, int height, i16 initialValue) : _width(width), _height(height)
 {
-	_data = new i16[width * height];
+	_data.resize(width * height);
 	setAll(initialValue);
 }
 
-Grid::Grid() : _width(0), _height(0), _data(nullptr)
+Grid::Grid() : _width(0), _height(0)
 {
 
 }
 
 Grid::~Grid()
 {
-	delete [] _data;
 }
 
 void Grid::set(int x, int y, i16 value)
