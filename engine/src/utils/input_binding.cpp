@@ -128,6 +128,7 @@ void pxl::InputBinding::clearBuffer()
 
 pxl::InputBindingRef pxl::Bindings::CreateInput()
 {
+	pxl::log().message("input binding created");
 	auto binding = pxl::InputBindingRef(new InputBinding());
 	_input_bindings.push_back(binding);
 	return binding;
@@ -135,12 +136,16 @@ pxl::InputBindingRef pxl::Bindings::CreateInput()
 
 void pxl::Bindings::update()
 {
-	// Todo: remove "dead" bindings
-	for (auto it : _input_bindings)
+	for (int i = _input_bindings.size() - 1; i >= 0; i--)
 	{
-		if (auto input = it.lock())
+		if (auto input = _input_bindings[i].lock())
 		{
 			input->update();
+		}
+		else
+		{
+			_input_bindings.erase(_input_bindings.begin() + i);
+			pxl::log().message("input binding removed");
 		}
 	}
 }
