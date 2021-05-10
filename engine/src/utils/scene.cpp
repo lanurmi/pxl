@@ -2,6 +2,7 @@
 #include <pxl/utils/scene.h>
 #include <pxl/utils/entity.h>
 #include <pxl/graphics/batch.h>
+#include <pxl/math/calc.h>
 
 using namespace pxl;
 
@@ -123,7 +124,16 @@ void Scene::update()
 
 void Scene::draw()
 {
-	batch.begin(nullptr, clear_color);
+
+	if (_renderTarget != nullptr)
+	{
+		batch.begin(_renderTarget, clear_color);
+	}
+	else
+	{
+		batch.begin(nullptr, clear_color);
+	}
+
 	for (auto it : _drawable_components)
 	{
 		it->draw(batch);
@@ -133,4 +143,26 @@ void Scene::draw()
 		it->debugDraw(batch);
 	}
 	batch.end();
+
+	if (_renderTarget != nullptr)
+	{
+		auto drawSize = engine().drawSize();
+		float scale = calc::min(drawSize.x / (float)_renderTarget->width(), drawSize.y / (float)_renderTarget->height());
+		if (pixel_perfect)
+		{
+			scale = calc::floor(scale);
+		}
+		Vec2 screen_center = Vec2(drawSize.x, drawSize.y) / 2;
+		Vec2 target_center = Vec2(_renderTarget->width(), _renderTarget->height()) / 2;
+		batch.begin(nullptr, clear_color);
+		batch.pushMatrix(Mat3x2::createTransform(screen_center, target_center, Vec2::one * scale, 0.0f));
+		batch.texture(_renderTarget->texture(), Vec2::zero, Color::white);
+		batch.popMatrix();
+		batch.end();
+	}
+}
+
+void pxl::Scene::setRenderTarget(const RenderTargetRef& renderTarget)
+{
+	_renderTarget = renderTarget;
 }

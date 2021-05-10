@@ -12,7 +12,10 @@ namespace pxl
 	public:
 		Scene(const string &name);
 		virtual ~Scene();
+
 		pxl::Color clear_color;
+		bool pixel_perfect;
+
 		Entity* createEntity(const pxl::Vec2& position);
 		template<class T>
 		T* add(Entity* entity, T&& component);
@@ -20,8 +23,9 @@ namespace pxl
 		void destroy(Entity* entity);
 
 		template<class T>
-		vector<T*>& all();
+		vector<Component*>& all();
 
+		void setRenderTarget(const RenderTargetRef& renderTarget);
 		virtual void begin();
 		virtual void update();
 		virtual void draw();
@@ -38,16 +42,17 @@ namespace pxl
 		vector<IUpdateable*> _updateable_components;
 		set<Component*> _remove_components;
 		set<Entity*> _remove_entities;
+		RenderTargetRef _renderTarget;
 	};
 
 	template<class T>
 	T* Scene::add(Entity* entity, T&& component)
 	{
-		auto c = new T();
+		T* c = new T();
 		*c = component;
 		c->_entity = entity;
-		c->_type = pxl::Component::findTypeId<T>();
-		_current_max_component_type_id = calc::max(_current_max_component_type_id, c->_type + 1);
+		c->_typeId = pxl::Component::findTypeId<T>();
+		_current_max_component_type_id = calc::max(_current_max_component_type_id, c->_typeId + 1);
 		if (auto drawabla = dynamic_cast<IDrawable*>(c))
 		{
 			_drawable_components.push_back(drawabla);
@@ -61,13 +66,13 @@ namespace pxl
 			_updateable_components.push_back(updateable);
 		}
 
-		entity->_components.push_back(c);
+		entity->_components.push_back((Component*)c);
 		pxl::log().message(string_format("component %d added to entity", c->typeId()));
 		return c;
 	}
 
 	template<class T>
-	vector<T*>& Scene::all()
+	vector<Component*>& Scene::all()
 	{
 		auto typeId = pxl::Component::findTypeId<T>();
 		return _components[typeId];
