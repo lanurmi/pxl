@@ -37,19 +37,4 @@ namespace pxl
 		void* glGetFunc(const string& name);
 		Func onEnd;
 	};
-
-	namespace path
-	{
-		string extension(const string& path);
-		string combine(const string lowerPath, const string upperPath);
-	}
-	namespace file
-	{
-		bool exists(const string& path);
-	}
-	namespace directory
-	{
-		vector<string> files(const string& path, const string& extension = "");
-		bool exists(const string& path);
-	}
 }

@@ -14,7 +14,7 @@ add_library(pxl
 	src/time.cpp
 	src/log.cpp
 	src/types.cpp
-	
+
 	src/platforms/platform_backend_sdl.cpp
 		
 	src/graphics/batch.cpp
@@ -26,8 +26,11 @@ add_library(pxl
 	src/graphics/sampler.cpp
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
+	src/graphics/sprite_font.cpp
+	src/graphics/Subtexture.cpp
 	
 	src/image/image.cpp
+	src/image/font.cpp
 	
 	src/input/gamepad_backend.cpp
 	src/input/keyboard_backend.cpp

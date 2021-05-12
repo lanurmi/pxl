@@ -12,6 +12,7 @@
 #include <pxl/graphics/material.h>
 #include <pxl/graphics/blend.h>
 #include <pxl/graphics/render_target.h>
+#include <pxl/graphics/sprite_font.h>
 
 namespace pxl
 {
@@ -65,14 +66,15 @@ namespace pxl
 		void hollowRectangle(const Rect& rect, const Color& color);
 		void line(const Vec2& from, const Vec2& to, int lineSize, const Color& color);
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color);
-		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Color& color);
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Color& color);
-		void texture(const pxl::TextureRef& texture, const Rect &dstRect, const pxl::Color& color);
+		void texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect &srcrect, const pxl::Color& color);
+		void text(const pxl::SpriteFontRef &font, const string &text, const pxl::Vec2 &pos, const pxl::Color &color);
 		//
 		
 	private:
-		void pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Vec2& p3, const Color& color);
-		void pushQuad(const Rect &rect, const Color& color);
+		void pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Vec2& p3,
+			const Vec2& t0, const Vec2& t1, const Vec2& t2, const Vec2& t3, const Color& color);
+		void pushQuad(const Rect& rect, const Rect &texcoords, const Color& color);
 		void setTexture(const TextureRef& texture);
 		void newBatch();
 		void draw(const RenderTargetRef& renderTarget, const Mat4x4& matrix);
@@ -95,5 +97,8 @@ namespace pxl
 		TextureRef m_defaultTexture;
 
 		RenderTargetRef _target;
+
+		int _draw_calls;
+		int _triangles;
 	};
 }

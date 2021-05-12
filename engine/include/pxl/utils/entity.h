@@ -49,7 +49,7 @@ namespace pxl
 				return c;
 			}
 		}
-		return null;
+		return nullptr;
 	}
 
 	template<class T>
@@ -62,7 +62,7 @@ namespace pxl
 				return c;
 			}
 		}
-		return null;
+		return nullptr;
 	}
 
 	template<class T>

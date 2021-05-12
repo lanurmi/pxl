@@ -1,5 +1,6 @@
 #include <pxl/image/image.h>
 #include <pxl/engine.h>
+#include <pxl/filesystem.h>
 #include <assert.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -22,6 +23,7 @@ static pxl::Color* loadJPEG(const pxl::string& path, int *w, int *h)
 	{
 		pxl::log().error("Could not load rgb image");
 		assert(0);
+		return nullptr;
 	}
 	auto size = (*w) * (*h);
 	auto result = new pxl::Color[size];
@@ -49,6 +51,7 @@ static pxl::Color* loadPNG(const pxl::string& path, int* w, int* h)
 	{
 		pxl::log().error("Could not load png image");
 		assert(0);
+		return nullptr;
 	}
 	auto size = (*w) * (*h);
 	auto result = new pxl::Color[size];
@@ -58,6 +61,21 @@ static pxl::Color* loadPNG(const pxl::string& path, int* w, int* h)
 }
 
 pxl::Image::Image(const string& file)
+{
+	load(file);
+}
+
+pxl::Image::Image() : _width(0), _height(0), _pixels(nullptr)
+{
+
+}
+
+pxl::Image::~Image()
+{
+	delete [] _pixels;
+}
+
+void pxl::Image::load(const pxl::string& file)
 {
 	auto ext = pxl::path::extension(file);
 	if (ext == ".png")
@@ -69,11 +87,10 @@ pxl::Image::Image(const string& file)
 	{
 		_pixels = loadJPEG(file, &_width, &_height);
 	}
-}
 
-pxl::Image::~Image()
-{
-	delete [] _pixels;
+	assert(_width > 0);
+	assert(_height > 0);
+	assert(_pixels != nullptr);
 }
 
 int pxl::Image::width() const

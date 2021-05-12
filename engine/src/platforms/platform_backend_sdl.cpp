@@ -1,14 +1,18 @@
-
 #include <pxl/platforms/platform_backend.h>
 #include <pxl/time.h>
+#include <pxl/filesystem.h>
+#include <string>
 #include <filesystem>
-
+#include <cstdio>
+#include <fstream>
 #include <pxl/engine.h>
 
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <assert.h>
+
+using namespace pxl;
 
 static SDL_Window* s_window = nullptr;
 static SDL_GameController* s_gamepads[pxl::s_max_gamepads];
@@ -356,37 +360,83 @@ pxl::Vec2 pxl::PlatformBackend::size() const
 	return pxl::Vec2(w, h);
 }
 
-// path
 
-pxl::string pxl::path::extension(const pxl::string& path)
+
+string path::extension(const string& path)
 {
 	std::filesystem::path filePath(path);
 	return filePath.extension().u8string();
 }
 
-pxl::string pxl::path::combine(const string lowerPath, const string upperPath)
+string path::combine(const string lowerPath, const string upperPath)
 {
 	std::filesystem::path path(lowerPath);
 	path.append(upperPath);
 	return path.u8string();
 }
+
+string path::withoutFile(const string& path)
+{
+	std::filesystem::path filePath(path);
+	return filePath.parent_path().u8string();
+}
 //file
 
-bool pxl::file::exists(const string& path)
+class FileCpp17 : public file::File
+{
+public:
+	FileCpp17(const string& file)
+	{
+		_stream.open(file, std::fstream::in | std::fstream::out);
+		if (!_stream.is_open())
+		{
+			log().error(string_format("could not open file %s", file));
+			assert(0);
+		}
+	}
+	~FileCpp17()
+	{
+		_stream.close();
+	}
+	bool ok() const override
+	{
+		return _stream.is_open();
+	}
+	bool eof() const override
+	{
+		return _stream.eof();
+	}
+	string line()
+	{
+		string result;
+		std::getline(_stream, result);
+		return result;
+	}
+private:
+	std::fstream _stream;
+};
+
+
+bool file::exists(const string& path)
 {
 	return std::filesystem::is_regular_file(path);
 }
 
+file::FileRef file::File::create(const string& file)
+{
+	return file::FileRef(new FileCpp17(file));
+}
+
 // directory
 
-bool pxl::directory::exists(const string& path)
+bool directory::exists(const string& path)
 {
 	return std::filesystem::is_directory(path);
 }
 
-pxl::vector<pxl::string> pxl::directory::files(const string& path, const string& extension)
+vector<string> directory::files(const string& path, const string& extension)
 {
-	pxl::vector<pxl::string> result;
+	vector<string> result;
 	for (const auto& e : std::filesystem::directory_iterator(path))
 	{
 		auto p = e.path();
@@ -405,4 +455,3 @@ pxl::vector<pxl::string> pxl::directory::files(const string& path, const string&
 	}
 	return result;
 }
-

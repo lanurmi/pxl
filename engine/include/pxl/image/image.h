@@ -9,7 +9,9 @@ namespace pxl
 	public:
 		Image(int width, int height);
 		Image(const string &file);
+		Image();
 		~Image();
+		void load(const string& file);
 		int width() const;
 		int height() const;
 		void setPixels(Color* data);
