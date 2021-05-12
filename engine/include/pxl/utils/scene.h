@@ -65,7 +65,7 @@ namespace pxl
 		{
 			_updateable_components.push_back(updateable);
 		}
-
+		_components[c->_typeId].push_back((Component*)c);
 		entity->_components.push_back((Component*)c);
 		pxl::log().message(string_format("component %d added to entity", c->typeId()));
 		return c;
