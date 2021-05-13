@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <assert.h>
+#include <algorithm>
 
 namespace pxl
 {
