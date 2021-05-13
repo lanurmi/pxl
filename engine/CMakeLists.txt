@@ -15,6 +15,7 @@ add_library(pxl
 	src/log.cpp
 	src/types.cpp
 	src/filesystem.cpp
+	src/content.cpp
 
 	src/platforms/platform_backend_sdl.cpp
 		
@@ -53,7 +54,8 @@ add_library(pxl
 	src/utils/component.cpp
 	src/utils/scene_manager.cpp
 	src/utils/image_packer.cpp
- )
+	src/utils/sprite.cpp
+)
 
 target_include_directories(pxl
 	PUBLIC

@@ -10,6 +10,7 @@
 #include <pxl/input/mouse_backend.h>
 #include <pxl/utils/scene_manager.h>
 #include <pxl/utils/input_binding.h>
+#include <pxl/content.h>
 #include <pxl/log.h>
 
 namespace pxl
@@ -24,6 +25,7 @@ namespace pxl
 		GamepadsBackend& gamepads();
 		KeyboardBackend& keyboard();
 		Bindings& bindings();
+		Content& content();
 		MouseBackend& mouse();
 		SceneManager& sceneManager();
 		Log& log();
@@ -38,6 +40,7 @@ namespace pxl
 		GraphicsBackend _graphics;
 		GamepadsBackend _gamepads;
 		KeyboardBackend _keyboard;
+		Content _content;
 		Bindings _bindings;
 		Log _log;
 		MouseBackend _mouse;
@@ -48,6 +51,7 @@ namespace pxl
 	Bindings& bindings();
 	SceneManager& sceneManager();
 	Log& log();
+	Content& content();
 
 	GraphicsBackend& graphics();
 	PlatformBackend& platform();

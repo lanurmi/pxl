@@ -39,6 +39,11 @@ pxl::Bindings& pxl::Engine::bindings()
 	return _bindings;
 }
 
+pxl::Content& pxl::Engine::content()
+{
+	return _content;
+}
+
 pxl::MouseBackend& pxl::Engine::mouse()
 {
 	return _mouse;
@@ -230,4 +235,9 @@ pxl::Log& pxl::log()
 pxl::SceneManager& pxl::sceneManager()
 {
 	return pxl::Engine::instance().sceneManager();
+}
+
+pxl::Content& pxl::content()
+{
+	return pxl::Engine::instance().content();
 }
