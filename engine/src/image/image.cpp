@@ -11,7 +11,7 @@
 
 pxl::Image::Image(int width, int height) : _pixels(nullptr), _width(width), _height(height)
 {
-	assert(width > 0 && height == 0);
+	assert(width > 0 && height > 0);
 	_pixels = new Color[_width * _height];
 }
 
@@ -70,6 +70,37 @@ pxl::Image::Image() : _width(0), _height(0), _pixels(nullptr)
 
 }
 
+pxl::Image::Image(Image&& src) noexcept
+{
+	_width = src._width;
+	_height = src._height;
+	_pixels = src._pixels;
+	src._pixels = nullptr;
+}
+
+pxl::Image& pxl::Image::operator=(Image&& src) noexcept
+{
+	delete[] _pixels;
+	_width = src._width;
+	_height = src._height;
+	_pixels = src._pixels;
+	src._pixels = nullptr;
+	return *this;
+}
+
+pxl::Image& pxl::Image::operator=(const Image& src)
+{
+	delete[] _pixels;
+	_width = src._width;
+	_height = src._height;
+	if (src._pixels != nullptr && _width > 0 && _height > 0)
+	{
+		_pixels = new Color[_width * _height];
+		memcpy(_pixels, src._pixels, sizeof(Color) * _width * _height);
+	}
+	return *this;
+}
+
 pxl::Image::~Image()
 {
 	delete [] _pixels;
@@ -106,6 +137,20 @@ int pxl::Image::height() const
 void pxl::Image::setPixels(pxl::Color* pixels)
 {
 	memcpy(_pixels, pixels, sizeof(pxl::Color) * _width * _height);
+}
+
+void pxl::Image::setPixels(const pxl::Rect& rect, Color* data)
+{
+	for (int i = 0; i < rect.width; i++)
+	{
+		for (int j = 0; j < rect.height; j++)
+		{
+			int srcIdx = j * rect.width + i;
+			int dstIdx = (rect.y + j) * _width + (i + rect.x);
+			auto src = data[srcIdx];
+			_pixels[dstIdx] = src;
+		}
+	}
 }
 
 pxl::Color* pxl::Image::pixels() const
