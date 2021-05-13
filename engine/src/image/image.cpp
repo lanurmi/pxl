@@ -70,6 +70,17 @@ pxl::Image::Image() : _width(0), _height(0), _pixels(nullptr)
 
 }
 
+pxl::Image::Image(const Image& src)
+{
+	_width = src._width;
+	_height = src._height;
+	if (src._pixels != nullptr && _width > 0 && _height > 0)
+	{
+		_pixels = new Color[_width * _height];
+		memcpy(_pixels, src._pixels, sizeof(Color) * _width * _height);
+	}
+}
+
 pxl::Image::Image(Image&& src) noexcept
 {
 	_width = src._width;
@@ -135,12 +146,12 @@ int pxl::Image::height() const
 	return _height;
 }
 
-void pxl::Image::setPixels(pxl::Color* pixels)
+void pxl::Image::setPixels(const pxl::Color* pixels)
 {
 	memcpy(_pixels, pixels, sizeof(pxl::Color) * _width * _height);
 }
 
-void pxl::Image::setPixels(const pxl::Rect& rect, Color* data)
+void pxl::Image::setPixels(const pxl::Rect& rect, const Color* data)
 {
 	for (int i = 0; i < rect.width; i++)
 	{

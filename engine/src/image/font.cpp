@@ -81,10 +81,10 @@ struct BMFont
 	private:
 	void load(const string &file)
 	{
-		auto fileRef = file::File::create(file);
-		while (!fileRef->eof())
+		file::FileStream fileRef(file, pxl::file::FileMode::Read);
+		while (!fileRef.eof())
 		{
-			string line = fileRef->line();
+			string line = fileRef.line();
 			std::stringstream lineStream;
 			lineStream << line;
 			string lineType;

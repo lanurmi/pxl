@@ -10,6 +10,7 @@ namespace pxl
 	public:
 		Image(int width, int height);
 		Image(const string &file);
+		Image(const Image& src);
 		Image(Image &&src) noexcept;
 		Image& operator=(Image&& src) noexcept;
 		Image& operator=(const Image& src);
@@ -18,8 +19,8 @@ namespace pxl
 		void load(const string& file);
 		int width() const;
 		int height() const;
-		void setPixels(Color* data);
-		void setPixels(const pxl::Rect& rect, Color* data);
+		void setPixels(const Color* data);
+		void setPixels(const pxl::Rect& rect, const Color* data);
 		Color* pixels() const;
 	private:
 		void preMultiply();

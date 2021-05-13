@@ -382,38 +382,39 @@ string path::withoutFile(const string& path)
 }
 //file
 
-class FileCpp17 : public file::File
+class SDLFile : public file::File
 {
 public:
-	FileCpp17(const string& file)
+	SDLFile(SDL_RWops* file) : m_file(file)
 	{
-		_stream.open(file, std::fstream::in | std::fstream::out);
-		if (!_stream.is_open())
-		{
-			log().error(string_format("could not open file %s", file));
-			assert(0);
-		}
+
 	}
-	~FileCpp17()
+	~SDLFile()
 	{
-		_stream.close();
+		SDL_RWclose(m_file);
 	}
-	bool ok() const override
+	size_t length() const override
 	{
-		return _stream.is_open();
+		return SDL_RWsize(m_file);
 	}
-	bool eof() const override
+	size_t position() const override
 	{
-		return _stream.eof();
+		return SDL_RWtell(m_file);
 	}
-	string line()
+	size_t seek(size_t position) override
 	{
-		string result;
-		std::getline(_stream, result);
-		return result;
+		return SDL_RWseek(m_file, position, RW_SEEK_SET);
+	}
+	size_t read(u8* buffer, size_t length) const override
+	{
+		return SDL_RWread(m_file, buffer, sizeof(u8), length);
+	}
+	size_t write(const u8* buffer, size_t length) override
+	{
+		return SDL_RWwrite(m_file, buffer, sizeof(u8), length);
 	}
 private:
-	std::fstream _stream;
+	SDL_RWops* m_file;
 };
 
 
@@ -422,9 +423,29 @@ bool file::exists(const string& path)
 	return std::filesystem::is_regular_file(path);
 }
 
-file::FileRef file::File::create(const string& file)
+file::FileRef file::File::open(const string& file, file::FileMode mode)
 {
-	return file::FileRef(new FileCpp17(file));
+	string smode = "";
+	switch (mode)
+	{
+		case file::FileMode::ReadBinary: {
+			smode = "rb";
+			break;
+		}
+		case file::FileMode::Read: {
+			smode = "r";
+			break;
+		}
+	}
+	auto ptr = SDL_RWFromFile(file.c_str(), smode.c_str());
+	if (ptr == nullptr)
+	{
+		return file::FileRef();
+	}
+	else
+	{
+		return file::FileRef(new SDLFile(ptr));
+	}
 }
 
 // directory

@@ -12,6 +12,14 @@ pxl::Color::Color(u8 r, u8 g, u8 b, u8 a) : r(r), g(g), b(b), a(a)
 {
 }
 
+pxl::Color::Color(u32 color)
+{
+	r = (u8)((color & 0xFF000000) >> 24);
+	g = (u8)((color & 0x00FF0000) >> 16);
+	b = (u8)((color & 0x0000FF00) >> 8);
+	a = (u8)((color & 0x000000FF));
+}
+
 bool pxl::Color::operator==(const Color& color) const
 {
 	return r == color.r && g == color.g && b == color.b && a == color.a;

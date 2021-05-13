@@ -9,6 +9,7 @@ namespace pxl
 		Color();
 		Color(u8 r, u8 g, u8 b);
 		Color(u8 r, u8 g, u8 b, u8 a);
+		Color(u32 color);
 		bool operator==(const Color& color) const;
 		bool operator!=(const Color& color) const;
 		void preMultiply();

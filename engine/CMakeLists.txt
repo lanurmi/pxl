@@ -14,6 +14,7 @@ add_library(pxl
 	src/time.cpp
 	src/log.cpp
 	src/types.cpp
+	src/filesystem.cpp
 
 	src/platforms/platform_backend_sdl.cpp
 		
