@@ -339,6 +339,12 @@ void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, c
 	pushQuad(pxl::Rect(pos.x, pos.y, width, height), pxl::Rect(0, 0, 1.0f, 1.0f), color);
 }
 
+void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Color& color)
+{
+	auto tex = subtexture.texture();
+	texture(tex, Rect(pos.x, pos.y, subtexture.width(), subtexture.height()), subtexture.rect(), color);
+}
+
 void pxl::Batch::texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect& srcrect, const pxl::Color& color)
 {
 	setTexture(texture);

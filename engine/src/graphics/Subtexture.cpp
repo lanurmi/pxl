@@ -25,3 +25,13 @@ Rect Subtexture::rect() const
 {
 	return _rect;
 }
+
+int Subtexture::width() const
+{
+	return _rect.width;
+}
+
+int Subtexture::height() const
+{
+	return _rect.height;
+}
