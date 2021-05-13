@@ -32,6 +32,7 @@ add_library(pxl
 	
 	src/image/image.cpp
 	src/image/font.cpp
+	src/image/aseprite.cpp
 	
 	src/input/gamepad_backend.cpp
 	src/input/keyboard_backend.cpp
