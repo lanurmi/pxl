@@ -380,6 +380,12 @@ string path::withoutFile(const string& path)
 	std::filesystem::path filePath(path);
 	return filePath.parent_path().u8string();
 }
+
+string path::filename(const string& path)
+{
+	std::filesystem::path filePath(path);
+	return filePath.stem().u8string();
+}
 //file
 
 class SDLFile : public file::File

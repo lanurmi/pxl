@@ -8,6 +8,7 @@ namespace pxl
 		string extension(const string& path);
 		string combine(const string lowerPath, const string upperPath);
 		string withoutFile(const string& path);
+		string filename(const string& path);
 	}
 	namespace file
 	{
