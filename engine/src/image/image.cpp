@@ -80,6 +80,7 @@ pxl::Image::Image(Image&& src) noexcept
 
 pxl::Image& pxl::Image::operator=(Image&& src) noexcept
 {
+	assert(_pixels == nullptr);
 	delete[] _pixels;
 	_width = src._width;
 	_height = src._height;
