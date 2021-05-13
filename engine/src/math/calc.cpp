@@ -71,3 +71,32 @@ float pxl::calc::lerp(float from, float to, float t)
 	assert(t <= 1.0f && t >= 0.0f);
 	return from + (to - from) * t;
 }
+
+int pxl::calc::abs(int v)
+{
+	if (v < 0)
+	{
+		return -v;
+	}
+	else
+	{
+		return v;
+	}
+}
+
+int pxl::calc::sign(int v)
+{
+	if (v == 0)
+	{
+		return 0;
+	}
+	else if (v < 0)
+	{
+		return -1;
+	}
+	else
+	{
+		return 1;
+	}
+	
+}

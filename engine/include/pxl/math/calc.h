@@ -17,6 +17,8 @@ namespace pxl
 		float atan2(float y, float x);
 		float sqrt(float x);
 		float lerp(float from, float to, float t);
+		int abs(int v);
+		int sign(int v);
 		template<class T>
 		T clamp(T value, T min, T max) { return value < min ? min : (value > max ? max : value); }
 		template<class T, class U>
