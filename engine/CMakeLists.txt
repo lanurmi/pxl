@@ -44,13 +44,14 @@ add_library(pxl
 	src/math/vec2.cpp
 	src/math/vec3.cpp	
 	
-	src/utils/content.cpp
+	
 	src/utils/input_binding.cpp
 	src/utils/scene.cpp
 	src/utils/entity.cpp
 	src/utils/component.cpp
 	src/utils/scene_manager.cpp
-)
+	src/utils/image_packer.cpp
+ )
 
 target_include_directories(pxl
 	PUBLIC

@@ -1,8 +1,8 @@
 #include <pxl/engine.h>
-#include <pxl/utils/content.h>
 #include <pxl/utils/scene.h>
 #include <pxl/graphics/batch.h>
 #include <pxl/utils/input_binding.h>
+#include <pxl/filesystem.h>
 
 class HelloWorldComponent : public pxl::Component, public pxl::IDrawable
 {
@@ -18,7 +18,7 @@ public:
 class HelloWorldScene : public pxl::Scene
 {
 public:
-	HelloWorldScene() : pxl::Scene("Hello World Scene"), content("content") {}
+	HelloWorldScene() : pxl::Scene("Hello World Scene"){}
 	void begin() override
 	{
 		pxl::Scene::begin();
@@ -31,7 +31,7 @@ public:
 
 		// component does things (in this case draws texture)
 		auto component = entity->add(HelloWorldComponent());
-		component->texture = content.LoadTexture("helloworld.png");
+		component->texture = pxl::Texture::create(pxl::path::combine(pxl::platform().applicationPath(), "content/helloworld.png"));
 		
 		//escape key does things
 		esc = pxl::bindings().CreateInput();
@@ -51,7 +51,6 @@ public:
 	}
 private:
 	pxl::InputBindingRef esc;
-	pxl::Content content;
 	pxl::TextureRef tex;
 	pxl::Batch batch;
 };
