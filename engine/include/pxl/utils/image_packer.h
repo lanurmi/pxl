@@ -30,7 +30,7 @@ namespace pxl
 		struct Buffer
 		{
 			u32 id;
-			const Color* pixels;
+			Color* pixels;
 		};
 		int _width;
 		int _height;

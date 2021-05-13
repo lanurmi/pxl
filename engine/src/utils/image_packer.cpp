@@ -13,7 +13,10 @@ ImagePacker::ImagePacker(int width, int height) : _width(width), _height(height)
 
 ImagePacker::~ImagePacker()
 {
-
+	for (auto& it : _pixels)
+	{
+		delete[] it.pixels;
+	}
 }
 
 void ImagePacker::add(u32 id, const Image& image)
@@ -52,7 +55,8 @@ void ImagePacker::add(u32 id, int width, int height, const Color* pixels)
 
 	Buffer buf;
 	buf.id = id;
-	buf.pixels = pixels;
+	buf.pixels = new Color[width * height];
+	memcpy(buf.pixels, pixels, sizeof(Color) * width * height);
 	_pixels.emplace_back(buf);
 }
 
@@ -152,6 +156,11 @@ int ImagePacker::doPack(int fromEntry)
 	}
 	_result.back().image = std::move(image);
 
+	for (auto &it : _pixels)
+	{
+		delete[] it.pixels;
+		it.pixels = nullptr;
+	}
 	return packed;
 }
 
