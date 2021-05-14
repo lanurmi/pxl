@@ -84,6 +84,18 @@ int pxl::calc::abs(int v)
 	}
 }
 
+float pxl::calc::abs(float v)
+{
+	if (v < 0)
+	{
+		return -v;
+	}
+	else
+	{
+		return v;
+	}
+}
+
 int pxl::calc::sign(int v)
 {
 	if (v == 0)
