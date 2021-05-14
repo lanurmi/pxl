@@ -1,5 +1,6 @@
 #include <pxl/utils/input_binding.h>
 #include <pxl/engine.h>
+#include <pxl/time.h>
 
 void pxl::VirtualAxis::update()
 {
@@ -47,6 +48,7 @@ void pxl::VirtualButton::update()
 		_pressed |= gamepads.pressed(_controller_index, btn);
 		_down |= gamepads.down(_controller_index, btn);
 	}
+	_buffer_timer = pxl::calc::approach(_buffer_timer, 0.0f, pxl::time::delta);
 	if (_pressed)
 	{
 		_buffer_timer = _buffer_time;
