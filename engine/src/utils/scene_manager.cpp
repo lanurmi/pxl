@@ -40,7 +40,12 @@ void SceneManager::end()
 	delete _current_scene;
 }
 
-const Scene* SceneManager::scene()
+const Scene* SceneManager::scene() const
+{
+	return _current_scene;
+}
+
+Scene* SceneManager::scene()
 {
 	return _current_scene;
 }
