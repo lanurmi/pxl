@@ -30,11 +30,11 @@ add_library(pxl
 	src/graphics/texture.cpp
 	src/graphics/sprite_font.cpp
 	src/graphics/Subtexture.cpp
-	
-	src/image/image.cpp
-	src/image/font.cpp
-	src/image/aseprite.cpp
-	src/image/ogmo.cpp
+
+	src/assets/BMFont.cpp
+	src/assets/aseprite.cpp
+	src/assets/ogmo.cpp
+	src/assets/image.cpp
 
 	src/input/gamepad_backend.cpp
 	src/input/keyboard_backend.cpp
@@ -56,8 +56,7 @@ add_library(pxl
 	src/utils/scene_manager.cpp
 	src/utils/image_packer.cpp
 	src/utils/sprite.cpp
-
- )
+)
 
 target_include_directories(pxl
 	PUBLIC

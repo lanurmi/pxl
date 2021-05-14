@@ -1,6 +1,6 @@
 #pragma once
 #include <pxl/types.h>
-#include <pxl/image/image.h>
+#include <pxl/assets/image.h>
 #include <memory>
 
 namespace pxl

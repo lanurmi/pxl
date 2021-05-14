@@ -3,7 +3,7 @@
 #include <pxl/utils/image_packer.h>
 #include <pxl/filesystem.h>
 #include <pxl/engine.h>
-#include <pxl/image/aseprite.h>
+#include <pxl/assets/aseprite.h>
 #include <pxl/time.h>
 
 using namespace pxl;

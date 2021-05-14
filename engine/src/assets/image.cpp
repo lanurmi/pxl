@@ -1,4 +1,4 @@
-#include <pxl/image/image.h>
+#include <pxl/assets/image.h>
 #include <pxl/engine.h>
 #include <pxl/filesystem.h>
 #include <assert.h>

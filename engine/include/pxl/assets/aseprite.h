@@ -1,7 +1,7 @@
 #pragma once
 #include <pxl/math/color.h>
 #include <pxl/math/vec2.h>
-#include <pxl/image/image.h>
+#include <pxl/assets/image.h>
 #include <pxl/filesystem.h>
 
 // Borrowed from the blah project: https://github.com/NoelFB/blah

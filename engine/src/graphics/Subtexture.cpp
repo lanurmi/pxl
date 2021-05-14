@@ -6,9 +6,15 @@ Subtexture::Subtexture(const TextureRef& texture) : _texture(texture)
 {
 }
 
-Subtexture::Subtexture(const TextureRef& texture, const Rect& rect) : _texture(texture)
+Subtexture::Subtexture(const TextureRef& texture, const Rect& rect)
 {
-	set(rect);
+	set(texture, rect);
+}
+
+void Subtexture::set(const TextureRef& texture, const Rect& rect)
+{
+	_texture = texture;
+	_rect = rect;
 }
 
 void Subtexture::set(const Rect& rect)

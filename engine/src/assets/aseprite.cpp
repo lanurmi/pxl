@@ -1,4 +1,4 @@
-#include <pxl/image/aseprite.h>
+#include <pxl/assets/aseprite.h>
 #include <pxl/math/calc.h>
 
 #include <pxl/filesystem.h>
@@ -9,8 +9,7 @@
 using namespace pxl;
 using namespace file;
 
-Aseprite::Aseprite()
-= default;
+Aseprite::Aseprite() = default;
 
 Aseprite::Aseprite(const string & path)
 {

@@ -10,6 +10,7 @@ namespace pxl
 		Subtexture() = default;
 		Subtexture(const TextureRef& texture);
 		Subtexture(const TextureRef& texture, const Rect &rect);
+		void set(const TextureRef& texture, const Rect& rect);
 		void set(const Rect& rect);
 		TextureRef texture() const;
 		Rect rect() const;

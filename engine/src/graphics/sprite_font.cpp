@@ -4,26 +4,12 @@
 using namespace pxl;
 
 
-SpriteFontGlyph::SpriteFontGlyph(const TextureRef& texture, const FontCharacter& chr, const vector<FontKerning>& kerningPairs) : subtexture(texture, pxl::Rect(chr.x, chr.y, chr.width, chr.height))
+SpriteFont::Glyph::Glyph()
 {
-	x_offset = chr.x_offset;
-	y_offset = chr.y_offset;
-	x_advance = chr.x_advance;
-	for (auto& it : kerningPairs)
-	{
-		if (it.second == chr.glyph)
-		{
-			if (it.amount != 0)
-			{
-				_kerningAmount[it.first] = it.amount;
-			}
-		}
-	}
 
 }
 
-
-u32 SpriteFontGlyph::kerning(u32 glyph) const
+u32 SpriteFont::Glyph::kerning(u32 glyph) const
 {
 	auto it = _kerningAmount.find(glyph);
 	if (it == _kerningAmount.end()) return 0;
@@ -31,19 +17,19 @@ u32 SpriteFontGlyph::kerning(u32 glyph) const
 }
 
 
-SpriteFontRef SpriteFont::create(const Font &font)
+SpriteFontRef SpriteFont::create(const BMFont &font)
 {
 	return SpriteFontRef(new SpriteFont(font) );
 }
 
 
 
-SpriteFont::SpriteFont(const Font& font)
+SpriteFont::SpriteFont(const BMFont& font)
 {;
 	build(font);
 }
 
-const SpriteFontGlyph& SpriteFont::character(u32 glyph) const
+const SpriteFont::Glyph& SpriteFont::character(u32 glyph) const
 {
 	auto it = _glyphs.find(glyph);
 	if (it == _glyphs.end())
@@ -59,14 +45,21 @@ u16 SpriteFont::lineHeight() const
 	return _line_height;
 }
 
-void SpriteFont::build(const Font& font)
+void SpriteFont::build(const BMFont& font)
 {
-	const auto& glyphs = font.characters();
-	const auto& kernings = font.kernings();
-	auto texture = Texture::create(font.image());
-	for (auto& it : glyphs)
+	auto texture = Texture::create(Image(font.pages[0].file));
+	for (auto& it : font.chars)
 	{
-		_glyphs.insert(std::make_pair(it.first, SpriteFontGlyph(texture, it.second, kernings)));
+		SpriteFont::Glyph glyph;
+		glyph.subtexture.set(texture, Rect(it.x, it.y, it.width, it.height));
+		glyph.x_advance = it.x_advance;
+		glyph.x_offset = it.x_offset;
+		glyph.y_offset = it.y_offset;
+		_glyphs[it.id] = glyph;
 	}
-	_line_height = font.lineHeight();
+	for (auto& it : font.kernings)
+	{
+		_glyphs[it.second]._kerningAmount[it.first] = it.amount;
+	}
+	_line_height = font.commmon.line_height;
 }

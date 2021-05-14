@@ -1,6 +1,6 @@
 #pragma once
 #include <pxl/math/color.h>
-#include <pxl/image/image.h>
+#include <pxl/assets/image.h>
 
 namespace pxl
 {

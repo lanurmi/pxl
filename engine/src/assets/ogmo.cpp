@@ -1,4 +1,4 @@
-#include <pxl/image/ogmo.h>
+#include <pxl/assets/ogmo.h>
 #include <pxl/filesystem.h>
 #include <pxl/3rdparty/json.hpp>
 
