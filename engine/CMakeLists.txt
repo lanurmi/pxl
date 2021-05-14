@@ -34,7 +34,8 @@ add_library(pxl
 	src/image/image.cpp
 	src/image/font.cpp
 	src/image/aseprite.cpp
-	
+	src/image/ogmo.cpp
+
 	src/input/gamepad_backend.cpp
 	src/input/keyboard_backend.cpp
 	src/input/mouse_backend.cpp
@@ -55,7 +56,8 @@ add_library(pxl
 	src/utils/scene_manager.cpp
 	src/utils/image_packer.cpp
 	src/utils/sprite.cpp
-)
+
+ )
 
 target_include_directories(pxl
 	PUBLIC
