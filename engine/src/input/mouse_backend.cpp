@@ -17,7 +17,6 @@ public:
 static MouseState s_mouseState;
 static MouseState s_nextMouseState;
 
-
 bool pxl::MouseBackend::pressed(MouseButton button)
 {
 	int i = (int)button;

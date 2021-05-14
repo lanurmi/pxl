@@ -35,10 +35,8 @@ public:
 	pxl::u16 version;
 };
 
-static GamepadState s_lastGamepadState[pxl::s_max_gamepads];
 static GamepadState s_gamepadState[pxl::s_max_gamepads];
 static GamepadState s_nextGamepadState[pxl::s_max_gamepads];
-static pxl::GamepadsBackend s_gamepads;
 
 //
 bool pxl::GamepadsBackend::pressed(int index, Button button)
@@ -152,9 +150,7 @@ void pxl::GamepadsBackend::update()
 {
 	for (int i = 0; i < s_max_gamepads; i++)
 	{
-		s_lastGamepadState[i] = s_gamepadState[i];
 		s_gamepadState[i] = s_nextGamepadState[i];
-
 		auto& gamepadState = s_nextGamepadState[i];
 		if (gamepadState.connected)
 		{
