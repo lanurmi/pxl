@@ -339,6 +339,19 @@ void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, c
 	pushQuad(pxl::Rect(pos.x, pos.y, width, height), pxl::Rect(0, 0, 1.0f, 1.0f), color);
 }
 
+
+void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color)
+{
+	pushMatrix(pxl::Mat3x2::createTransform(pos, origin, scale, rotation));
+	auto texture = subtexture.texture();
+	setTexture(texture);
+	const auto width = texture->width();
+	const auto height = texture->height();
+	auto srcRect = subtexture.rect();
+	pushQuad(pxl::Rect(0, 0, srcRect.width, srcRect.height), pxl::Rect(srcRect.x / width, srcRect.y / height, srcRect.width / width, srcRect.height / height), color);
+	popMatrix();
+}
+
 void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Color& color)
 {
 	auto tex = subtexture.texture();

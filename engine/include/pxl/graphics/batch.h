@@ -68,6 +68,7 @@ namespace pxl
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color);
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Color& color);
 		void texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect &srcrect, const pxl::Color& color);
+		void texture(const pxl::Subtexture& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color);
 		void texture(const pxl::Subtexture& texture, const pxl::Vec2& pos, const pxl::Color& color);
 		void text(const pxl::SpriteFontRef &font, const string &text, const pxl::Vec2 &pos, const pxl::Color &color);
 		//
