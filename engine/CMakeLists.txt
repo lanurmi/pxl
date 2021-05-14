@@ -56,6 +56,7 @@ add_library(pxl
 	src/utils/scene_manager.cpp
 	src/utils/image_packer.cpp
 	src/utils/sprite.cpp
+	src/utils/tileset.cpp
 )
 
 target_include_directories(pxl
