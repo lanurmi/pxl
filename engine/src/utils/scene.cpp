@@ -6,7 +6,7 @@
 
 using namespace pxl;
 
-Scene::Scene(const string &name) : clear_color(pxl::Color::black), _current_max_component_type_id(0), _name(name)
+Scene::Scene(const string &name) : clear_color(pxl::Color::black), pixel_perfect(true), debug_draw(false), _current_max_component_type_id(0), _name(name)
 {
 
 }
@@ -140,9 +140,12 @@ void Scene::draw()
 	{
 		it->draw(batch);
 	}
-	for (auto it : _debug_drawable_components)
+	if (debug_draw)
 	{
-		it->debugDraw(batch);
+		for (auto it : _debug_drawable_components)
+		{
+			it->debugDraw(batch);
+		}
 	}
 	batch.end();
 
