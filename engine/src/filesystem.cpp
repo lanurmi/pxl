@@ -25,6 +25,17 @@ string FileStream::line()
 	return r;
 }
 
+string FileStream::all()
+{
+	string r;
+	u8 c;
+	while (read(&c, 1) && c != '\0')
+	{
+		r.push_back(c);
+	}
+	return r;
+}
+
 size_t FileStream::position() const
 {
 	return _file->position();
