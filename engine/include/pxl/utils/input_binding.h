@@ -5,38 +5,15 @@
 
 namespace pxl
 {
-	class KeyBind
-	{
-	public:
-		KeyBind(Key key);
-		bool pressed() const;
-		bool down() const;
-		bool released() const;
-	private:
-		Key _key;
-	};
 
-	class ButtonBind
+	class VirtualButton
 	{
 	public:
-		ButtonBind(int controllerIndex, Button button);
-		bool pressed() const;
-		bool down() const;
-		bool released() const;
-		void setGamepadIndex(int controllerIndex);
-	private:
-		int _controller_index;
-		Button _button;	
-	};
-
-	class InputBinding
-	{
-	public:
-		InputBinding();
-		InputBinding& bind(Key key);
-		InputBinding& bind(Button button);
-		InputBinding& setGamepadIndex(int index);
-		InputBinding& setInputBuffer(float bufferTime);
+		VirtualButton();
+		VirtualButton& bind(Key key);
+		VirtualButton& bind(Button button);
+		VirtualButton& setGamepadIndex(int index);
+		VirtualButton& setInputBuffer(float bufferTime);
 		bool pressed() const;
 		bool down() const;
 		bool released() const;
@@ -44,8 +21,8 @@ namespace pxl
 		void clearBuffer();
 		void update();
 	private:
-		std::vector<KeyBind> _key_binds;
-		std::vector<ButtonBind> _button_binds;
+		std::vector<Key> _key_binds;
+		std::vector<Button> _button_binds;
 		int _controller_index;
 		float _buffer_timer;
 		float _buffer_time;
@@ -54,14 +31,26 @@ namespace pxl
 		bool _down;
 	};
 
-	using InputBindingRef = std::shared_ptr<InputBinding>;
+
+	class VirtualAxis
+	{
+	public:
+		VirtualButton negative;
+		VirtualButton positive;
+		void update();
+		int sign();
+	};
+	using VirtualButtonRef = std::shared_ptr<VirtualButton>;
+	using VirtualAxisRef = std::shared_ptr<VirtualAxis>;
 
 	class Bindings
 	{
 	public:
-		InputBindingRef CreateInput();
+		VirtualButtonRef CreateInput();
+		VirtualAxisRef CreateAxis();
 		void update();
 	private:
-		std::vector<std::weak_ptr<InputBinding>> _input_bindings;
+		std::vector<std::weak_ptr<VirtualButton>> _input_bindings;
+		std::vector<std::weak_ptr<VirtualAxis>> _axis_bindings;
 	};
 }
