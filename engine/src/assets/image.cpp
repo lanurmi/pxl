@@ -13,6 +13,7 @@ pxl::Image::Image(int width, int height) : _pixels(nullptr), _width(width), _hei
 {
 	assert(width > 0 && height > 0);
 	_pixels = new Color[_width * _height];
+	memset(_pixels, 0, sizeof(Color) * _width * _height);
 }
 
 static pxl::Color* loadJPEG(const pxl::string& path, int *w, int *h)
