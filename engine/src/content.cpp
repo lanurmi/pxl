@@ -11,13 +11,53 @@ using namespace pxl;
 void ContentPack::addSprite(const string& path)
 {
 	auto applicationPath = pxl::engine().applicationPath();
-	_sprites.push_back(path::combine(applicationPath, path));
+	auto file = path::combine(applicationPath, path);
+	if (file::exists(file) && path::extension(file) == ".ase")
+	{
+		_sprites.push_back(file);
+	}
 }
 
 void ContentPack::addSpriteDirectory(const string &path)
 {
 	auto applicationPath = pxl::engine().applicationPath();
-	_sprite_directories.push_back(path::combine(applicationPath, path));
+	auto files = directory::files(path::combine(applicationPath, path));
+	for (auto& it : files)
+	{
+		if (path::extension(it) == ".ase")
+		{
+			_sprites.push_back(it);
+		}
+	}
+}
+
+void ContentPack::addTileset(const string& path, int size)
+{
+	auto applicationPath = pxl::engine().applicationPath();
+	auto file = path::combine(applicationPath, path);
+	if (file::exists(file) && path::extension(file) == ".ase")
+	{
+		TilesetInfo info;
+		info.path = file;
+		info.tilesize = size;
+		_tilesets.push_back(info);
+	}
+}
+
+void ContentPack::addTilesetDirectory(const string& path, int size)
+{
+	auto applicationPath = pxl::engine().applicationPath();
+	auto files = directory::files(path::combine(applicationPath, path));
+	for (auto& it : files)
+	{
+		if (path::extension(it) == ".ase")
+		{
+			TilesetInfo info;
+			info.path = it;
+			info.tilesize = size;
+			_tilesets.push_back(info);
+		}
+	}
 }
 
 void Content::load(const ContentPack& content)
@@ -30,26 +70,39 @@ void Content::load(const ContentPack& content)
 
 void Content::loadSprites(const ContentPack& pack)
 {
-
 	struct Info
 	{
 		string name;
 		u32 pack_index;
+		int tileset_size;
 		Aseprite asesprite;
 	};
 
 	ImagePacker packer(2048, 2048);
-	std::vector<Info> spriteinfos;
-	std::vector<string> asefiles;
-	for (auto& dir : pack._sprite_directories)
+	i32 packIndex = 0;
+
+	//Tilesets
+	std::vector<Info> tilesetinfos;
+	for (auto& file : pack._tilesets)
 	{
-		auto files = directory::files(dir, ".ase");
-		for (auto& file : files)
+		if (path::extension(file.path) == ".ase")
 		{
-			asefiles.push_back(file);
+			Info info;
+			info.name = path::filename(file.path);
+			info.asesprite = Aseprite(file.path);
+			info.tileset_size = file.tilesize;
+			info.pack_index = packIndex;
+			packer.add(packIndex, info.asesprite.frames[0].image);
+			packIndex++;
+			tilesetinfos.emplace_back(info);
 		}
 	}
-	for (auto file : pack._sprites)
+
+	//sprites
+	
+	std::vector<Info> spriteinfos;
+	std::vector<string> asefiles;
+	for (auto &file : pack._sprites)
 	{
 		if (path::extension(file) == ".ase" && file::exists(file))
 		{
@@ -57,7 +110,6 @@ void Content::loadSprites(const ContentPack& pack)
 		}
 	}
 
-	i32 packIndex = 0;
 	for (auto it : asefiles)
 	{
 		Info info;
@@ -81,6 +133,11 @@ void Content::loadSprites(const ContentPack& pack)
 		{
 			subtextures[s.id] = Subtexture(atlas, Rect(s.x, s.y, s.width, s.height));
 		}
+	}
+	
+	for (auto& it : tilesetinfos)
+	{
+		_tilesets[it.name] = Tileset(subtextures[it.pack_index], it.tileset_size);
 	}
 
 	vector<Sprite> sprites;
@@ -111,11 +168,23 @@ void Content::loadSprites(const ContentPack& pack)
 	}
 }
 
+void Content::loadTilesets(const ContentPack& pack)
+{
+
+}
+
 const pxl::Sprite* Content::sprite(const string &name)
 {
 	auto sprite = _sprites.find(name);
 	if (sprite == _sprites.end()) return nullptr;
 	return &sprite->second;
+}
+
+const Tileset* Content::tileset(const string& name)
+{
+	auto tileset = _tilesets.find(name);
+	if (tileset == _tilesets.end()) return nullptr;
+	return &tileset->second;
 }
 
 void Content::unload()
