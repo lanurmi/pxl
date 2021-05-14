@@ -15,6 +15,7 @@ namespace pxl
 
 		pxl::Color clear_color;
 		bool pixel_perfect;
+		bool debug_draw;
 
 		Entity* createEntity(const pxl::Vec2& position);
 		template<class T>
