@@ -22,8 +22,8 @@ namespace pxl
 		void setPixels(const Color* data);
 		void setPixels(const pxl::Rect& rect, const Color* data);
 		Color* pixels() const;
-	private:
 		void preMultiply();
+	private:
 		int _width;
 		int _height;
 		Color* _pixels;
