@@ -46,15 +46,12 @@ void Content::loadSprites(const ContentPack& pack)
 		auto files = directory::files(dir, ".ase");
 		for (auto& file : files)
 		{
-			if (file::exists(file))
-			{
-				asefiles.push_back(file);
-			}
+			asefiles.push_back(file);
 		}
 	}
 	for (auto file : pack._sprites)
 	{
-		if (path::extension(file) == ".ase")
+		if (path::extension(file) == ".ase" && file::exists(file))
 		{
 			asefiles.push_back(file);
 		}
