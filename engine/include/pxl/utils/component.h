@@ -30,6 +30,7 @@ namespace pxl
 	public:
 		Component();
 		virtual ~Component() {}
+		virtual void awake() {};
 		template<class T>
 		T* get();
 		template<class T>
