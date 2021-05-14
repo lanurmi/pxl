@@ -124,7 +124,6 @@ void pxl::Image::load(const pxl::string& file)
 	if (ext == ".png")
 	{
 		_pixels = loadPNG(file, &_width, &_height);
-		preMultiply();
 	}
 	else if (ext == ".jpg" || ext == ".jpeg")
 	{
