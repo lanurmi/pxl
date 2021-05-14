@@ -114,3 +114,27 @@ void Ogmo::load(const string& path)
 		}
 	}
 }
+
+const Ogmo::TileLayer* Ogmo::tileLayer(const string& name) const
+{
+	for (int i = 0; i < tile_layers.size(); i++)
+	{
+		if (tile_layers[i].name == name)
+		{
+			return &tile_layers[i];
+		}
+	}
+	return nullptr;
+}
+
+const Ogmo::EntityLayer* Ogmo::entityLayer(const string& name) const
+{
+	for (int i = 0; i < entity_layers.size(); i++)
+	{
+		if (entity_layers[i].name == name)
+		{
+			return &entity_layers[i];
+		}
+	}
+	return nullptr;
+}
