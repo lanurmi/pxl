@@ -148,6 +148,8 @@ int ImagePacker::doPack(int fromEntry)
 		}
 	}
 
+	image.preMultiply();
+
 	_result.emplace_back(Result());
 
 	for (int p = 0; p < _entries.size(); p++)
