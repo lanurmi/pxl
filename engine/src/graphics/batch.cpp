@@ -81,19 +81,30 @@ void pxl::Batch::clear()
 
 	_samplerStack.push_back(pxl::TextureSampler::NearestClamp);
 	_blend_stack.push_back(pxl::BlendState::Normal);
-	_matrix_stack.push_back(pxl::Mat3x2::identity);
+
+	_current_matrix = Mat3x2::identity;
+
 	newBatch();
 }
 
 void pxl::Batch::pushMatrix(const Mat3x2& matrix)
 {
 	_matrix_stack.push_back(matrix);
+	_current_matrix = matrix * _current_matrix;
 }
 
 void pxl::Batch::popMatrix()
 {
-	assert(_matrix_stack.size() > 1U);
+	assert(_matrix_stack.size() >= 1U);
 	_matrix_stack.pop_back();
+	if (_matrix_stack.empty())
+	{
+		_current_matrix = Mat3x2::identity;
+	}
+	else
+	{
+		_current_matrix = _matrix_stack.back();
+	}
 }
 
 void pxl::Batch::pushMaterial(const MaterialRef& material)
@@ -206,9 +217,16 @@ pxl::BatchInfo& pxl::Batch::currentBatch()
 	return _batches.back();
 }
 
-pxl::Mat3x2& pxl::Batch::currentMatrix()
+const pxl::Mat3x2& pxl::Batch::currentMatrix()
 {
-	return _matrix_stack.back();
+	if (_matrix_stack.empty())
+	{
+		return pxl::Mat3x2::identity;
+	}
+	else
+	{
+		return _current_matrix;
+	}
 }
 
 void pxl::Batch::setTexture(const TextureRef& texture)

@@ -82,9 +82,10 @@ namespace pxl
 		void draw(const RenderTargetRef& renderTarget, const Mat4x4& matrix);
 		void drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x4& matrix, const BatchInfo& batch);
 
-		Mat3x2& currentMatrix();
+		const Mat3x2& currentMatrix();
 		BatchInfo& currentBatch();
 
+		Mat3x2 _current_matrix;
 		vector<Mat3x2> _matrix_stack;
 		vector<MaterialRef> _material_stack;
 		vector<BlendState> _blend_stack;
