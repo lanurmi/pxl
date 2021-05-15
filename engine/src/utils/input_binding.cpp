@@ -40,6 +40,7 @@ void pxl::VirtualButton::update()
 	{
 		_pressed |= keyboard.pressed(key);
 		_down |= keyboard.down(key);
+		_released |= keyboard.released(key);
 	} 
 
 	auto& gamepads = pxl::gamepads();
@@ -47,11 +48,16 @@ void pxl::VirtualButton::update()
 	{
 		_pressed |= gamepads.pressed(_controller_index, btn);
 		_down |= gamepads.down(_controller_index, btn);
+		_released |= gamepads.released(_controller_index, btn);
 	}
 	_buffer_timer = pxl::calc::approach(_buffer_timer, 0.0f, pxl::time::delta);
 	if (_pressed)
 	{
 		_buffer_timer = _buffer_time;
+	}
+	if (_released)
+	{
+		_buffer_timer = 0.0f;
 	}
 }
 
