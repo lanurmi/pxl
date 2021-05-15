@@ -57,6 +57,8 @@ add_library(pxl
 	src/utils/image_packer.cpp
 	src/utils/sprite.cpp
 	src/utils/tileset.cpp
+
+	src/utils/components/camera.cpp
 )
 
 target_include_directories(pxl
