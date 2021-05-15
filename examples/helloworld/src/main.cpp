@@ -23,8 +23,6 @@ public:
 	{
 		pxl::Scene::begin();
 
-		//yellow bacground
-		clear_color = pxl::Color::yellow;
 
 		// entity holds components
 		auto entity = createEntity(pxl::Vec2(rand()%800, 100));
@@ -50,7 +48,7 @@ public:
 		}
 	}
 private:
-	pxl::InputBindingRef esc;
+	pxl::VirtualButtonRef esc;
 	pxl::TextureRef tex;
 	pxl::Batch batch;
 };

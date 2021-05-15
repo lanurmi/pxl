@@ -1,14 +1,14 @@
 #include <pxl/engine.h>
 #include <pxl/utils/scene.h>
 #include <pxl/utils/entity.h>
+#include <pxl/utils/components/camera.h>
 #include <pxl/graphics/batch.h>
 #include <pxl/math/calc.h>
 
 using namespace pxl;
 
-Scene::Scene(const string &name) : clear_color(pxl::Color::black), pixel_perfect(true), debug_draw(false), _current_max_component_type_id(0), _name(name)
+Scene::Scene(const string &name) : _current_max_component_type_id(0), _name(name)
 {
-
 }
 
 Scene::~Scene()
@@ -126,48 +126,25 @@ void Scene::update()
 
 void Scene::draw()
 {
-
-	if (_renderTarget != nullptr)
-	{
-		batch.begin(_renderTarget, clear_color);
-	}
-	else
-	{
-		batch.begin(nullptr, clear_color);
-	}
-
+	_batch.begin(nullptr, pxl::Color::black);
 	for (auto it : _drawable_components)
 	{
-		it->draw(batch);
+		it->draw(_batch);
 	}
-	if (debug_draw)
-	{
-		for (auto it : _debug_drawable_components)
-		{
-			it->debugDraw(batch);
-		}
-	}
-	batch.end();
-
-	if (_renderTarget != nullptr)
-	{
-		auto drawSize = engine().drawSize();
-		float scale = calc::min(drawSize.x / (float)_renderTarget->width(), drawSize.y / (float)_renderTarget->height());
-		if (pixel_perfect)
-		{
-			scale = calc::floor(scale);
-		}
-		Vec2 screen_center = Vec2(drawSize.x, drawSize.y) / 2;
-		Vec2 target_center = Vec2(_renderTarget->width(), _renderTarget->height()) / 2;
-		batch.begin(nullptr, clear_color);
-		batch.pushMatrix(Mat3x2::createTransform(screen_center, target_center, Vec2::one * scale, 0.0f));
-		batch.texture(_renderTarget->texture(), Vec2::zero, Color::white);
-		batch.popMatrix();
-		batch.end();
-	}
+	_batch.end();
 }
 
-void pxl::Scene::setRenderTarget(const RenderTargetRef& renderTarget)
+const std::vector<IDrawable*> &Scene::drawables()
 {
-	_renderTarget = renderTarget;
+	return _drawable_components;
+}
+
+const std::vector<IDebugDrawable*> &Scene::debugDrawables()
+{
+	return _debug_drawable_components;
+}
+
+Batch& Scene::batch()
+{
+	return _batch;
 }

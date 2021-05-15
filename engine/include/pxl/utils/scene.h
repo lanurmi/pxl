@@ -12,11 +12,6 @@ namespace pxl
 	public:
 		Scene(const string &name);
 		virtual ~Scene();
-
-		pxl::Color clear_color;
-		bool pixel_perfect;
-		bool debug_draw;
-
 		Entity* createEntity(const pxl::Vec2& position);
 		template<class T>
 		T* add(Entity* entity, T&& component);
@@ -26,15 +21,18 @@ namespace pxl
 		template<class T>
 		vector<Component*>& all();
 
-		void setRenderTarget(const RenderTargetRef& renderTarget);
 		virtual void begin();
 		virtual void update();
 		virtual void draw();
 		virtual void end();
+	protected:
+		const std::vector<IDrawable*> &drawables();
+		const std::vector<IDebugDrawable*> &debugDrawables();
+		Batch& batch();
 	private:
 		void clearRemoveSets();
 		string _name;
-		Batch batch;
+		Batch _batch;
 		u16 _current_max_component_type_id;
 		vector<Entity*> _entities;
 		vector<Component*> _components[s_max_component_types];
@@ -43,7 +41,6 @@ namespace pxl
 		vector<IUpdateable*> _updateable_components;
 		set<Component*> _remove_components;
 		set<Entity*> _remove_entities;
-		RenderTargetRef _renderTarget;
 	};
 
 	template<class T>
