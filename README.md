@@ -7,5 +7,6 @@ Simple 2D game engine made in C++.
 
 
 #### Acknowledgements/Attributions
-* pxl is partially based on [blah framework](https://github.com/NoelFB/blah) by Noel Berry.
+* pxl is partially based on [blah framework](https://github.com/NoelFB/blah)
 * pxl uses [stb_image](https://github.com/nothings/stb) for image loading
+* pxl uses [nlohmann json](https://github.com/nlohmann/json) for json
