@@ -16,3 +16,10 @@ const Mat3x2 Camera::matrix() const
 
 	return Mat3x2::createTranslation(Vec2(-x, -y));
 }
+
+Rect Camera::bounds() const
+{
+	int x = (entity()->position.x - size.x / 2);
+	int y = (entity()->position.y - size.y / 2);
+	return Rect(x, y, size.x, size.y);
+}

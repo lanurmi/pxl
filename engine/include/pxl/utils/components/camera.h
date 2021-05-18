@@ -15,5 +15,6 @@ namespace pxl
 		Vec2 size;
 		pxl::Color clear_color;
 		const Mat3x2 matrix() const;
+		Rect bounds() const;
 	};
 }
