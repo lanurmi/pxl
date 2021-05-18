@@ -46,7 +46,7 @@ namespace pxl
 			int grid_cell_height;
 			int grid_cells_x;
 			int grid_cells_y;
-			std::vector<Entity> entities;
+			vector<Entity> entities;
 		};
 
 		
