@@ -35,6 +35,7 @@ add_library(pxl
 	src/assets/aseprite.cpp
 	src/assets/ogmo.cpp
 	src/assets/image.cpp
+	src/assets/ldtk.cpp
 
 	src/input/gamepad_backend.cpp
 	src/input/keyboard_backend.cpp
