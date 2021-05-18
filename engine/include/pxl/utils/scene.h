@@ -7,6 +7,7 @@
 namespace pxl
 {
 	class Batch;
+	class Camera;
 	class Scene
 	{
 	public:
@@ -28,6 +29,8 @@ namespace pxl
 		virtual void update();
 		virtual void draw();
 		virtual void end();
+
+		virtual const Camera* camera() { return nullptr; }
 	protected:
 		const std::vector<IDrawable*> &drawables();
 		const std::vector<IDebugDrawable*> &debugDrawables();
