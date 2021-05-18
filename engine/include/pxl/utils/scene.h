@@ -21,6 +21,9 @@ namespace pxl
 		template<class T>
 		vector<Component*>& all();
 
+		template<class T>
+		T* first();
+
 		virtual void begin();
 		virtual void update();
 		virtual void draw();
@@ -68,6 +71,19 @@ namespace pxl
 		pxl::log().message(string_format("component %d added to entity", c->typeId()));
 		c->awake();
 		return c;
+	}
+
+	template<class T>
+	T* Scene::first()
+	{
+		auto typeId = pxl::Component::findTypeId<T>();
+		if (_components[typeId].empty())
+		{
+			return nullptr;
+		}
+		{
+			return dynamic_cast<T*>(_components[typeId].front());
+		}
 	}
 
 	template<class T>
