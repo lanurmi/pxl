@@ -115,6 +115,14 @@ void Ogmo::load(const string& path)
 	}
 }
 
+bool Ogmo::checkStringValue(const string& key, const string& value)
+{
+	auto it = string_text_enum_color_values.find(key);
+	if (it == string_text_enum_color_values.end()) return false;
+	
+	return it->second == value;
+}
+
 const Ogmo::TileLayer* Ogmo::tileLayer(const string& name) const
 {
 	for (int i = 0; i < tile_layers.size(); i++)

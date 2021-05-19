@@ -42,6 +42,18 @@ namespace pxl
 			std::vector<EntityInstance> entity_instances;
 		};
 
+		struct FieldInstance
+		{
+			enum class Type
+			{
+				Bool
+			};
+			string _identifier;
+			Type _type;
+			bool bool_value;
+			int defUid;
+		};
+
 		LDTKLevel();
 		LDTKLevel(const string& path);
 		void load(const string& path);
@@ -54,7 +66,10 @@ namespace pxl
 		int px_hei;
 
 		std::vector<LayerInstance> layer_instances;
-		const LayerInstance* tileLayer(const string& name);
-		const LayerInstance* entitiesLayer(const string& name);
+		std::vector<FieldInstance> field_instances;
+		const LayerInstance* tileLayer(const string& name) const;
+		const LayerInstance* entitiesLayer(const string& name) const;
+
+		bool checkBool(const string& name, bool value) const;
 	};
 }

@@ -68,6 +68,22 @@ void LDTKLevel::load(const string& path)
 	px_wid = ldtkLevelJson["pxWid"];
 	px_hei = ldtkLevelJson["pxHei"];
 
+	if (ldtkLevelJson.contains("fieldInstances") && ldtkLevelJson["fieldInstances"].is_array())
+	{
+		auto fieldInstancesJson = ldtkLevelJson["fieldInstances"];
+		for (auto& it : fieldInstancesJson)
+		{
+			FieldInstance field;
+			field._identifier = it["__identifier"].get<string>();
+			string type = it["__type"].get<string>();
+			if (type == "Bool")
+			{
+				field._type = FieldInstance::Type::Bool;
+				field.bool_value = it["__value"].get<bool>();
+			}
+		}
+	}
+
 	if (ldtkLevelJson.contains("layerInstances") && ldtkLevelJson["layerInstances"].is_array())
 	{
 		auto layerInstancesJson = ldtkLevelJson["layerInstances"];
@@ -142,7 +158,7 @@ void LDTKLevel::load(const string& path)
 	}
 }
 
-const LDTKLevel::LayerInstance* LDTKLevel::tileLayer(const string& name)
+const LDTKLevel::LayerInstance* LDTKLevel::tileLayer(const string& name) const
 {
 	for (auto& it : layer_instances)
 	{
@@ -154,7 +170,7 @@ const LDTKLevel::LayerInstance* LDTKLevel::tileLayer(const string& name)
 	return nullptr;
 }
 
-const LDTKLevel::LayerInstance* LDTKLevel::entitiesLayer(const string& name)
+const LDTKLevel::LayerInstance* LDTKLevel::entitiesLayer(const string& name) const
 {
 	for (auto& it : layer_instances)
 	{
@@ -164,4 +180,16 @@ const LDTKLevel::LayerInstance* LDTKLevel::entitiesLayer(const string& name)
 		}
 	}
 	return nullptr;
+}
+
+bool LDTKLevel::checkBool(const string& name, bool value) const
+{
+	for (auto& it : field_instances)
+	{
+		if (it._identifier == name && it._type == FieldInstance::Type::Bool)
+		{
+			return it.bool_value == value;
+		}
+	}
+	return false;
 }

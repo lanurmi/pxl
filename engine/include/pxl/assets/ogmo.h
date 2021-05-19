@@ -55,6 +55,7 @@ namespace pxl
 		Ogmo(const string& path);
 		void load(const string& path);
 		bool valid() const { return !ogmo_version.empty(); }
+		bool checkStringValue(const string& key, const string& value);
 		const TileLayer* tileLayer(const string& name) const;
 		const EntityLayer* entityLayer(const string& name) const;
 		string ogmo_version;
