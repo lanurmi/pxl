@@ -5,6 +5,8 @@ using namespace pxl;
 
 const u64 time::ticks_per_second = 1000000;
 float time::delta = 0.0f;
+float time::unscaled_delta = 0.0f;
+float time::scale = 1.0f;
 float time::true_delta = 0.0f;
 u64 time::ticks = 0;
 

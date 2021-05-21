@@ -7,6 +7,8 @@ namespace pxl
 	{
 		extern const u64 ticks_per_second;
 		extern float delta;
+		extern float unscaled_delta;
+		extern float scale;
 		extern float true_delta;
 		extern u64 ticks;
 

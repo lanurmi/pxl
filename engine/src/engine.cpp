@@ -162,6 +162,8 @@ void pxl::Engine::begin(const pxl::Config& config)
 				time_accumulator = time_maximum;
 			}
 			time::delta = 1.0f / config.target_framerate;
+			time::unscaled_delta = time::delta;
+			time::delta *= pxl::time::scale;
 			while (time_accumulator >= time_target)
 			{
 				time_accumulator -= time_target;
@@ -173,6 +175,8 @@ void pxl::Engine::begin(const pxl::Config& config)
 		else
 		{
 			pxl::time::delta = (double)time_diff / pxl::time::ticks_per_second;
+			time::unscaled_delta = time::delta;
+			pxl::time::delta *= pxl::time::scale;
 			_platform.inputUpdate();
 			_bindings.update();
 			_scene_manager.update();
