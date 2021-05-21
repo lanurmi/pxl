@@ -30,7 +30,6 @@ namespace pxl
 		virtual void draw();
 		virtual void end();
 
-		virtual const Camera* camera() { return nullptr; }
 	protected:
 		const pxl::vector<IDrawable*> &drawables();
 		const pxl::vector<IDebugDrawable*> &debugDrawables();
