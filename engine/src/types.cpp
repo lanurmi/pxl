@@ -28,6 +28,22 @@ void Grid::set(int index, i16 value)
 	_data[index] = value;
 }
 
+void  Grid::set(int fromx, int fromy, const Grid& otherGrid)
+{
+	int dsty = fromy;
+
+	for (int j = 0; j < otherGrid.height(); j++)
+	{
+		int dstx = fromx;
+		for (int i = 0; i < otherGrid.width(); i++)
+		{
+			set(dstx, dsty, otherGrid.get(i, j));
+			dstx++;
+		}
+		dsty++;
+	}
+}
+
 void Grid::setAll(i16 value)
 {
 	for (int i = 0; i < _width * _height; i++)
