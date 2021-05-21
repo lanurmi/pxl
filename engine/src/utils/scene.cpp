@@ -60,6 +60,7 @@ void Scene::clearRemoveSets()
 		auto& components = it->_entity->_components;
 		remove_all(components, it);
 
+		remove_all(_components[it->typeId()], it);
 		// remove from lists
 		if (auto drawable = dynamic_cast<IDrawable*>(it))
 		{
@@ -142,6 +143,11 @@ const std::vector<IDrawable*> &Scene::drawables()
 const std::vector<IDebugDrawable*> &Scene::debugDrawables()
 {
 	return _debug_drawable_components;
+}
+
+const std::vector<Entity*>& Scene::entities()
+{
+	return _entities;
 }
 
 Batch& Scene::batch()

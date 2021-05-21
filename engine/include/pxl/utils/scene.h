@@ -32,8 +32,9 @@ namespace pxl
 
 		virtual const Camera* camera() { return nullptr; }
 	protected:
-		const std::vector<IDrawable*> &drawables();
-		const std::vector<IDebugDrawable*> &debugDrawables();
+		const pxl::vector<IDrawable*> &drawables();
+		const pxl::vector<IDebugDrawable*> &debugDrawables();
+		const pxl::vector<Entity*>& entities();
 		Batch& batch();
 	private:
 		void clearRemoveSets();
