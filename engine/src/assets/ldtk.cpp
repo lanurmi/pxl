@@ -81,6 +81,7 @@ void LDTKLevel::load(const string& path)
 				field._type = FieldInstance::Type::Bool;
 				field.bool_value = it["__value"].get<bool>();
 			}
+			field_instances.emplace_back(field);
 		}
 	}
 
