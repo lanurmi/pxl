@@ -3,6 +3,7 @@
 #include <pxl/utils/entity.h>
 #include <pxl/utils/component.h>
 #include <pxl/graphics/batch.h>
+#include <pxl/types.h>
 
 namespace pxl
 {
@@ -29,18 +30,19 @@ namespace pxl
 		virtual void update();
 		virtual void draw();
 		virtual void end();
-
-		void sortUpdateables() { _sort_drawables = true; }
-		void sortDrawables() { _sort_updateables = true; }
 	protected:
 		const pxl::vector<IDrawable*> &drawables();
 		const pxl::vector<IDebugDrawable*> &debugDrawables();
 		const pxl::vector<Entity*>& entities();
 		Batch& batch();
 	private:
+		void sortUpdateables();
+		void sortDrawables();
+		void sortDebugDrawables();
+		void clearRemoveSets();
 		bool _sort_drawables;
 		bool _sort_updateables;
-		void clearRemoveSets();
+		bool _sort_debug_drawables;
 		string _name;
 		Batch _batch;
 		u16 _current_max_component_type_id;
@@ -64,6 +66,7 @@ namespace pxl
 		if (auto drawabla = dynamic_cast<IDrawable*>(c))
 		{
 			_drawable_components.push_back(drawabla);
+			_sort_drawables = true;
 		}
 		if (auto debugDrawable = dynamic_cast<IDebugDrawable*>(c))
 		{
@@ -72,6 +75,7 @@ namespace pxl
 		if (auto updateable = dynamic_cast<IUpdateable*>(c))
 		{
 			_updateable_components.push_back(updateable);
+			_sort_updateables = true;
 		}
 		_components[c->_typeId].push_back((Component*)c);
 		entity->_components.push_back((Component*)c);

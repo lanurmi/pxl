@@ -10,6 +10,7 @@ namespace pxl
 	{
 	public:
 		virtual void update() = 0;
+		virtual i16 updateOrder() const { return 0; }
 	};
 	
 	class Batch;
@@ -17,12 +18,14 @@ namespace pxl
 	{
 	public:
 		virtual void draw(Batch &batch) = 0;
+		virtual i16 drawOrder() const { return 0; }
 	};
 
 	class IDebugDrawable
 	{
 	public:
 		virtual void debugDraw(Batch& batch) = 0;
+		virtual i16 drawOrder() const { return 0; }
 	};
 
 	class Component
@@ -38,13 +41,7 @@ namespace pxl
 		u16 typeId() const;
 		virtual void destroyed() {}
 		Entity* entity() const;
-		u16 drawOrder() const;
-		u16 updateOrder() const;
-		void setUpdateOrder(u16 updateOrder);
-		void setDrawOrder(u16 drawOrder);
 	private:
-		u16 _draw_order;
-		u16 _update_order;
 		u16 _typeId;
 		Entity* _entity;
 
