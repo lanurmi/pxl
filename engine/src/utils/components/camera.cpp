@@ -14,6 +14,25 @@ namespace
 }
 
 
+Camera::Camera(int width, int height, int tilesize) : _size(width, height)
+{
+}
+
+
+const Mat3x2 Camera::matrix() const
+{
+	int x = (entity()->position.x - _size.x / 2);
+	int y = (entity()->position.y - _size.y / 2);
+
+	return Mat3x2::createTranslation(Vec2(-x, -y));
+}
+
+Vec2 Camera::size() const
+{
+	return _size;
+}
+
+
 static Vec2 getPosition(const Vec2& cameraSize, const Rect& bounds, const Vec2 targetPos)
 {
 	Vec2 p = Vec2::zero;
@@ -34,23 +53,23 @@ static Vec2 getPosition(const Vec2& cameraSize, const Rect& bounds, const Vec2 t
 	return p;
 }
 
-
-Camera::Camera(int width, int height, int tilesize) : _size(width, height), _tilesize(tilesize), _transitioning(false), target(nullptr)
+PlatformerCameraController::PlatformerCameraController() : target(nullptr)
 {
+
 }
 
-void Camera::awake()
+i16 PlatformerCameraController::updateOrder() const
 {
-	setUpdateOrder(update_order);
+	return update_order;
 }
 
-void Camera::transition(const Rect& rect, Transition transition)
+void PlatformerCameraController::transition(const Rect& rect, Transition transition)
 {
 	auto cam = get<Camera>();
 	_bounds = rect;
-	Vec2 useSize = cam->_size;
-	useSize.x += (int)cam->_size.x % _tilesize;
-	useSize.y += (int)cam->_size.y % _tilesize;
+	Vec2 useSize = cam->size();
+	useSize.x += (int)useSize.x % 16;
+	useSize.y += (int)useSize.y % 16;
 
 	auto p = getPosition(useSize, _bounds, target->position);
 	if (transition == Transition::Slide)
@@ -58,32 +77,17 @@ void Camera::transition(const Rect& rect, Transition transition)
 		_slide_tween.start(entity()->position, p, 0.5f, Easing::QuadOut);
 	}
 	else
-	{	
+	{
 		entity()->position = p;
 	}
 }
 
-const Mat3x2 Camera::matrix() const
-{
-	int x = (entity()->position.x - _size.x / 2);
-	int y = (entity()->position.y - _size.y / 2);
-
-	return Mat3x2::createTranslation(Vec2(-x, -y));
-}
-
-Rect Camera::bounds() const
-{
-	int x = (entity()->position.x - _size.x / 2);
-	int y = (entity()->position.y - _size.y / 2);
-	return Rect(x, y, _size.x, _size.y);
-}
-
-bool Camera::transitioning() const
+bool PlatformerCameraController::transitioning() const
 {
 	return _slide_tween.running();
 }
 
-void Camera::update()
+void PlatformerCameraController::update()
 {
 	if (target == nullptr) return;
 
@@ -96,9 +100,9 @@ void Camera::update()
 	else
 	{
 		auto cam = get<Camera>();
-		Vec2 useSize = cam->_size;
-		useSize.x += (int)cam->_size.x % _tilesize;
-		useSize.y += (int)cam->_size.y % _tilesize;
+		Vec2 useSize = cam->size();
+		useSize.x += (int)useSize.x % 16;
+		useSize.y += (int)useSize.y % 16;
 		auto p = getPosition(useSize, _bounds, target->position);
 		entity()->position = p;
 	}

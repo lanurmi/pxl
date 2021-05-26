@@ -8,7 +8,19 @@
 
 namespace pxl
 {
-	class Camera : public Component, public IUpdateable
+	class Camera : public Component
+	{
+	public:
+
+		Camera() = default;
+		Camera(int width, int height, int tilesize);
+		const Mat3x2 matrix() const;
+		Vec2 size() const;
+	private:
+		Vec2 _size;
+	};
+
+	class PlatformerCameraController : public Component, public IUpdateable
 	{
 	public:
 		enum class Transition
@@ -16,22 +28,15 @@ namespace pxl
 			Instant,
 			Slide
 		};
-		Camera() = default;
-		Camera(int width, int height, int tilesize);
-		void awake() override;
+		PlatformerCameraController();
+		i16 updateOrder() const override;
 		const Entity* target;
-		const Mat3x2 matrix() const;
 		Rect bounds() const;
 		void transition(const Rect& rect, Transition transition);
 		bool transitioning() const;
 		void update() override;
 	private:
 		Vec2Tween _slide_tween;
-		Vec2 _size;
-		int _tilesize;
 		Rect _bounds;
-		bool _transitioning;
-		Vec2 _transition_target;
-		Vec2 _transition_now;
 	};
 }
