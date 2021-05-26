@@ -48,7 +48,7 @@ add_library(pxl
 	src/math/rect.cpp
 	src/math/vec2.cpp
 	src/math/vec3.cpp	
-	
+	src/math/tween.cpp
 	
 	src/utils/input_binding.cpp
 	src/utils/scene.cpp

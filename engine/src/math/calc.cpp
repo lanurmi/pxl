@@ -26,6 +26,11 @@ pxl::Vec2 pxl::calc::approach(const Vec2& start, const Vec2& end, float shift)
 	return start + toVector.normal() * shift;
 }
 
+float pxl::calc::pow(float x, float y)
+{
+	return powf(x, y);
+}
+
 float pxl::calc::round(float v)
 {
 	return roundf(v);

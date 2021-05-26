@@ -8,6 +8,7 @@ namespace pxl
 		constexpr float PI = 3.141592653f;
 		float approach(float start, float end, float shift);
 		Vec2 approach(const Vec2& start, const Vec2& end, float shift);
+		float pow(float x, float y);
 		float round(float v);
 		float floor(float v);
 		float ceiling(float v);
