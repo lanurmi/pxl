@@ -7,7 +7,7 @@
 
 using namespace pxl;
 
-Scene::Scene(const string &name) : _current_max_component_type_id(0), _name(name)
+Scene::Scene(const string &name) : _current_max_component_type_id(0), _name(name), _sort_updateables(true), _sort_drawables(true)
 {
 }
 
@@ -114,14 +114,31 @@ void Scene::end()
 	clearRemoveSets();
 	pxl::log().message("End scene: " + _name);
 }
-
+#include <algorithm>
 void Scene::update()
 {
 	clearRemoveSets();
 
+	if (_sort_updateables) {
+		std::sort(_updateable_components.begin(), _updateable_components.end(), [](const IUpdateable* up1, const IUpdateable* up2) -> bool {
+			auto c1 = (Component*)up1;
+			auto c2 = (Component*)up2;
+			return c1->updateOrder() < c2->updateOrder();
+		});
+		_sort_updateables = false;
+	}
 	for (auto it : _updateable_components)
 	{
 		it->update();
+	}
+
+	if (_sort_drawables) {
+		std::sort(_drawable_components.begin(), _drawable_components.end(), [](const IDrawable* up1, const IDrawable* up2) -> bool {
+			const auto c1 = (Component*)up1;
+			const auto c2 = (Component*)up2;
+			return c1->drawOrder() < c2->drawOrder();
+			});
+		_sort_drawables = false;
 	}
 }
 

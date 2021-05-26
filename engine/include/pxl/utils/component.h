@@ -38,7 +38,13 @@ namespace pxl
 		u16 typeId() const;
 		virtual void destroyed() {}
 		Entity* entity() const;
+		u16 drawOrder() const;
+		u16 updateOrder() const;
+		void setUpdateOrder(u16 updateOrder);
+		void setDrawOrder(u16 drawOrder);
 	private:
+		u16 _draw_order;
+		u16 _update_order;
 		u16 _typeId;
 		Entity* _entity;
 

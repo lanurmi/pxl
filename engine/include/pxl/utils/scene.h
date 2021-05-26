@@ -30,12 +30,16 @@ namespace pxl
 		virtual void draw();
 		virtual void end();
 
+		void sortUpdateables() { _sort_drawables = true; }
+		void sortDrawables() { _sort_updateables = true; }
 	protected:
 		const pxl::vector<IDrawable*> &drawables();
 		const pxl::vector<IDebugDrawable*> &debugDrawables();
 		const pxl::vector<Entity*>& entities();
 		Batch& batch();
 	private:
+		bool _sort_drawables;
+		bool _sort_updateables;
 		void clearRemoveSets();
 		string _name;
 		Batch _batch;
