@@ -98,7 +98,7 @@ void pxl::VirtualButton::clearBuffer()
 	_buffer_timer = 0.0f;
 }
 
-pxl::VirtualButtonRef pxl::Bindings::CreateInput()
+pxl::VirtualButtonRef pxl::Bindings::CreateButton()
 {
 	pxl::log().message("button binding created");
 	auto binding = pxl::VirtualButtonRef(new VirtualButton());

@@ -46,7 +46,7 @@ namespace pxl
 	class Bindings
 	{
 	public:
-		VirtualButtonRef CreateInput();
+		VirtualButtonRef CreateButton();
 		VirtualAxisRef CreateAxis();
 		void update();
 	private:

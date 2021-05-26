@@ -32,7 +32,7 @@ public:
 		component->texture = pxl::Texture::create(pxl::path::combine(pxl::platform().applicationPath(), "content/helloworld.png"));
 		
 		//escape key does things
-		esc = pxl::bindings().CreateInput();
+		esc = pxl::bindings().CreateButton();
 		esc->bind(pxl::Key::Escape);
 	}
 	void end() override
