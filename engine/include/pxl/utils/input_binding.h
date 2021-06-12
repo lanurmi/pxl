@@ -1,11 +1,10 @@
 #pragma once
 #include <pxl/types.h>
-#include <pxl/input/keyboard_keys.h>
-#include <pxl/input/gamepad_buttons.h>
+#include <pxl/backends/keyboard.h>
+#include <pxl/backends/gamepad.h>
 
 namespace pxl
 {
-
 	class VirtualButton
 	{
 	public:
@@ -31,14 +30,17 @@ namespace pxl
 		bool _down;
 	};
 
-
 	class VirtualAxis
 	{
 	public:
-		VirtualButton negative;
-		VirtualButton positive;
+		VirtualAxis& bind(Key positiveKey, Key negativeKey);
+		VirtualAxis& bind(Button positiveButton, Button negativeButton);
+		VirtualAxis& setGamepadIndex(int index);
 		void update();
 		int sign();
+	private:
+		VirtualButton _negative;
+		VirtualButton _positive;
 	};
 	using VirtualButtonRef = std::shared_ptr<VirtualButton>;
 	using VirtualAxisRef = std::shared_ptr<VirtualAxis>;

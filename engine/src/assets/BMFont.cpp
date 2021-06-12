@@ -1,6 +1,6 @@
 #include <pxl/assets/BMFont.h>
 #include <pxl/engine.h>
-#include <pxl/filesystem.h>
+#include <pxl/utils/filestream.h>
 #include <sstream>
 
 using namespace pxl;
@@ -13,7 +13,7 @@ BMFont::BMFont(const string& file)
 
 void BMFont::load(const string& file)
 {
-	file::FileStream fileRef(file, pxl::file::FileMode::Read);
+	FileStream fileRef(file, pxl::file::FileMode::Read);
 	while (!fileRef.eof())
 	{
 		string line = fileRef.line();

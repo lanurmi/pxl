@@ -24,9 +24,9 @@ pxl::PlatformBackend& pxl::Engine::platform()
 	return _platform;
 }
 
-pxl::GamepadsBackend& pxl::Engine::gamepads()
+pxl::Gamepad& pxl::Engine::gamepad()
 {
-	return _gamepads;
+	return _gamepad;
 }
 
 pxl::KeyboardBackend& pxl::Engine::keyboard()
@@ -211,9 +211,9 @@ pxl::PlatformBackend& pxl::platform()
 	return pxl::Engine::instance().platform();
 }
 
-pxl::GamepadsBackend& pxl::gamepads()
+pxl::Gamepad& pxl::gamepad()
 {
-	return pxl::Engine::instance().gamepads();
+	return pxl::Engine::instance().gamepad();
 }
 
 pxl::KeyboardBackend& pxl::keyboard()

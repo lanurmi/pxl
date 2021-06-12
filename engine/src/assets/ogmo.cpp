@@ -1,5 +1,5 @@
 #include <pxl/assets/ogmo.h>
-#include <pxl/filesystem.h>
+#include <pxl/utils/filestream.h>
 #include <pxl/3rdparty/json.hpp>
 
 using namespace pxl;
@@ -44,7 +44,7 @@ static void parseValues(std::map<string,string>& dstStrings,
 
 void Ogmo::load(const string& path)
 {
-	file::FileStream file(path, file::FileMode::Read);
+	FileStream file(path, file::FileMode::Read);
 	string data = file.all();
 	nlohmann::json ogmoJson = nlohmann::json::parse(data);
 	

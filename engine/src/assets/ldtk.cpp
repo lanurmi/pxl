@@ -1,50 +1,9 @@
 #include <pxl/assets/ldtk.h>
-#include <pxl/filesystem.h>
+#include <pxl/utils/filestream.h>
 #include <pxl/3rdparty/json.hpp>
 
 using namespace pxl;
 
-/*
-struct EntityInstance
-{
-	string __identifier;
-	int _grid[2];
-	int _pivot[2];
-	int width;
-	int height;
-	int px[2];
-};
-
-struct GridTile
-{
-	int px[2];
-	int src[2];
-	int f;
-	int t;
-	//int d; some ldtk internal thing
-};
-struct LayerInstance
-{
-	string __identifier;
-	string __type;
-	int __c_wid;
-	int __c_hei;
-	int __grid_size;
-	float __opacity;
-	int __px_total_offset_x;
-	int __py_total_offset_y;
-	int __tileset_def_uid;
-	string __tileset_rel_path;
-
-		string identifier;
-		int uid;
-		int world_x;
-		int world_y;
-		int px_wid;
-		int px_hei;
-		Color _bg_color;
-};
-*/
 LDTKLevel::LDTKLevel()
 {
 }
@@ -56,7 +15,7 @@ LDTKLevel::LDTKLevel(const string& path)
 
 void LDTKLevel::load(const string& path)
 {
-	file::FileStream file(path, file::FileMode::Read);
+	FileStream file(path, file::FileMode::Read);
 	string data = file.all();
 	nlohmann::json ldtkLevelJson = nlohmann::json::parse(data);
 

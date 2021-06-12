@@ -1,4 +1,4 @@
-#include <pxl/input/keyboard_backend.h>
+#include <pxl/backends/keyboard.h>
 #include <pxl/time.h>
 
 constexpr int s_max_keyboard_keys = 256;

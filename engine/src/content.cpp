@@ -1,7 +1,7 @@
 #include <pxl/content.h>
 #include <pxl/types.h>
 #include <pxl/utils/image_packer.h>
-#include <pxl/filesystem.h>
+#include <pxl/utils/filestream.h>
 #include <pxl/engine.h>
 #include <pxl/assets/aseprite.h>
 #include <pxl/time.h>

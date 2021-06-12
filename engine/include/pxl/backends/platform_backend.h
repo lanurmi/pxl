@@ -3,7 +3,7 @@
 #include <pxl/types.h>
 #include <pxl/config.h>
 #include <pxl/math/vec2.h>
-#include <pxl/input/keyboard_backend.h>
+#include <pxl/backends/keyboard.h>
 #include <functional>
 
 namespace pxl
@@ -24,7 +24,7 @@ namespace pxl
 		Vec2 drawSize() const;
 		Vec2 size() const;
 		Vec2 position() const;
-		//gamepads
+		//Gamepad
 		void rumble(int index, float time, float strength);
 		void inputUpdate();
 		//Paths

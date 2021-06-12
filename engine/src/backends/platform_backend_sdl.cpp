@@ -1,10 +1,8 @@
-#include <pxl/platforms/platform_backend.h>
+#include <pxl/backends/platform_backend.h>
 #include <pxl/time.h>
-#include <pxl/filesystem.h>
 #include <string>
 #include <filesystem>
 #include <cstdio>
-#include <fstream>
 #include <pxl/engine.h>
 
 
@@ -15,8 +13,8 @@
 using namespace pxl;
 
 static SDL_Window* s_window = nullptr;
-static SDL_GameController* s_gamepads[pxl::s_max_gamepads];
-static SDL_Haptic* s_gamepad_haptics[pxl::s_max_gamepads];
+static SDL_GameController* s_Gamepad[pxl::s_max_Gamepad];
+static SDL_Haptic* s_gamepad_haptics[pxl::s_max_Gamepad];
 
 static char* s_applicationPath = nullptr;
 static char* s_userPath = nullptr;
@@ -62,11 +60,11 @@ void pxl::PlatformBackend::init(const pxl::Config& config)
 
 void pxl::PlatformBackend::shutdown()
 {
-	for (int i = 0; i < pxl::s_max_gamepads; i++)
+	for (int i = 0; i < pxl::s_max_Gamepad; i++)
 	{
-		SDL_GameControllerClose(s_gamepads[i]);
+		SDL_GameControllerClose(s_Gamepad[i]);
 	}
-	for (int i = 0; i < pxl::s_max_gamepads; i++)
+	for (int i = 0; i < pxl::s_max_Gamepad; i++)
 	{
 		SDL_HapticClose(s_gamepad_haptics[i]);
 	}
@@ -84,11 +82,11 @@ pxl::PlatformBackend::~PlatformBackend()
 
 static int getGamepadIndex(SDL_JoystickID joystickId)
 {
-	for (int i = 0; i < pxl::s_max_gamepads; i++)
+	for (int i = 0; i < pxl::s_max_Gamepad; i++)
 	{
-		if (s_gamepads[i] != nullptr)
+		if (s_Gamepad[i] != nullptr)
 		{
-			auto p = SDL_GameControllerGetJoystick(s_gamepads[i]);
+			auto p = SDL_GameControllerGetJoystick(s_Gamepad[i]);
 			if (SDL_JoystickInstanceID(p) == joystickId)
 			{
 				return i;
@@ -152,15 +150,15 @@ void pxl::PlatformBackend::update()
 		else if (event.type == SDL_CONTROLLERDEVICEADDED)
 		{
 			auto index = event.cdevice.which;
-			if (index >= 0 && index < pxl::s_max_gamepads)
+			if (index >= 0 && index < pxl::s_max_Gamepad)
 			{
-				auto ptr = s_gamepads[index] = SDL_GameControllerOpen(index);
+				auto ptr = s_Gamepad[index] = SDL_GameControllerOpen(index);
 				auto name = SDL_GameControllerName(ptr);
 				auto vendor = SDL_GameControllerGetVendor(ptr);
 				auto product = SDL_GameControllerGetProduct(ptr);
 				auto version = SDL_GameControllerGetProductVersion(ptr);
 
-				pxl::gamepads().onConnect(index, pxl::string(name), vendor, product, version);
+				pxl::Gamepad().onConnect(index, pxl::string(name), vendor, product, version);
 				int asd = SDL_NumHaptics();
 				auto joystick = SDL_GameControllerGetJoystick(ptr);
 
@@ -179,8 +177,8 @@ void pxl::PlatformBackend::update()
 			auto index = getGamepadIndex(event.cdevice.which);
 			if (index >= 0)
 			{
-				SDL_GameControllerClose(s_gamepads[index]);
-				pxl::gamepads().onDisconnect(index);
+				SDL_GameControllerClose(s_Gamepad[index]);
+				pxl::Gamepad().onDisconnect(index);
 			}
 		}
 		else if (event.type == SDL_KEYDOWN)
@@ -207,7 +205,7 @@ void pxl::PlatformBackend::update()
 					button = event.cbutton.button;
 				}
 
-				pxl::gamepads().onButtonDown(index, button);
+				pxl::Gamepad().onButtonDown(index, button);
 			}
 		}
 		else if (event.type == SDL_CONTROLLERBUTTONUP)
@@ -221,7 +219,7 @@ void pxl::PlatformBackend::update()
 					button = event.cbutton.button;
 				}
 
-				pxl::gamepads().onButtonUp(index, button);
+				pxl::Gamepad().onButtonUp(index, button);
 			}
 		}
 		else if (event.type == SDL_CONTROLLERAXISMOTION)
@@ -244,7 +242,7 @@ void pxl::PlatformBackend::update()
 				{
 					value = event.caxis.value / 32768.0f;
 				}
-				pxl::gamepads().onAxis(index, axis, value);
+				pxl::Gamepad().onAxis(index, axis, value);
 			}
 		}
 	}
@@ -253,14 +251,14 @@ void pxl::PlatformBackend::update()
 void pxl::PlatformBackend::inputUpdate()
 {
 	pxl::mouse().update();
-	pxl::gamepads().update();
+	pxl::Gamepad().update();
 	pxl::keyboard().update();
 }
 
 void pxl::PlatformBackend::rumble(int index, float time, float strength)
 {
 	assert(strength >= 0.0f && strength <= 1.0f);
-	if (index < pxl::s_max_gamepads)
+	if (index < pxl::s_max_Gamepad)
 	{
 		auto haptic = s_gamepad_haptics[index];
 		SDL_HapticRumblePlay(haptic, strength, time * 1000);
@@ -358,127 +356,4 @@ pxl::Vec2 pxl::PlatformBackend::size() const
 	int w, h;
 	SDL_GetWindowSize(s_window, &w, &h);
 	return pxl::Vec2(w, h);
-}
-
-
-
-string path::extension(const string& path)
-{
-	std::filesystem::path filePath(path);
-	return filePath.extension().u8string();
-}
-
-string path::combine(const string lowerPath, const string upperPath)
-{
-	std::filesystem::path path(lowerPath);
-	path.append(upperPath);
-	return path.u8string();
-}
-
-string path::withoutFile(const string& path)
-{
-	std::filesystem::path filePath(path);
-	return filePath.parent_path().u8string();
-}
-
-string path::filename(const string& path)
-{
-	std::filesystem::path filePath(path);
-	return filePath.stem().u8string();
-}
-//file
-
-class SDLFile : public file::File
-{
-public:
-	SDLFile(SDL_RWops* file) : m_file(file)
-	{
-
-	}
-	~SDLFile()
-	{
-		SDL_RWclose(m_file);
-	}
-	size_t length() const override
-	{
-		return SDL_RWsize(m_file);
-	}
-	size_t position() const override
-	{
-		return SDL_RWtell(m_file);
-	}
-	size_t seek(size_t position) override
-	{
-		return SDL_RWseek(m_file, position, RW_SEEK_SET);
-	}
-	size_t read(u8* buffer, size_t length) const override
-	{
-		return SDL_RWread(m_file, buffer, sizeof(u8), length);
-	}
-	size_t write(const u8* buffer, size_t length) override
-	{
-		return SDL_RWwrite(m_file, buffer, sizeof(u8), length);
-	}
-private:
-	SDL_RWops* m_file;
-};
-
-
-bool file::exists(const string& path)
-{
-	return std::filesystem::is_regular_file(path);
-}
-
-file::FileRef file::File::open(const string& file, file::FileMode mode)
-{
-	string smode = "";
-	switch (mode)
-	{
-		case file::FileMode::ReadBinary: {
-			smode = "rb";
-			break;
-		}
-		case file::FileMode::Read: {
-			smode = "r";
-			break;
-		}
-	}
-	auto ptr = SDL_RWFromFile(file.c_str(), smode.c_str());
-	if (ptr == nullptr)
-	{
-		return file::FileRef();
-	}
-	else
-	{
-		return file::FileRef(new SDLFile(ptr));
-	}
-}
-
-// directory
-
-bool directory::exists(const string& path)
-{
-	return std::filesystem::is_directory(path);
-}
-
-vector<string> directory::files(const string& path, const string& extension)
-{
-	vector<string> result;
-	for (const auto& e : std::filesystem::directory_iterator(path))
-	{
-		auto p = e.path();
-		if (extension.empty())
-		{
-			result.push_back(p.u8string());
-		}
-		else
-		{
-			auto ext = p.extension();
-			if (ext.u8string() == extension)
-			{
-				result.push_back(p.u8string());
-			}
-		}
-	}
-	return result;
 }

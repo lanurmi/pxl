@@ -1,7 +1,5 @@
 #include <pxl/assets/aseprite.h>
 #include <pxl/math/calc.h>
-
-#include <pxl/filesystem.h>
 #define STBI_NO_STDIO
 #define STBI_ONLY_ZLIB
 #include <pxl/3rdparty/stb_image.h>

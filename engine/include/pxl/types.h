@@ -7,6 +7,7 @@
 #include <stack>
 #include <map>
 #include <set>
+#include <unordered_set>
 #include <assert.h>
 #include <algorithm>
 
@@ -29,6 +30,9 @@ namespace pxl
 
 	template<class T>
 	using set = std::set<T>;
+
+	template<class T>
+	using unordered_set = std::unordered_set<T>;
 
 	using i8 = int8_t;
 	using i16 = int16_t;

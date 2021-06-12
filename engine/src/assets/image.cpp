@@ -1,6 +1,6 @@
 #include <pxl/assets/image.h>
 #include <pxl/engine.h>
-#include <pxl/filesystem.h>
+#include <pxl/utils/filestream.h>
 #include <assert.h>
 
 #define STB_IMAGE_IMPLEMENTATION

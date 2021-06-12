@@ -1,8 +1,11 @@
 #pragma once
+#include <pxl/types.h>
 
-namespace pxl {
-	enum class Key
-	{
+namespace pxl
+{
+	class PlatformBackend;
+
+	enum class Key 	{
 		A = 4,
 		B = 5,
 		C = 6,
@@ -169,5 +172,19 @@ namespace pxl {
 		RightShift = 229,
 		RightAlt = 230,
 		RightOS = 231
+	};
+
+	class KeyboardBackend
+	{
+	public:
+		//
+		bool pressed(Key key);
+		bool down(Key key);
+		bool released(Key key);
+	private:
+		void update();
+		void onKeyDown(Key key);
+		void onKeyUp(Key key);
+		friend class pxl::PlatformBackend;
 	};
 }

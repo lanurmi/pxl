@@ -2,16 +2,7 @@
 #include <pxl/engine.h>
 #include <pxl/time.h>
 
-void pxl::VirtualAxis::update()
-{
-	positive.update();
-	negative.update();
-}
-
-int pxl::VirtualAxis::sign()
-{
-	return (positive.down() ? 1 : 0) - (negative.down() ? 1 : 0);
-}
+using namespace pxl;
 
 pxl::VirtualButton::VirtualButton() : _controller_index(-1), _buffer_timer(0.0f), _buffer_time(0.0f), _pressed(false), _released(false), _down(false)
 {
@@ -43,12 +34,12 @@ void pxl::VirtualButton::update()
 		_released |= keyboard.released(key);
 	} 
 
-	auto& gamepads = pxl::gamepads();
+	auto& gamepad = pxl::Gamepad();
 	for (auto& btn : _button_binds)
 	{
-		_pressed |= gamepads.pressed(_controller_index, btn);
-		_down |= gamepads.down(_controller_index, btn);
-		_released |= gamepads.released(_controller_index, btn);
+		_pressed |= gamepad.pressed(_controller_index, btn);
+		_down |= gamepad.down(_controller_index, btn);
+		_released |= gamepad.released(_controller_index, btn);
 	}
 	_buffer_timer = pxl::calc::approach(_buffer_timer, 0.0f, pxl::time::delta);
 	if (_pressed)
@@ -96,6 +87,34 @@ bool pxl::VirtualButton::buffered() const
 void pxl::VirtualButton::clearBuffer()
 {
 	_buffer_timer = 0.0f;
+}
+
+
+VirtualAxis& VirtualAxis::bind(Key positiveKey, Key negativeKey) {
+	_positive.bind(positiveKey);
+	_negative.bind(negativeKey);
+	return *this;
+}
+
+VirtualAxis& VirtualAxis::bind(Button positiveButton, Button negativeButton) {
+	_positive.bind(positiveButton);
+	_negative.bind(negativeButton);
+	return *this;
+}
+
+VirtualAxis& VirtualAxis::setGamepadIndex(int index) {
+	_positive.setGamepadIndex(index);
+	_negative.setGamepadIndex(index);
+	return *this;
+}
+
+void pxl::VirtualAxis::update() {
+	_positive.update();
+	_negative.update();
+}
+
+int pxl::VirtualAxis::sign() {
+	return (_positive.down() ? 1 : 0) - (_negative.down() ? 1 : 0);
 }
 
 pxl::VirtualButtonRef pxl::Bindings::CreateButton()

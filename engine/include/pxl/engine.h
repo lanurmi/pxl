@@ -3,11 +3,11 @@
 #include <pxl/types.h>
 #include <functional>
 #include <pxl/config.h>
-#include <pxl/platforms/platform_backend.h>
-#include <pxl/graphics/graphics_backend.h>
-#include <pxl/input/gamepad_backend.h>
-#include <pxl/input/keyboard_backend.h>
-#include <pxl/input/mouse_backend.h>
+#include <pxl/backends/platform_backend.h>
+#include <pxl/backends/graphics_backend.h>
+#include <pxl/backends/gamepad.h>
+#include <pxl/backends/keyboard.h>
+#include <pxl/backends/mouse_backend.h>
 #include <pxl/utils/scene_manager.h>
 #include <pxl/utils/input_binding.h>
 #include <pxl/content.h>
@@ -22,7 +22,7 @@ namespace pxl
 		void begin(const Config& config);
 		GraphicsBackend& graphics();
 		PlatformBackend& platform();
-		GamepadsBackend& gamepads();
+		Gamepad& gamepad();
 		KeyboardBackend& keyboard();
 		Bindings& bindings();
 		Content& content();
@@ -38,7 +38,7 @@ namespace pxl
 		Engine();
 		PlatformBackend _platform;
 		GraphicsBackend _graphics;
-		GamepadsBackend _gamepads;
+		Gamepad _gamepad;
 		KeyboardBackend _keyboard;
 		Content _content;
 		Bindings _bindings;
@@ -56,6 +56,6 @@ namespace pxl
 	GraphicsBackend& graphics();
 	PlatformBackend& platform();
 	MouseBackend& mouse();
-	GamepadsBackend& gamepads();
+	Gamepad& gamepad();
 	KeyboardBackend& keyboard();
 }

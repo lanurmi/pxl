@@ -14,14 +14,17 @@ add_library(pxl
 	src/time.cpp
 	src/log.cpp
 	src/types.cpp
-	src/filesystem.cpp
 	src/content.cpp
 
-	src/platforms/platform_backend_sdl.cpp
-		
+	src/backends/platform_backend_sdl.cpp	
+	src/backends/filesystem_backend_cpp.cpp
+	src/backends/gamepad.cpp
+	src/backends/keyboard.cpp
+	src/backends/mouse.cpp
+	src/backends/graphics_backend_gl.cpp
+
 	src/graphics/batch.cpp
 	src/graphics/blend.cpp
-	src/graphics/graphics_backend_gl.cpp
 	src/graphics/material.cpp
 	src/graphics/mesh.cpp
 	src/graphics/render_target.cpp
@@ -36,10 +39,6 @@ add_library(pxl
 	src/assets/ogmo.cpp
 	src/assets/image.cpp
 	src/assets/ldtk.cpp
-
-	src/input/gamepad_backend.cpp
-	src/input/keyboard_backend.cpp
-	src/input/mouse_backend.cpp
 	
 	src/math/calc.cpp
 	src/math/color.cpp
@@ -58,6 +57,7 @@ add_library(pxl
 	src/utils/image_packer.cpp
 	src/utils/sprite.cpp
 	src/utils/tileset.cpp
+	src/utils/filestream.cpp
 
 	src/utils/components/camera.cpp
 )

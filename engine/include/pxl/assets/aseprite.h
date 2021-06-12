@@ -2,7 +2,7 @@
 #include <pxl/math/color.h>
 #include <pxl/math/vec2.h>
 #include <pxl/assets/image.h>
-#include <pxl/filesystem.h>
+#include <pxl/utils/filestream.h>
 
 // Borrowed from the blah project: https://github.com/NoelFB/blah
 namespace pxl
@@ -141,13 +141,13 @@ namespace pxl
 	private:
 		UserData* m_last_userdata = nullptr;
 
-		void parse(file::FileStream& stream);
-		void parse_layer(file::FileStream& stream, int frame);
-		void parse_cel(file::FileStream& stream, int frame, size_t maxPosition);
-		void parse_palette(file::FileStream& stream, int frame);
-		void parse_user_data(file::FileStream& stream, int frame);
-		void parse_tag(file::FileStream& stream, int frame);
-		void parse_slice(file::FileStream& stream, int frame);
+		void parse(FileStream& stream);
+		void parse_layer(FileStream& stream, int frame);
+		void parse_cel(FileStream& stream, int frame, size_t maxPosition);
+		void parse_palette(FileStream& stream, int frame);
+		void parse_user_data(FileStream& stream, int frame);
+		void parse_tag(FileStream& stream, int frame);
+		void parse_slice(FileStream& stream, int frame);
 		void render_cel(Cel* cel, Frame* frame);
 	};
 }

@@ -30,7 +30,7 @@ namespace pxl
 		virtual void update();
 		virtual void draw();
 		virtual void end();
-	protected:
+
 		const pxl::vector<IDrawable*> &drawables();
 		const pxl::vector<IDebugDrawable*> &debugDrawables();
 		const pxl::vector<Entity*>& entities();
@@ -51,8 +51,8 @@ namespace pxl
 		vector<IDrawable*> _drawable_components;
 		vector<IDebugDrawable*> _debug_drawable_components;
 		vector<IUpdateable*> _updateable_components;
-		set<Component*> _remove_components;
-		set<Entity*> _remove_entities;
+		unordered_set<Component*> _remove_components;
+		unordered_set<Entity*> _remove_entities;
 	};
 
 	template<class T>

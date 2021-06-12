@@ -2,7 +2,7 @@
 #include <pxl/utils/scene.h>
 #include <pxl/graphics/batch.h>
 #include <pxl/utils/input_binding.h>
-#include <pxl/filesystem.h>
+#include <pxl/utils/filestream.h>
 
 class HelloWorldComponent : public pxl::Component, public pxl::IDrawable
 {
