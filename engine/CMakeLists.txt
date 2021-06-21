@@ -79,44 +79,11 @@ if (GRAPHICS_OPENGL)
 endif()
 
 if (PLATFORM_SDL2)
+	set(SDL2_PATH "libs/SDL")
 	add_compile_definitions(PXL_PLATFORM_SDL2)
-
-	# Try to find SDL2
-	if (DEFINED SDL2_LIBRARIES AND DEFINED SDL2_INCLUDE_DIRS)
-		set(SDL2_FOUND true)
-
-	else()
-		find_package(SDL2 QUIET)
-
-	endif()	
-
-	# If CMake cannot find SDL2 library, then it gets downloaded and compiled that way
-	if (NOT ${SDL2_FOUND})
-		include(FetchContent)
-		FetchContent_Declare(
-			SDL2
-			GIT_REPOSITORY https://github.com/libsdl-org/SDL
-			GIT_TAG release-2.0.14 # grab latest stable release
-		)
-		FetchContent_GetProperties(SDL2)
-
-		if (NOT sdl2_POPULATED)
-			FetchContent_Populate(SDL2)
-			add_subdirectory(${sdl2_SOURCE_DIR} ${sdl2_BINARY_DIR})
-
-		endif()
-
-		# statically link SDL2 since we're building it ourselves
-		set(LIBS ${LIBS} SDL2main SDL2-static)
-		target_include_directories(pxl PUBLIC ${sdl2_SOURCE_DIRS}/include)
-
-	else()
-		# Add Library and Include Dirs
-		set(LIBS ${LIBS} ${SDL2_LIBRARIES})
-		target_include_directories(pxl PUBLIC ${SDL2_INCLUDE_DIRS})
-
-	endif()
-
+	add_subdirectory( ${SDL2_PATH} )
+	set(LIBS ${LIBS} SDL2main SDL2-static)
+	target_include_directories(pxl PUBLIC ${SDL2_PATH}/include)
 endif()
 
 target_link_libraries(pxl PUBLIC ${LIBS})
