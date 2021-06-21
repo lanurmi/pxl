@@ -7,7 +7,7 @@
 #include <pxl/backends/graphics_backend.h>
 #include <pxl/backends/gamepad.h>
 #include <pxl/backends/keyboard.h>
-#include <pxl/backends/mouse_backend.h>
+#include <pxl/backends/mouse.h>
 #include <pxl/utils/scene_manager.h>
 #include <pxl/utils/input_binding.h>
 #include <pxl/content.h>
@@ -26,7 +26,7 @@ namespace pxl
 		KeyboardBackend& keyboard();
 		Bindings& bindings();
 		Content& content();
-		MouseBackend& mouse();
+		Mouse& mouse();
 		SceneManager& sceneManager();
 		Log& log();
 		Vec2 drawSize() const;
@@ -43,7 +43,7 @@ namespace pxl
 		Content _content;
 		Bindings _bindings;
 		Log _log;
-		MouseBackend _mouse;
+		Mouse _mouse;
 		SceneManager _scene_manager;
 	};
 
@@ -55,7 +55,7 @@ namespace pxl
 
 	GraphicsBackend& graphics();
 	PlatformBackend& platform();
-	MouseBackend& mouse();
+	Mouse& mouse();
 	Gamepad& gamepad();
 	KeyboardBackend& keyboard();
 }

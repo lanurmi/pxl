@@ -31,8 +31,7 @@ namespace pxl
 		const Sprite* sprite(const string& name);
 		const Tileset* tileset(const string& name);
 	private:
-		void loadSprites(const ContentPack& pack);
-		void loadTilesets(const ContentPack& pack);
+		void loadImages(const ContentPack& pack);
 		map<string, Sprite> _sprites;
 		map<string, Tileset> _tilesets;
 	};

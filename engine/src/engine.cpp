@@ -44,7 +44,7 @@ pxl::Content& pxl::Engine::content()
 	return _content;
 }
 
-pxl::MouseBackend& pxl::Engine::mouse()
+pxl::Mouse& pxl::Engine::mouse()
 {
 	return _mouse;
 }
@@ -226,7 +226,7 @@ pxl::Bindings& pxl::bindings()
 	return pxl::Engine::instance().bindings();
 }
 
-pxl::MouseBackend& pxl::mouse()
+pxl::Mouse& pxl::mouse()
 {
 	return pxl::Engine::instance().mouse();
 }

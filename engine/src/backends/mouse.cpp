@@ -1,4 +1,4 @@
-#include <pxl/backends/mouse_backend.h>
+#include <pxl/backends/mouse.h>
 #include <pxl/engine.h>
 #include <pxl/types.h>
 
@@ -17,35 +17,35 @@ public:
 static MouseState s_mouseState;
 static MouseState s_nextMouseState;
 
-bool pxl::MouseBackend::pressed(MouseButton button)
+bool pxl::Mouse::pressed(MouseButton button)
 {
 	int i = (int)button;
 	return i < pxl::s_max_mouse_buttons && s_mouseState.pressed[i];
 }
 
-bool pxl::MouseBackend::down(MouseButton button)
+bool pxl::Mouse::down(MouseButton button)
 {
 	int i = (int)button;
 	return i < pxl::s_max_mouse_buttons&& s_mouseState.down[i];
 }
 
-bool pxl::MouseBackend::released(MouseButton button)
+bool pxl::Mouse::released(MouseButton button)
 {
 	int i = (int)button;
 	return i < pxl::s_max_mouse_buttons&& s_mouseState.released[i];
 }
 
-pxl::Vec2 pxl::MouseBackend::position()
+pxl::Vec2 pxl::Mouse::position()
 {
 	return s_mouseState.position;
 }
 
-pxl::Vec2 pxl::MouseBackend::drawPosition()
+pxl::Vec2 pxl::Mouse::drawPosition()
 {
 	return s_mouseState.draw_position;
 }
 
-void pxl::MouseBackend::onButtonDown(MouseButton button)
+void pxl::Mouse::onButtonDown(MouseButton button)
 {
 	int i = (int)button;
 	if (i < pxl::s_max_mouse_buttons)
@@ -55,7 +55,7 @@ void pxl::MouseBackend::onButtonDown(MouseButton button)
 	}
 }
 
-void pxl::MouseBackend::onButtonUp(MouseButton button)
+void pxl::Mouse::onButtonUp(MouseButton button)
 {
 	int i = (int)button;
 	if (i < pxl::s_max_mouse_buttons)
@@ -64,7 +64,7 @@ void pxl::MouseBackend::onButtonUp(MouseButton button)
 	}
 }
 
-void pxl::MouseBackend::onMousePosition(const pxl::Vec2& position)
+void pxl::Mouse::onMousePosition(const pxl::Vec2& position)
 {
 	s_nextMouseState.position = position;
 	auto size = pxl::engine().size();
@@ -73,7 +73,7 @@ void pxl::MouseBackend::onMousePosition(const pxl::Vec2& position)
 }
 
 
-void pxl::MouseBackend::update()
+void pxl::Mouse::update()
 {
 	s_mouseState = s_nextMouseState;
 

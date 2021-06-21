@@ -14,7 +14,7 @@ namespace pxl
 		Right = 2,
 	};
 
-	class MouseBackend
+	class Mouse
 	{
 	public:
 		//

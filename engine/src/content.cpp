@@ -63,12 +63,12 @@ void ContentPack::addTilesetDirectory(const string& path, int size)
 void Content::load(const ContentPack& content)
 {
 	time::Timer timer;
-	loadSprites(content);
+	loadImages(content);
 	auto elapsed = timer.ms();
 	log().message(string_format("Content pack loaded in %llums", elapsed));
 }
 
-void Content::loadSprites(const ContentPack& pack)
+void Content::loadImages(const ContentPack& pack)
 {
 	struct Info
 	{
@@ -124,6 +124,7 @@ void Content::loadSprites(const ContentPack& pack)
 		spriteinfos.emplace_back(info);
 	}
 
+	// Pack all
 	map<u32, Subtexture> subtextures;
 	const auto& result = packer.pack();
 	for (auto& it : result)
@@ -135,12 +136,13 @@ void Content::loadSprites(const ContentPack& pack)
 		}
 	}
 	
+	// Save tilesets
 	for (auto& it : tilesetinfos)
 	{
 		_tilesets[it.name] = Tileset(subtextures[it.pack_index], it.tileset_size);
 	}
 
-	vector<Sprite> sprites;
+	// Save sprites
 	for (auto& it : spriteinfos)
 	{
 		Sprite sprite;
@@ -168,11 +170,6 @@ void Content::loadSprites(const ContentPack& pack)
 	}
 }
 
-void Content::loadTilesets(const ContentPack& pack)
-{
-
-}
-
 const pxl::Sprite* Content::sprite(const string &name)
 {
 	auto sprite = _sprites.find(name);
@@ -190,4 +187,5 @@ const Tileset* Content::tileset(const string& name)
 void Content::unload()
 {
 	_sprites.clear();
+	_tilesets.clear();
 }
