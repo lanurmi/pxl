@@ -26,9 +26,9 @@ void Tileset::createTiles(const TextureRef& texture, const Rect& area, int tiles
 	}
 
 	log().error("Invalid tileset index");
-	for (int j = area.y; j < (int)area.height; j += tilesize)
+	for (int j = area.y; j < (int)(area.y + area.height); j += tilesize)
 	{
-		for (int i = area.x; i < (int)area.width; i += tilesize)
+		for (int i = area.x; i < (int)(area.x + area.width); i += tilesize)
 		{
 			_tiles.emplace_back(Subtexture(texture, pxl::Rect(i, j, tilesize, tilesize)));
 		}
