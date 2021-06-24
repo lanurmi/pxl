@@ -42,6 +42,10 @@ namespace pxl
 		void draw();
 	};
 
+	struct BatchStatistics {
+		int draw_calls;
+		int triangles;
+	};
 	class Batch
 	{
 	public:
@@ -72,7 +76,7 @@ namespace pxl
 		void texture(const pxl::Subtexture& texture, const pxl::Vec2& pos, const pxl::Color& color);
 		void text(const pxl::SpriteFontRef &font, const string &text, const pxl::Vec2 &pos, const pxl::Color &color);
 		//
-		
+		const BatchStatistics &stats() const;
 	private:
 		void pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Vec2& p3,
 			const Vec2& t0, const Vec2& t1, const Vec2& t2, const Vec2& t3, const Color& color);
@@ -101,7 +105,6 @@ namespace pxl
 
 		RenderTargetRef _target;
 
-		int _draw_calls;
-		int _triangles;
+		BatchStatistics _stats;
 	};
 }

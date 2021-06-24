@@ -35,8 +35,8 @@ pxl::Batch::~Batch()
 
 void pxl::Batch::begin(const RenderTargetRef& target, const pxl::Color& clearColor)
 {
-	_draw_calls = 0;
-	_triangles = 0;;
+	_stats.draw_calls = 0;
+	_stats.triangles = 0;
 
 	clear();
 	_target = target;
@@ -414,6 +414,10 @@ void pxl::Batch::text(const pxl::SpriteFontRef& font, const string& text, const 
 	}
 }
 
+const pxl::BatchStatistics& pxl::Batch::stats() const {
+	return _stats;
+}
+
 const pxl::VertexFormat format = pxl::VertexFormat(
 	{
 		{ 0, pxl::VertexType::Float2, false }, //position
@@ -464,8 +468,8 @@ void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x
 {
 	if (batch.elements == 0) return;
 
-	_draw_calls++;
-	_triangles += batch.elements;
+	_stats.draw_calls++;
+	_stats.triangles += batch.elements;
 	DrawCall drawcall;
 	drawcall.mesh = _mesh;
 
