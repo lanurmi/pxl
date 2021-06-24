@@ -27,6 +27,7 @@ namespace pxl
 		T* first();
 
 		virtual void begin();
+		void trueUpdate();
 		virtual void update();
 		virtual void draw();
 		virtual void end();

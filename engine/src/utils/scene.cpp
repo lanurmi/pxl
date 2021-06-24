@@ -115,8 +115,12 @@ void Scene::end()
 	pxl::log().message("End scene: " + _name);
 }
 
-void Scene::update()
-{
+void Scene::trueUpdate() {
+	update();
+	for (auto it : _updateable_components) 	{
+		it->update();
+	}
+
 	clearRemoveSets();
 
 	if (_sort_updateables) {
@@ -131,10 +135,10 @@ void Scene::update()
 		sortDebugDrawables();
 		_sort_debug_drawables = false;
 	}
-	for (auto it : _updateable_components)
-	{
-		it->update();
-	}
+}
+
+void Scene::update()
+{
 }
 
 void Scene::draw()

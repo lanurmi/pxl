@@ -18,7 +18,7 @@ void SceneManager::update()
 
 	if (_current_scene != nullptr)
 	{
-		_current_scene->update();
+		_current_scene->trueUpdate();
 	}
 }
 
