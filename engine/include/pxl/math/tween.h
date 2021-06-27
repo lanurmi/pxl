@@ -1,5 +1,6 @@
 #pragma once
 #include <pxl/math/vec2.h>
+#include <pxl/math/color.h>
 #include <pxl/math/calc.h>
 
 namespace pxl 
@@ -59,7 +60,7 @@ namespace pxl
 			return _running;
 		}
 	private:
-		T lerp(T v0, T v1, float t)
+		float lerp(float v0, float v1, float t)
 		{
 			if (t == 0)
 			{
@@ -74,6 +75,19 @@ namespace pxl
 				return v0 + (v1 - v0) * t;
 			}
 		}
+		Vec2 lerp(const Vec2& v0, const Vec2& v1, float t) {
+			return Vec2(
+				lerp(v0.x, v1.x, t),
+				lerp(v0.y, v1.y, t));
+		}
+		Color lerp(const Color& v0, const Color& v1, float t) {
+			return Color(
+				lerp(v0.r, v1.r, t),
+				lerp(v0.g, v1.g, t),
+				lerp(v0.b, v1.b, t),
+				lerp(v0.a, v1.a, t));
+		}
+
 
 		T _start;
 		T _end;
@@ -85,5 +99,6 @@ namespace pxl
 	};
 
 	using Vec2Tween = Tween<Vec2>;
+	using ColorTween = Tween<Color>;
 	using FloatTween = Tween<float>;
 }

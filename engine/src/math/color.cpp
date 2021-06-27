@@ -30,6 +30,26 @@ bool pxl::Color::operator!=(const Color& color) const
 	return r != color.r || g != color.g || b != color.b || a != color.a;
 }
 
+pxl::Color pxl::Color::operator +(const Color& rhs) const
+{
+	return pxl::Color(r + rhs.r, g + rhs.g, b + rhs.b, a + rhs.a);
+}
+
+pxl::Color pxl::Color::operator -(const Color& rhs) const
+{
+	return pxl::Color(r - rhs.r, g - rhs.g, b - rhs.b, a - rhs.a);
+}
+
+pxl::Color pxl::Color::operator /(const float rhs) const
+{
+	return pxl::Color(r / rhs, g / rhs, b / rhs, a / rhs);
+}
+
+pxl::Color pxl::Color::operator *(const float rhs) const 
+{
+	return pxl::Color((float)r * rhs, (float)g * rhs, (float)b * rhs, (float)a * rhs);
+}
+
 void pxl::Color::preMultiply()
 {
 	r = r * a / 255;
