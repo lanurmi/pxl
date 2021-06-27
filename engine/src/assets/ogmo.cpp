@@ -89,7 +89,9 @@ void Ogmo::load(const string& path)
 				{
 					parseValues(entity.string_text_enum_color_values, entity.int_values, entity.float_values, entity.bool_values, e["values"]);
 				}
+				layer.entities.emplace_back(entity);
 			}
+			entity_layers.emplace_back(layer);
 		}
 		else if(it.contains("tileset"))
 		{
