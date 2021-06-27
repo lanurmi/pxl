@@ -69,7 +69,7 @@ void pxl::Shader::addUniformInfo(const pxl::UniformInfo& info)
 	_uniforms.push_back(info);
 }
 
-const pxl::vector<pxl::UniformInfo>& pxl::Shader::getUniforms() const
+const pxl::vector<pxl::UniformInfo>& pxl::Shader::uniforms() const
 {
 	return _uniforms;
 }

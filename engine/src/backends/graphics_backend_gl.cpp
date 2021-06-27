@@ -1126,7 +1126,7 @@ void pxl::GraphicsBackend::render(const DrawCall& call)
 	int gl_texture_slot = 0;
 	GLint texture_ids[64];
 
-	auto& uniforms = shader->getUniforms();
+	auto& uniforms = shader->uniforms();
 	for (int i = 0; i < uniforms.size(); i++)
 	{
 		auto& uniform = uniforms[i];

@@ -52,7 +52,7 @@ namespace pxl
 		virtual ~Shader() = default;
 		static ShaderRef create(const ShaderData& data);
 		static ShaderRef create();
-		const vector<UniformInfo>& getUniforms() const;
+		const vector<UniformInfo>& uniforms() const;
 	protected:
 		Shader() = default;
 		void addUniformInfo(const UniformInfo& info);

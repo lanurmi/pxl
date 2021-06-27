@@ -25,7 +25,7 @@ static int calcUniformSize(const pxl::UniformInfo& uniform)
 pxl::Material::Material(const pxl::ShaderRef& shader) : _shader(shader)
 {
 
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	int floatSize = 0;
 	for (auto& u : uniforms)
 	{
@@ -61,7 +61,7 @@ pxl::MaterialRef pxl::Material::create(const ShaderRef& shader)
 void pxl::Material::setTexture(string name, const TextureRef& texture)
 {
 	int offset = 0;
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	for (auto& u : uniforms)
 	{
 		if (u.type != pxl::UniformType::Texture2D) continue;
@@ -85,7 +85,7 @@ void pxl::Material::setTexture(string name, const TextureRef& texture)
 void pxl::Material::setTexture(int slot, const TextureRef& texture)
 {
 	int offset = 0;
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	int s = 0;
 	for (auto& u : uniforms)
 	{
@@ -105,7 +105,7 @@ void pxl::Material::setTexture(int slot, const TextureRef& texture)
 void pxl::Material::setSampler(string name, const TextureSampler& sampler)
 {
 	int offset = 0;
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	for (auto& u : uniforms)
 	{
 		if (u.type != pxl::UniformType::Sampler2D) continue;
@@ -130,7 +130,7 @@ void pxl::Material::setSampler(int slot, const TextureSampler& sampler)
 {
 	int s = 0;
 	int offset = 0;
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	for (auto& u : uniforms)
 	{
 		if (u.type != pxl::UniformType::Sampler2D) continue;
@@ -150,7 +150,7 @@ void pxl::Material::setFloat(string name, const float* values, i64 length)
 {
 	int offset = 0;
 	int index = 0;
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	for (auto& u : uniforms)
 	{
 		if (u.type == UniformType::Texture2D ||
@@ -181,7 +181,7 @@ pxl::TextureRef pxl::Material::texture(int slot, int index) const
 {
 	int s = 0;
 	int offset = 0;
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	for (auto& uniform : uniforms)
 	{
 		if (uniform.type != UniformType::Texture2D) continue;
@@ -210,7 +210,7 @@ pxl::TextureSampler pxl::Material::sampler(int slot, int index) const
 {
 	int s = 0;
 	int offset = 0;
-	auto& uniforms = _shader->getUniforms();
+	auto& uniforms = _shader->uniforms();
 	for (auto& uniform : uniforms)
 	{
 		if (uniform.type != UniformType::Sampler2D)
