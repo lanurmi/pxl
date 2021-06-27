@@ -16,6 +16,7 @@ namespace pxl
 		Camera(int width, int height, int tilesize);
 		const Mat3x2 matrix() const;
 		Vec2 size() const;
+		Rect view() const;
 	private:
 		Vec2 _size;
 	};

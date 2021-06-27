@@ -32,6 +32,12 @@ Vec2 Camera::size() const
 	return _size;
 }
 
+Rect Camera::view() const {
+	int cx = (entity()->position.x - _size.x / 2);
+	int cy = (entity()->position.y - _size.y / 2);
+	return Rect(cx,cy, _size.x, _size.y);
+}
+
 
 static Vec2 getPosition(const Vec2& cameraSize, const Rect& bounds, const Vec2 targetPos)
 {
