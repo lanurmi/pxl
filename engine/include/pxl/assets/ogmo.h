@@ -8,66 +8,66 @@ namespace pxl
 	{
 		struct Entity
 		{
-			string name;
+			String name;
 			int id;
-			string _eid;
+			String _eid;
 			int x;
 			int y;
 			int origin_x;
 			int origin_y;
-			map<string, string> string_text_enum_color_values;
-			map<string, bool> bool_values;
-			map<string, int> int_values;
-			map<string, float> float_values;
+			Map<String, String> string_text_enum_color_values;
+			Map<String, bool> bool_values;
+			Map<String, int> int_values;
+			Map<String, float> float_values;
 
 		};
 		struct TileLayer
 		{
-			string name;
-			string _eid;
+			String name;
+			String _eid;
 			int offset_x;
 			int offset_y;
 			int grid_cell_width;
 			int grid_cell_height;
 			int grid_cells_x;
 			int grid_cells_y;
-			string tileset;
-			vector<int> data;
+			String tileset;
+			Vector<int> data;
 			int export_mode;
 			int array_mode;
 		};
 		struct EntityLayer
 		{
-			string name;
-			string _eid;
+			String name;
+			String _eid;
 			int offset_x;
 			int offset_y;
 			int grid_cell_width;
 			int grid_cell_height;
 			int grid_cells_x;
 			int grid_cells_y;
-			vector<Entity> entities;
+			Vector<Entity> entities;
 		};
 
 		
 
 		Ogmo();
-		Ogmo(const string& path);
-		void load(const string& path);
+		Ogmo(const String& path);
+		void load(const String& path);
 		bool valid() const { return !ogmo_version.empty(); }
-		bool checkStringValue(const string& key, const string& value);
-		const TileLayer* tileLayer(const string& name) const;
-		const EntityLayer* entityLayer(const string& name) const;
-		string ogmo_version;
+		bool checkStringValue(const String& key, const String& value);
+		const TileLayer* tileLayer(const String& name) const;
+		const EntityLayer* entityLayer(const String& name) const;
+		String ogmo_version;
 		int width;
 		int height;
 		int offset_x;
 		int offset_y;
 		std::vector<TileLayer> tile_layers;
 		std::vector<EntityLayer> entity_layers;
-		map<string, string> string_text_enum_color_values;
-		map<string, bool> bool_values;
-		map<string, int> int_values;
-		map<string, float> float_values;
+		Map<String, String> string_text_enum_color_values;
+		Map<String, bool> bool_values;
+		Map<String, int> int_values;
+		Map<String, float> float_values;
 	};
 }

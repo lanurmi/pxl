@@ -2,50 +2,57 @@
 
 using namespace pxl;
 
-void SceneManager::update()
+namespace
 {
-	if (_next_scene != nullptr)
+	Scene* s_current_scene;
+	Scene* s_next_scene;
+}
+
+void setNextScenePtr(Scene* scene)
+{
+	assert(s_next_scene == nullptr);
+	s_next_scene = scene;
+}
+
+void pxl::scenes::update()
+{
+	if (s_next_scene != nullptr)
 	{
-		if (_current_scene != nullptr)
+		if (s_current_scene != nullptr)
 		{
-			_current_scene->end();
+			s_current_scene->end();
 		}
-		delete _current_scene;
-		_current_scene = _next_scene;
-		_next_scene = nullptr;
-		_current_scene->begin();
+		delete s_current_scene;
+		s_current_scene = s_next_scene;
+		s_next_scene = nullptr;
+		s_current_scene->begin();
 	}
 
-	if (_current_scene != nullptr)
+	if (s_current_scene != nullptr)
 	{
-		_current_scene->trueUpdate();
+		s_current_scene->trueUpdate();
 	}
 }
 
-void SceneManager::draw()
+void pxl::scenes::draw()
 {
-	if (_current_scene != nullptr)
+	if (s_current_scene != nullptr)
 	{
-		_current_scene->draw();
+		s_current_scene->draw();
 	}
 }
 
-void SceneManager::end()
+void pxl::scenes::end()
 {
-	if (_current_scene != nullptr)
+	if (s_current_scene != nullptr)
 	{
-		_current_scene->end();
+		s_current_scene->end();
 	}
-	delete _next_scene;
-	delete _current_scene;
+	delete s_next_scene;
+	delete s_current_scene;
 }
 
-const Scene* SceneManager::scene() const
+Scene* pxl::scenes::scene()
 {
-	return _current_scene;
-}
-
-Scene* SceneManager::scene()
-{
-	return _current_scene;
+	return s_current_scene;
 }

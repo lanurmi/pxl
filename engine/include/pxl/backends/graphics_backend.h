@@ -8,28 +8,25 @@
 
 namespace pxl
 {
-	struct GraphicsFeatures
-	{
-		bool origin_bottom_left = false;
-		int max_texture_size = 0;
-	};
-
 	class PlatformBackend;
 
-	class GraphicsBackend
+	namespace graphics
 	{
-	public:
-		GraphicsBackend();
-		~GraphicsBackend();
-		void bind(PlatformBackend& platform);
-		void unbind(PlatformBackend& platform);
+		struct GraphicsFeatures
+		{
+			bool origin_bottom_left = false;
+			int max_texture_size = 0;
+		};
+
+		void bind();
+		void unbind();
 		void render(const DrawCall& pass);
 		void clearBackbuffer(const Color& color);
-		GraphicsFeatures features() const;
+		GraphicsFeatures features();
 
-		TextureRef createTexture(int width, int height, TextureFormat format) const;
-		ShaderRef createShader(const ShaderData& data) const;
-		MeshRef createMesh() const;
+		TextureRef createTexture(int width, int height, TextureFormat format);
+		ShaderRef createShader(const ShaderData& data);
+		MeshRef createMesh();
 		RenderTargetRef createRenderTarget(int width, int height);
-	};
+	}
 }

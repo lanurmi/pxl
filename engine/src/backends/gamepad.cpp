@@ -19,7 +19,7 @@ public:
 			axis[i] = 0.0f;
 		}
 	}
-	pxl::string name;
+	pxl::String name;
 	bool connected;
 	bool gamepad;
 	int button_count;
@@ -39,7 +39,7 @@ static Gamepadtate s_Gamepadtate[pxl::s_max_Gamepad];
 static Gamepadtate s_nextGamepadtate[pxl::s_max_Gamepad];
 
 //
-bool pxl::Gamepad::pressed(int index, Button button)
+bool pxl::gamepad::pressed(int index, Button button)
 {
 	int b = (int)button;
 	if (index < pxl::s_max_Gamepad && b >= 0 && b < pxl::s_max_gamepad_buttons)
@@ -48,7 +48,7 @@ bool pxl::Gamepad::pressed(int index, Button button)
 	}
 	return false;
 }
-bool pxl::Gamepad::down(int index, Button button)
+bool pxl::gamepad::down(int index, Button button)
 {
 	int b = (int)button;
 	if (index < pxl::s_max_Gamepad && b >= 0 && b < pxl::s_max_gamepad_buttons)
@@ -58,7 +58,7 @@ bool pxl::Gamepad::down(int index, Button button)
 	return false;
 }
 
-bool pxl::Gamepad::released(int index, Button button)
+bool pxl::gamepad::released(int index, Button button)
 {
 	int b = (int)button;
 	if (index < pxl::s_max_Gamepad && b >= 0 && b < pxl::s_max_gamepad_buttons)
@@ -68,12 +68,12 @@ bool pxl::Gamepad::released(int index, Button button)
 	return false;
 }
 
-void pxl::Gamepad::rumble(int index, float time, float strength)
+void pxl::gamepad::rumble(int index, float time, float strength)
 {
-	pxl::platform().rumble(index, time, strength);
+	pxl::platform::rumble(index, time, strength);
 }
 
-float pxl::Gamepad::axis(int index, Axis axis)
+float pxl::gamepad::axis(int index, Axis axis)
 {
 	int a = (int)axis;
 	if (index < pxl::s_max_Gamepad && a >= 0 && a < pxl::s_max_gamepad_axis)
@@ -83,7 +83,7 @@ float pxl::Gamepad::axis(int index, Axis axis)
 	return false;
 }
 
-void pxl::Gamepad::onConnect(int index, const string& name, u16 vendor, u16 product, u16 version)
+void pxl::gamepad::onConnect(int index, const String& name, u16 vendor, u16 product, u16 version)
 {
 	if (index < 0 || index >= s_max_Gamepad) return;
 
@@ -98,7 +98,7 @@ void pxl::Gamepad::onConnect(int index, const string& name, u16 vendor, u16 prod
 	state.axis_count = s_max_gamepad_axis;
 }
 
-void pxl::Gamepad::onDisconnect(int index)
+void pxl::gamepad::onDisconnect(int index)
 {
 	if (index < 0 || index >= s_max_Gamepad) return;
 
@@ -106,7 +106,7 @@ void pxl::Gamepad::onDisconnect(int index)
 }
 
 
-void pxl::Gamepad::onButtonDown(int index, int button)
+void pxl::gamepad::onButtonDown(int index, int button)
 {
 	if (index < pxl::s_max_Gamepad && button < pxl::s_max_gamepad_buttons)
 	{
@@ -120,7 +120,7 @@ void pxl::Gamepad::onButtonDown(int index, int button)
 	}
 }
 
-void pxl::Gamepad::onButtonUp(int index, int button)
+void pxl::gamepad::onButtonUp(int index, int button)
 {
 	if (index < pxl::s_max_Gamepad && button < pxl::s_max_gamepad_buttons)
 	{
@@ -133,7 +133,7 @@ void pxl::Gamepad::onButtonUp(int index, int button)
 	}
 }
 
-void  pxl::Gamepad::onAxis(int index, int axis, float value)
+void pxl::gamepad::onAxis(int index, int axis, float value)
 {
 	if (index < pxl::s_max_Gamepad && axis < pxl::s_max_gamepad_axis)
 	{
@@ -146,7 +146,7 @@ void  pxl::Gamepad::onAxis(int index, int axis, float value)
 	}
 }
 
-void pxl::Gamepad::update()
+void pxl::gamepad::update()
 {
 	for (int i = 0; i < s_max_Gamepad; i++)
 	{

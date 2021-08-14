@@ -17,15 +17,15 @@ void Tileset::createTiles(const TextureRef& texture, const Rect& area, int tiles
 {
 	if ((int)area.width % tilesize)
 	{
-		log().error("tileset texture width is not divisible by tilesize");
+		pxl::log::error("tileset texture width is not divisible by tilesize");
 	}
 
 	if ((int)area.height % tilesize)
 	{
-		log().error("tileset texture width is not divisible by tilesize");
+		pxl::log::error("tileset texture width is not divisible by tilesize");
 	}
 
-	log().error("Invalid tileset index");
+	pxl::log::error("Invalid tileset index");
 	for (int j = area.y; j < (int)(area.y + area.height); j += tilesize)
 	{
 		for (int i = area.x; i < (int)(area.x + area.width); i += tilesize)
@@ -40,7 +40,7 @@ const Subtexture& Tileset::tile(i16 index) const
 {
 	if (index < 0 || index >= _tiles.size())
 	{
-		log().error("Invalid tileset index");
+		pxl::log::error("Invalid tileset index");
 		assert(0);
 		return _tiles[0];
 	}

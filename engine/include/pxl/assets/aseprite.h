@@ -62,7 +62,7 @@ namespace pxl
 
 		struct UserData
 		{
-			string text;
+			String text;
 			Color color;
 		};
 
@@ -83,14 +83,14 @@ namespace pxl
 		{
 			int duration = 0;
 			Image image;
-			vector<Cel> cels;
+			Vector<Cel> cels;
 		};
 
 		struct Layer
 		{
 			LayerFlags flag = (LayerFlags)0;
 			LayerTypes type = LayerTypes::Normal;
-			string name;
+			String name;
 			int child_level = 0;
 			int blendmode = 0;
 			unsigned char alpha = 0;
@@ -100,7 +100,7 @@ namespace pxl
 
 		struct Tag
 		{
-			string name;
+			String name;
 			LoopDirections loops = LoopDirections::Forward;
 			int from = 0;
 			int to = 0;
@@ -111,7 +111,7 @@ namespace pxl
 		struct Slice
 		{
 			int frame = 0;
-			string name;
+			String name;
 			Vec2 origin;
 			int width = 0;
 			int height = 0;
@@ -124,14 +124,14 @@ namespace pxl
 		int width = 0;
 		int height = 0;
 
-		vector<Layer> layers;
-		vector<Frame> frames;
-		vector<Tag>   tags;
-		vector<Slice> slices;
-		vector<Color> palette;
+		Vector<Layer> layers;
+		Vector<Frame> frames;
+		Vector<Tag>   tags;
+		Vector<Slice> slices;
+		Vector<Color> palette;
 
 		Aseprite();
-		Aseprite(const string& path);
+		Aseprite(const String& path);
 		Aseprite(const Aseprite& src);
 		Aseprite(Aseprite&& src) noexcept;
 		Aseprite& operator=(const Aseprite& src);

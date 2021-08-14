@@ -8,33 +8,29 @@
 
 namespace pxl
 {
-	class PlatformBackend
+	namespace platform
 	{
-	public:
-		PlatformBackend();
-		~PlatformBackend();
 		void init(const pxl::Config& config);
 		void shutdown();
-		void update();
-		void setTitle(const string& title);
+		bool update();
+		void setTitle(const String& title);
 		void present();
 		void sleep(int ms);
 		void vsync(bool vsync);
 		u64 ticks();
-		Vec2 drawSize() const;
-		Vec2 size() const;
-		Vec2 position() const;
+		Vec2 drawSize();
+		Vec2 size();
+		Vec2 position();
 		//Gamepad
 		void rumble(int index, float time, float strength);
 		void inputUpdate();
 		//Paths
-		string applicationPath() const;
-		string userPath() const;
+		String applicationPath();
+		String userPath();
 		// Opengl
 		void* glCreateContext();
 		void glBindContext(void* context);
 		void glDestroyContext(void* context);
-		void* glGetFunc(const string& name);
-		Func onEnd;
-	};
+		void* glGetFunc(const String& name);
+	}
 }

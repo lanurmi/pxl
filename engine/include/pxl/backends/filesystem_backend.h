@@ -5,18 +5,18 @@ namespace pxl
 {
 	namespace path
 	{
-		string extension(const string& path);
-		string combine(const string lowerPath, const string upperPath);
-		string withoutFile(const string& path);
-		string filename(const string& path);
+		String extension(const String& path);
+		String combine(const String lowerPath, const String upperPath);
+		String withoutFile(const String& path);
+		String filename(const String& path);
 	}
 	namespace file
 	{
-		bool exists(const string& path);
+		bool exists(const String& path);
 
 		class File;
 		using FileRef = std::shared_ptr<File>;
-		FileRef open(const string& path);
+		FileRef open(const String& path);
 
 		enum class FileMode
 		{
@@ -27,7 +27,7 @@ namespace pxl
 		{
 		public:
 
-			static FileRef open(const string& file, FileMode mode);
+			static FileRef open(const String& file, FileMode mode);
 			File(const File&) = delete;
 			File(File&&) = delete;
 			File& operator=(const File&) = delete;
@@ -44,7 +44,7 @@ namespace pxl
 	}
 	namespace directory
 	{
-		vector<string> files(const string& path, const string& extension = "");
-		bool exists(const string& path);
+		Vector<String> files(const String& path, const String& extension = "");
+		bool exists(const String& path);
 	}
 }

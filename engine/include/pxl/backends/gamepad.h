@@ -38,21 +38,19 @@ namespace pxl
 		RightTrigger = 5
 	};
 
-	class Gamepad
+	namespace gamepad
 	{
-	public:
 		bool pressed(int index, Button key);
 		bool down(int index, Button key);
 		bool released(int index, Button key);
 		void rumble(int index, float time, float strength);
 		float axis(int index, Axis axis);
-	private:
+
 		void update(); //called by engine
-		void onConnect(int index, const string& name, u16 vendor, u16 product, u16 version);
-		void onDisconnect(int index);
-		void onButtonDown(int index, int button);
-		void onButtonUp(int index, int button);
-		void onAxis(int index, int axis, float value);
-		friend class pxl::PlatformBackend;
+		void onConnect(int index, const String& name, u16 vendor, u16 product, u16 version); // called by platform
+		void onDisconnect(int index); // called by platform
+		void onButtonDown(int index, int button); // called by platform
+		void onButtonUp(int index, int button); // called by platform
+		void onAxis(int index, int axis, float value); // called by platform
 	};
 }

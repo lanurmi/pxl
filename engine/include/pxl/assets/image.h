@@ -9,14 +9,14 @@ namespace pxl
 	{
 	public:
 		Image(int width, int height);
-		Image(const string &file);
+		Image(const String &file);
 		Image(const Image& src);
 		Image(Image &&src) noexcept;
 		Image& operator=(Image&& src) noexcept;
 		Image& operator=(const Image& src);
 		Image();
 		~Image();
-		void load(const string& file);
+		void load(const String& file);
 		int width() const;
 		int height() const;
 		void setPixels(const Color* data);

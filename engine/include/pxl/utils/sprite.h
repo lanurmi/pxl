@@ -15,15 +15,15 @@ namespace pxl
 
 		struct Animation
 		{
-			string name;
-			vector<Frame> frames;
+			String name;
+			Vector<Frame> frames;
 		};
 
-		string name;
+		String name;
 		Vec2 origin;
-		vector<Animation> animations;
+		Vector<Animation> animations;
 
-		const Animation* animation(const string &name) const;
-		int indexOfAnimation(const string& name) const;
+		const Animation* animation(const String &name) const;
+		int indexOfAnimation(const String& name) const;
 	};
 }

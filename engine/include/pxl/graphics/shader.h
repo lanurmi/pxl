@@ -26,7 +26,7 @@ namespace pxl
 
 	struct UniformInfo
 	{
-		string name;
+		String name;
 		UniformType type;
 		ShaderType shader;
 		int buffer_index;
@@ -38,8 +38,8 @@ namespace pxl
 
 	struct ShaderData
 	{
-		string vertex;
-		string pixel;
+		String vertex;
+		String pixel;
 	};
 
 	class Shader
@@ -52,11 +52,11 @@ namespace pxl
 		virtual ~Shader() = default;
 		static ShaderRef create(const ShaderData& data);
 		static ShaderRef create();
-		const vector<UniformInfo>& uniforms() const;
+		const Vector<UniformInfo>& uniforms() const;
 	protected:
 		Shader() = default;
 		void addUniformInfo(const UniformInfo& info);
 	private:
-		vector<UniformInfo> _uniforms;
+		Vector<UniformInfo> _uniforms;
 	};
 }

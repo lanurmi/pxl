@@ -4,7 +4,7 @@
 
 pxl::RenderTargetRef pxl::RenderTarget::create(int width, int height)
 {
-	return pxl::graphics().createRenderTarget(width, height);
+	return pxl::graphics::createRenderTarget(width, height);
 }
 
 int pxl::RenderTarget::width() const

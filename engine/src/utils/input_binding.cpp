@@ -4,6 +4,13 @@
 
 using namespace pxl;
 
+
+namespace
+{
+	std::vector<std::weak_ptr<VirtualButton>> s_input_bindings;
+	std::vector<std::weak_ptr<VirtualAxis>> s_axis_bindings;
+}
+
 pxl::VirtualButton::VirtualButton() : _controller_index(-1), _buffer_timer(0.0f), _buffer_time(0.0f), _pressed(false), _released(false), _down(false)
 {
 
@@ -26,20 +33,18 @@ void pxl::VirtualButton::update()
 	_pressed = false;
 	_down = false;
 	_released = false;
-	auto& keyboard = pxl::keyboard();
 	for (auto& key : _key_binds)
 	{
-		_pressed |= keyboard.pressed(key);
-		_down |= keyboard.down(key);
-		_released |= keyboard.released(key);
+		_pressed |= pxl::keyboard::pressed(key);
+		_down |= pxl::keyboard::down(key);
+		_released |= pxl::keyboard::released(key);
 	} 
 
-	auto& gamepad = pxl::Gamepad();
 	for (auto& btn : _button_binds)
 	{
-		_pressed |= gamepad.pressed(_controller_index, btn);
-		_down |= gamepad.down(_controller_index, btn);
-		_released |= gamepad.released(_controller_index, btn);
+		_pressed |= pxl::gamepad::pressed(_controller_index, btn);
+		_down |= pxl::gamepad::down(_controller_index, btn);
+		_released |= pxl::gamepad::released(_controller_index, btn);
 	}
 	_buffer_timer = pxl::calc::approach(_buffer_timer, 0.0f, pxl::time::delta);
 	if (_pressed)
@@ -117,47 +122,47 @@ int pxl::VirtualAxis::sign() {
 	return (_positive.down() ? 1 : 0) - (_negative.down() ? 1 : 0);
 }
 
-pxl::VirtualButtonRef pxl::Bindings::CreateButton()
+pxl::VirtualButtonRef pxl::bindings::createButton()
 {
-	pxl::log().message("button binding created");
+	pxl::log::message("button binding created");
 	auto binding = pxl::VirtualButtonRef(new VirtualButton());
-	_input_bindings.push_back(binding);
+	s_input_bindings.push_back(binding);
 	return binding;
 }
 
-pxl::VirtualAxisRef pxl::Bindings::CreateAxis()
+pxl::VirtualAxisRef pxl::bindings::createAxis()
 {
-	pxl::log().message("axis binding created");
+	pxl::log::message("axis binding created");
 	auto binding = pxl::VirtualAxisRef(new VirtualAxis());
-	_axis_bindings.push_back(binding);
+	s_axis_bindings.push_back(binding);
 	return binding;
 }
 
-void pxl::Bindings::update()
+void pxl::bindings::update()
 {
-	for (int i = _input_bindings.size() - 1; i >= 0; i--)
+	for (int i = s_input_bindings.size() - 1; i >= 0; i--)
 	{
-		if (auto input = _input_bindings[i].lock())
+		if (auto input = s_input_bindings[i].lock())
 		{
 			input->update();
 		}
 		else
 		{
-			_input_bindings.erase(_input_bindings.begin() + i);
-			pxl::log().message("input binding removed");
+			s_input_bindings.erase(s_input_bindings.begin() + i);
+			pxl::log::message("input binding removed");
 		}
 	}
 
-	for (int i = _axis_bindings.size() - 1; i >= 0; i--)
+	for (int i = s_axis_bindings.size() - 1; i >= 0; i--)
 	{
-		if (auto axis = _axis_bindings[i].lock())
+		if (auto axis = s_axis_bindings[i].lock())
 		{
 			axis->update();
 		}
 		else
 		{
-			_axis_bindings.erase(_axis_bindings.begin() + i);
-			pxl::log().message("axisbinding removed");
+			s_axis_bindings.erase(s_axis_bindings.begin() + i);
+			pxl::log::message("axisbinding removed");
 		}
 	}
 }

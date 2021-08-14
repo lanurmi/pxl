@@ -14,7 +14,10 @@ add_library(pxl
 	src/time.cpp
 	src/log.cpp
 	src/types.cpp
-	src/content.cpp
+	
+	src/containers/string.cpp
+	src/containers/vector.cpp
+	src/containers/map.cpp
 
 	src/backends/platform_backend_sdl.cpp	
 	src/backends/filesystem_backend_cpp.cpp
@@ -31,14 +34,14 @@ add_library(pxl
 	src/graphics/sampler.cpp
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
-	src/graphics/sprite_font.cpp
 	src/graphics/Subtexture.cpp
 
-	src/assets/BMFont.cpp
+	
 	src/assets/aseprite.cpp
 	src/assets/ogmo.cpp
 	src/assets/image.cpp
 	src/assets/ldtk.cpp
+	src/assets/font.cpp
 	
 	src/math/calc.cpp
 	src/math/color.cpp
@@ -58,6 +61,7 @@ add_library(pxl
 	src/utils/sprite.cpp
 	src/utils/tileset.cpp
 	src/utils/filestream.cpp
+	src/utils/sprite_font.cpp
 
 	src/utils/components/camera.cpp
 )

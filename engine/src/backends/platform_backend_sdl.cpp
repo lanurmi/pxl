@@ -19,15 +19,12 @@ static SDL_Haptic* s_gamepad_haptics[pxl::s_max_Gamepad];
 static char* s_applicationPath = nullptr;
 static char* s_userPath = nullptr;
 
-pxl::PlatformBackend::PlatformBackend()
-{
-}
 
-void pxl::PlatformBackend::init(const pxl::Config& config)
+void pxl::platform::init(const pxl::Config& config)
 {
 	if (SDL_Init(SDL_INIT_VIDEO |SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC) < 0)
 	{
-		pxl::log().error("Could not load png image");
+		pxl::log::error("Could not load png image");
 		assert(0);
 		return;
 	}
@@ -45,20 +42,20 @@ void pxl::PlatformBackend::init(const pxl::Config& config)
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-	s_window = SDL_CreateWindow(config.title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.width, config.height, flags);
+	s_window = SDL_CreateWindow(config.title.cstr(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.width, config.height, flags);
 	if (s_window == nullptr)
 	{
-		pxl::log().error("Window creation failed");
+		pxl::log::error("Window creation failed");
 		assert(0);
 		return;
 	}
 	SDL_SetWindowMinimumSize(s_window, 256, 256);
 
 	s_applicationPath = SDL_GetBasePath();
-	s_userPath = SDL_GetPrefPath(nullptr, config.name.c_str());
+	s_userPath = SDL_GetPrefPath(nullptr, config.name.cstr());
 }
 
-void pxl::PlatformBackend::shutdown()
+void pxl::platform::shutdown()
 {
 	for (int i = 0; i < pxl::s_max_Gamepad; i++)
 	{
@@ -73,11 +70,6 @@ void pxl::PlatformBackend::shutdown()
 	SDL_free(s_applicationPath);
 	SDL_DestroyWindow(s_window);
 	SDL_Quit();
-}
-
-pxl::PlatformBackend::~PlatformBackend()
-{
-
 }
 
 static int getGamepadIndex(SDL_JoystickID joystickId)
@@ -96,22 +88,19 @@ static int getGamepadIndex(SDL_JoystickID joystickId)
 	return -1;
 }
 
-void pxl::PlatformBackend::update()
+bool pxl::platform::update()
 {
 	int mx, my;
 	SDL_GetGlobalMouseState(&mx, &my);
-	auto& mouse = pxl::mouse();
-	mouse.onMousePosition(pxl::Vec2(mx, my));
+	pxl::mouse::onMousePosition(pxl::Vec2(mx, my));
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT)
 		{
-			if (onEnd != nullptr)
-			{
-				onEnd();
-			}
+			return false;
+			break;
 		}
 		else if (event.type == SDL_MOUSEBUTTONDOWN)
 		{
@@ -128,7 +117,7 @@ void pxl::PlatformBackend::update()
 			{
 				btn = MouseButton::Middle;
 			}
-			pxl::mouse().onButtonDown(btn);
+			pxl::mouse::onButtonDown(btn);
 		}
 		else if (event.type == SDL_MOUSEBUTTONUP)
 		{
@@ -145,7 +134,7 @@ void pxl::PlatformBackend::update()
 			{
 				btn = MouseButton::Middle;
 			}
-			pxl::mouse().onButtonUp(btn);
+			pxl::mouse::onButtonUp(btn);
 		}
 		else if (event.type == SDL_CONTROLLERDEVICEADDED)
 		{
@@ -158,7 +147,7 @@ void pxl::PlatformBackend::update()
 				auto product = SDL_GameControllerGetProduct(ptr);
 				auto version = SDL_GameControllerGetProductVersion(ptr);
 
-				pxl::Gamepad().onConnect(index, pxl::string(name), vendor, product, version);
+				pxl::gamepad::onConnect(index, pxl::String(name), vendor, product, version);
 				int asd = SDL_NumHaptics();
 				auto joystick = SDL_GameControllerGetJoystick(ptr);
 
@@ -178,21 +167,21 @@ void pxl::PlatformBackend::update()
 			if (index >= 0)
 			{
 				SDL_GameControllerClose(s_Gamepad[index]);
-				pxl::Gamepad().onDisconnect(index);
+				pxl::gamepad::onDisconnect(index);
 			}
 		}
 		else if (event.type == SDL_KEYDOWN)
 		{
 			if (event.key.repeat == 0)
 			{
-				pxl::keyboard().onKeyDown((pxl::Key)event.key.keysym.scancode);
+				pxl::keyboard::onKeyDown((pxl::Key)event.key.keysym.scancode);
 			}
 		}
 		else if (event.type == SDL_KEYUP)
 		{
 			if (event.key.repeat == 0)
 			{
-				pxl::keyboard().onKeyUp((pxl::Key)event.key.keysym.scancode);
+				pxl::keyboard::onKeyUp((pxl::Key)event.key.keysym.scancode);
 			}
 		}
 		else if (event.type == SDL_CONTROLLERBUTTONDOWN)
@@ -205,7 +194,7 @@ void pxl::PlatformBackend::update()
 					button = event.cbutton.button;
 				}
 
-				pxl::Gamepad().onButtonDown(index, button);
+				pxl::gamepad::onButtonDown(index, button);
 			}
 		}
 		else if (event.type == SDL_CONTROLLERBUTTONUP)
@@ -219,7 +208,7 @@ void pxl::PlatformBackend::update()
 					button = event.cbutton.button;
 				}
 
-				pxl::Gamepad().onButtonUp(index, button);
+				pxl::gamepad::onButtonUp(index, button);
 			}
 		}
 		else if (event.type == SDL_CONTROLLERAXISMOTION)
@@ -242,20 +231,21 @@ void pxl::PlatformBackend::update()
 				{
 					value = event.caxis.value / 32768.0f;
 				}
-				pxl::Gamepad().onAxis(index, axis, value);
+				pxl::gamepad::onAxis(index, axis, value);
 			}
 		}
 	}
+	return true;
 }
 
-void pxl::PlatformBackend::inputUpdate()
+void pxl::platform::inputUpdate()
 {
-	pxl::mouse().update();
-	pxl::Gamepad().update();
-	pxl::keyboard().update();
+	pxl::mouse::update();
+	pxl::keyboard::update();
+	pxl::gamepad::update();
 }
 
-void pxl::PlatformBackend::rumble(int index, float time, float strength)
+void pxl::platform::rumble(int index, float time, float strength)
 {
 	assert(strength >= 0.0f && strength <= 1.0f);
 	if (index < pxl::s_max_Gamepad)
@@ -265,41 +255,41 @@ void pxl::PlatformBackend::rumble(int index, float time, float strength)
 	}
 }
 
-pxl::Vec2 pxl::PlatformBackend::position() const
+pxl::Vec2 pxl::platform::position()
 {
 	int wx, wy;
 	SDL_GetWindowPosition(s_window, &wx, &wy);
 	return pxl::Vec2(wx, wy);
 }
-pxl::string pxl::PlatformBackend::applicationPath() const
+pxl::String pxl::platform::applicationPath()
 {
-	return string(s_applicationPath);
+	return String(s_applicationPath);
 }
 
-pxl::string pxl::PlatformBackend::userPath() const
+pxl::String pxl::platform::userPath()
 {
-	return string(s_userPath);
+	return String(s_userPath);
 }
 
-void pxl::PlatformBackend::setTitle(const pxl::string& title)
+void pxl::platform::setTitle(const pxl::String& title)
 {
 	assert(s_window);
-	SDL_SetWindowTitle(s_window, title.c_str());
+	SDL_SetWindowTitle(s_window, title.cstr());
 }
 
-void pxl::PlatformBackend::present()
+void pxl::platform::present()
 {
 	assert(s_window);
 	SDL_GL_SwapWindow(s_window);
 }
 
-void pxl::PlatformBackend::sleep(int ms)
+void pxl::platform::sleep(int ms)
 {
 	assert(ms >= 0);
 	SDL_Delay(ms);
 }
 
-void pxl::PlatformBackend::vsync(bool vsync)
+void pxl::platform::vsync(bool vsync)
 {
 	if (vsync)
 	{
@@ -311,47 +301,47 @@ void pxl::PlatformBackend::vsync(bool vsync)
 	}
 }
 
-void* pxl::PlatformBackend::glCreateContext()
+void* pxl::platform::glCreateContext()
 {
 	void* pointer = SDL_GL_CreateContext(s_window);
 	if (pointer == nullptr)
 	{
-		pxl::log().error("OpenGL Context creation failed");
+		pxl::log::error("OpenGL Context creation failed");
 		assert(0);
 	}
 	return pointer;
 }
 
-void pxl::PlatformBackend::glBindContext(void* context)
+void pxl::platform::glBindContext(void* context)
 {
 	SDL_GL_MakeCurrent(s_window, context);
 }
 
-void pxl::PlatformBackend::glDestroyContext(void* context)
+void pxl::platform::glDestroyContext(void* context)
 {
 	SDL_GL_DeleteContext(context);
 }
 
-void* pxl::PlatformBackend::glGetFunc(const pxl::string& name)
+void* pxl::platform::glGetFunc(const pxl::String& name)
 {
-	return SDL_GL_GetProcAddress(name.c_str());
+	return SDL_GL_GetProcAddress(name.cstr());
 }
 
-pxl::u64 pxl::PlatformBackend::ticks()
+pxl::u64 pxl::platform::ticks()
 {
 	auto counter = SDL_GetPerformanceCounter();
 	auto per_second = (double)SDL_GetPerformanceFrequency();
 	return (u64)(counter * (time::ticks_per_second / per_second));
 }
 
-pxl::Vec2 pxl::PlatformBackend::drawSize() const
+pxl::Vec2 pxl::platform::drawSize()
 {
 	int w, h;
 	SDL_GL_GetDrawableSize(s_window, &w, &h);
 	return pxl::Vec2(w, h);
 }
 
-pxl::Vec2 pxl::PlatformBackend::size() const
+pxl::Vec2 pxl::platform::size()
 {
 	int w, h;
 	SDL_GetWindowSize(s_window, &w, &h);

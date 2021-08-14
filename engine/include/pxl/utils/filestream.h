@@ -8,13 +8,14 @@ namespace pxl
 	class FileStream
 	{
 	public:
-		FileStream(const string& path, FileMode mode);
+		FileStream(const String& path, FileMode mode);
 		bool eof() const;
-		string line();
-		string all();
+		String line();
+		String all();
 		size_t position() const;
 		size_t seek(size_t to) const;
 		size_t read(u8* ptr, size_t length);
+		size_t length() const;
 		template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 		T read()
 		{

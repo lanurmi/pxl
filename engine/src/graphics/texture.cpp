@@ -5,7 +5,7 @@
 pxl::TextureRef pxl::Texture::create(int width, int height, pxl::TextureFormat format, pxl::u8* data)
 {
 	assert(width > 0 && height > 0);
-	auto tex = pxl::graphics().createTexture(width, height, format);
+	auto tex = pxl::graphics::createTexture(width, height, format);
 	if (tex != nullptr && data != nullptr)
 	{
 		tex->setData(data);
@@ -17,7 +17,7 @@ pxl::TextureRef pxl::Texture::create(int width, int height, pxl::TextureFormat f
 pxl::TextureRef pxl::Texture::create(int width, int height, pxl::TextureFormat format)
 {
 	assert(width > 0 && height > 0);
-	auto tex = pxl::graphics().createTexture(width, height, format);
+	auto tex = pxl::graphics::createTexture(width, height, format);
 	return tex;
 }
 

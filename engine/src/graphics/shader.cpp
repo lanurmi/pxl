@@ -56,7 +56,7 @@ const pxl::ShaderData s_default_shader = {
 */
 pxl::ShaderRef pxl::Shader::create(const ShaderData& data)
 {
-	return pxl::graphics().createShader(data);
+	return pxl::graphics::createShader(data);
 }
 
 pxl::ShaderRef pxl::Shader::create()
@@ -69,7 +69,7 @@ void pxl::Shader::addUniformInfo(const pxl::UniformInfo& info)
 	_uniforms.push_back(info);
 }
 
-const pxl::vector<pxl::UniformInfo>& pxl::Shader::uniforms() const
+const pxl::Vector<pxl::UniformInfo>& pxl::Shader::uniforms() const
 {
 	return _uniforms;
 }

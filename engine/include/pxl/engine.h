@@ -10,52 +10,10 @@
 #include <pxl/backends/mouse.h>
 #include <pxl/utils/scene_manager.h>
 #include <pxl/utils/input_binding.h>
-#include <pxl/content.h>
 #include <pxl/log.h>
 
 namespace pxl
 {
-	class Engine
-	{
-	public:
-		static Engine& instance();
-		void begin(const Config& config);
-		GraphicsBackend& graphics();
-		PlatformBackend& platform();
-		Gamepad& gamepad();
-		KeyboardBackend& keyboard();
-		Bindings& bindings();
-		Content& content();
-		Mouse& mouse();
-		SceneManager& sceneManager();
-		Log& log();
-		Vec2 drawSize() const;
-		Vec2 size() const;
-		string applicationPath() const;
-		string userPath() const;
-		void end();
-	private:
-		Engine();
-		PlatformBackend _platform;
-		GraphicsBackend _graphics;
-		Gamepad _gamepad;
-		KeyboardBackend _keyboard;
-		Content _content;
-		Bindings _bindings;
-		Log _log;
-		Mouse _mouse;
-		SceneManager _scene_manager;
-	};
-
-	Engine& engine();
-	Bindings& bindings();
-	SceneManager& sceneManager();
-	Log& log();
-	Content& content();
-
-	GraphicsBackend& graphics();
-	PlatformBackend& platform();
-	Mouse& mouse();
-	Gamepad& gamepad();
-	KeyboardBackend& keyboard();
+	void begin(const Config& config);
+	void end();
 }

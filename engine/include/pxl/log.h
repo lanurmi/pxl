@@ -4,11 +4,9 @@
 
 namespace pxl
 {
-	class Log
+	namespace log
 	{
-	public:
-		void message(const string& message);
-		void error(const string& error);
-		std::function<void(const string&)> onLog;
+		void message(const String& message);
+		void error(const String& error);
 	};
 }

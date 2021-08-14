@@ -45,14 +45,10 @@ namespace pxl
 	using VirtualButtonRef = std::shared_ptr<VirtualButton>;
 	using VirtualAxisRef = std::shared_ptr<VirtualAxis>;
 
-	class Bindings
+	namespace bindings
 	{
-	public:
-		VirtualButtonRef CreateButton();
-		VirtualAxisRef CreateAxis();
+		VirtualButtonRef createButton();
+		VirtualAxisRef createAxis();
 		void update();
-	private:
-		std::vector<std::weak_ptr<VirtualButton>> _input_bindings;
-		std::vector<std::weak_ptr<VirtualAxis>> _axis_bindings;
 	};
 }

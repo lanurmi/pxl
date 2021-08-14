@@ -105,7 +105,7 @@ static Node* splitNode(Node* node, int w, int h, std::vector<Node*> &nodeBuffer)
 
 int ImagePacker::doPack(int fromEntry)
 {
-	vector<Node*> nodes;
+	Vector<Node*> nodes;
 
 	auto rootNode = new Node();
 	rootNode->width = _width;

@@ -10,45 +10,46 @@ Ogmo::Ogmo()
 
 }
 
-Ogmo::Ogmo(const string &path)
+Ogmo::Ogmo(const String&path)
 {
 	load(path);
 }
 
-static void parseValues(std::map<string,string>& dstStrings,
-	std::map<string,int>& dstInt,
-	std::map<string,float>& dstFloats,
-	std::map<string,bool>& dstBools,
+static void parseValues(Map<String, String>& dstStrings,
+	Map<String,int>& dstInt,
+	Map<String,float>& dstFloats,
+	Map<String,bool>& dstBools,
 	const nlohmann::json& valuesJson)
 {
 	for (auto itv = valuesJson.begin(); itv != valuesJson.end(); ++itv)
 	{
+		pxl::String key(itv.key().c_str());
 		if (itv->is_string())
 		{
-			dstStrings[itv.key()] = itv.value();
+			dstStrings[key] = itv.value().get<std::string>().c_str();
 		}
 		else if (itv->is_number_float())
 		{
-			dstFloats[itv.key()] = itv.value();
+			dstFloats[key] = itv.value();
 		}
 		else if (itv->is_number_integer())
 		{
-			dstInt[itv.key()] = itv.value();
+			dstInt[key] = itv.value();
 		}
 		else if (itv->is_boolean())
 		{
-			dstBools[itv.key()] = itv.value();
+			dstBools[key] = itv.value();
 		}
 	}
 }
 
-void Ogmo::load(const string& path)
+void Ogmo::load(const String& path)
 {
 	FileStream file(path, file::FileMode::Read);
-	string data = file.all();
-	nlohmann::json ogmoJson = nlohmann::json::parse(data);
+	String data = file.all();
+	nlohmann::json ogmoJson = nlohmann::json::parse(data.cstr());
 	
-	ogmo_version = ogmoJson["ogmoVersion"].get<string>();
+	ogmo_version = ogmoJson["ogmoVersion"].get<std::string>().c_str();
 	width = ogmoJson["width"].get<int>();
 	height = ogmoJson["height"].get<int>();
 	offset_x = ogmoJson["offsetX"].get<int>();
@@ -65,8 +66,8 @@ void Ogmo::load(const string& path)
 		if (it.contains("entities"))
 		{
 			EntityLayer layer;
-			layer.name = it["name"].get<string>();
-			layer._eid = it["_eid"].get<string>();
+			layer.name = it["name"].get<std::string>().c_str();
+			layer._eid = it["_eid"].get<std::string>().c_str();
 			layer.offset_x = it["offsetX"].get<int>();
 			layer.offset_y = it["offsetY"].get<int>();
 			layer.grid_cell_width = it["gridCellWidth"].get<int>();
@@ -77,9 +78,9 @@ void Ogmo::load(const string& path)
 			for (auto& e : entities)
 			{
 				Entity entity;
-				entity.name = e["name"].get<string>();
+				entity.name = e["name"].get<std::string>().c_str();;
 				entity.id = e["id"].get<int>();
-				entity._eid = e["_eid"].get<string>();
+				entity._eid = e["_eid"].get<std::string>().c_str();;
 				entity.x = e["x"].get<int>();
 				entity.y = e["y"].get<int>();
 				entity.origin_x = e["originX"].get<int>();
@@ -96,15 +97,15 @@ void Ogmo::load(const string& path)
 		else if(it.contains("tileset"))
 		{
 			TileLayer layer;
-			layer.name = it["name"].get<string>();
-			layer._eid = it["_eid"].get<string>();
+			layer.name = it["name"].get<std::string>().c_str();
+			layer._eid = it["_eid"].get<std::string>().c_str();
 			layer.offset_x = it["offsetX"].get<int>();
 			layer.offset_y = it["offsetY"].get<int>();
 			layer.grid_cell_width = it["gridCellWidth"].get<int>();
 			layer.grid_cell_height = it["gridCellHeight"].get<int>();
 			layer.grid_cells_x = it["gridCellsX"].get<int>();
 			layer.grid_cells_y = it["gridCellsY"].get<int>();
-			layer.tileset = it["tileset"].get<string>();
+			layer.tileset = it["tileset"].get<std::string>().c_str();
 			auto data = it["data"];
 			for (auto& d : data)
 			{
@@ -117,7 +118,7 @@ void Ogmo::load(const string& path)
 	}
 }
 
-bool Ogmo::checkStringValue(const string& key, const string& value)
+bool Ogmo::checkStringValue(const String& key, const String& value)
 {
 	auto it = string_text_enum_color_values.find(key);
 	if (it == string_text_enum_color_values.end()) return false;
@@ -125,7 +126,7 @@ bool Ogmo::checkStringValue(const string& key, const string& value)
 	return it->second == value;
 }
 
-const Ogmo::TileLayer* Ogmo::tileLayer(const string& name) const
+const Ogmo::TileLayer* Ogmo::tileLayer(const String& name) const
 {
 	for (int i = 0; i < tile_layers.size(); i++)
 	{
@@ -137,7 +138,7 @@ const Ogmo::TileLayer* Ogmo::tileLayer(const string& name) const
 	return nullptr;
 }
 
-const Ogmo::EntityLayer* Ogmo::entityLayer(const string& name) const
+const Ogmo::EntityLayer* Ogmo::entityLayer(const String& name) const
 {
 	for (int i = 0; i < entity_layers.size(); i++)
 	{

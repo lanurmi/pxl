@@ -3,8 +3,6 @@
 
 namespace pxl
 {
-	class PlatformBackend;
-
 	enum class Key 	{
 		A = 4,
 		B = 5,
@@ -174,17 +172,14 @@ namespace pxl
 		RightOS = 231
 	};
 
-	class KeyboardBackend
+	namespace keyboard
 	{
-	public:
-		//
 		bool pressed(Key key);
 		bool down(Key key);
 		bool released(Key key);
-	private:
-		void update();
-		void onKeyDown(Key key);
-		void onKeyUp(Key key);
-		friend class pxl::PlatformBackend;
-	};
+
+		void update(); //called by engine
+		void onKeyDown(Key key); // called by platform
+		void onKeyUp(Key key); // called by platform
+	}
 }

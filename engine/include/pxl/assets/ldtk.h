@@ -7,7 +7,7 @@ namespace pxl
 	{
 		struct EntityInstance
 		{
-			string _identifier;
+			String _identifier;
 			int _grid[2];
 			int _pivot[2];
 			int width;
@@ -30,7 +30,7 @@ namespace pxl
 				Entities,
 				Tiles
 			};
-			string _identifier;
+			String _identifier;
 			Type _type;
 			int _c_wid;
 			int _c_hei;
@@ -48,17 +48,17 @@ namespace pxl
 			{
 				Bool
 			};
-			string _identifier;
+			pxl::String _identifier;
 			Type _type;
 			bool bool_value;
 			int defUid;
 		};
 
 		LDTKLevel();
-		LDTKLevel(const string& path);
-		void load(const string& path);
+		LDTKLevel(const String& path);
+		void load(const String& path);
 
-		string identifier;
+		String identifier;
 		int uid;
 		int world_x;
 		int world_y;
@@ -67,9 +67,9 @@ namespace pxl
 
 		std::vector<LayerInstance> layer_instances;
 		std::vector<FieldInstance> field_instances;
-		const LayerInstance* tileLayer(const string& name) const;
-		const LayerInstance* entitiesLayer(const string& name) const;
+		const LayerInstance* tileLayer(const String& name) const;
+		const LayerInstance* entitiesLayer(const String& name) const;
 
-		bool checkBool(const string& name, bool value) const;
+		bool checkBool(const String& name, bool value) const;
 	};
 }

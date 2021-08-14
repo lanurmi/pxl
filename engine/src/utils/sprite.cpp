@@ -2,7 +2,7 @@
 
 using namespace pxl;
 
-const Sprite::Animation* Sprite::animation(const string& name) const
+const Sprite::Animation* Sprite::animation(const String& name) const
 {
 	for (int i = 0; i < animations.size(); i++)
 	{
@@ -14,7 +14,7 @@ const Sprite::Animation* Sprite::animation(const string& name) const
 	return nullptr;
 }
 
-int Sprite::indexOfAnimation(const string& name) const
+int Sprite::indexOfAnimation(const String& name) const
 {
 	for (int i = 0; i < animations.size(); i++)
 	{

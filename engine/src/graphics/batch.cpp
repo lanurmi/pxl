@@ -13,7 +13,7 @@ void pxl::DrawCall::draw()
 	pxl::Vec2 size;
 	if (renderTarget == nullptr)
 	{
-		size = pxl::engine().drawSize();
+		size = pxl::platform::drawSize();
 	}
 	else
 	{
@@ -21,7 +21,7 @@ void pxl::DrawCall::draw()
 	}
 	viewport = pxl::Rect(0, 0, size.x, size.y);
 	assert(material);
-	pxl::graphics().render(*this);
+	pxl::graphics::render(*this);
 }
 
 pxl::Batch::Batch()
@@ -48,7 +48,7 @@ void pxl::Batch::begin(const RenderTargetRef& target, const pxl::Color& clearCol
 		}
 		else
 		{
-			pxl::graphics().clearBackbuffer(clearColor);
+			pxl::graphics::clearBackbuffer(clearColor);
 		}
 	}
 }
@@ -62,7 +62,7 @@ void pxl::Batch::end()
 	}
 	else
 	{
-		size = pxl::engine().drawSize();
+		size = pxl::platform::drawSize();
 
 	}
 	auto mat = Mat4x4::createOrthoOffcenter(0, size.x, size.y, 0, 0.01f, 1000.0f);
@@ -240,7 +240,7 @@ void pxl::Batch::setTexture(const TextureRef& texture)
 	}
 	auto& batch = currentBatch();
 	batch.texture = texture;
-	batch.flip_vertically = pxl::graphics().features().origin_bottom_left && texture && texture->isRenderTarget();
+	batch.flip_vertically = pxl::graphics::features().origin_bottom_left && texture && texture->isRenderTarget();
 }
 
 void pxl::Batch::triangle(const pxl::Vec2& p0, const pxl::Vec2& p1, const pxl::Vec2& p2, const pxl::Color& color)
@@ -386,31 +386,32 @@ void pxl::Batch::texture(const pxl::TextureRef& texture, const Rect& dstRect, co
 }
 
 
-void pxl::Batch::text(const pxl::SpriteFontRef& font, const string& text, const pxl::Vec2& pos, const pxl::Color &color)
+void pxl::Batch::text(const pxl::SpriteFont &font, const String& text, const pxl::Vec2& pos, const pxl::Color &color)
 {
 	Vec2 drawPos = pos;
 	u32 prev = 0;
-	bool skipKerning = true;
 	for (int i = 0; i < text.size(); i++)
 	{
-		//FIXME: UTF-8
+		u32 glyph = static_cast<u32>(text[i]);
+		const auto character = font.character(glyph);
 		if (text[i] == '\n')
 		{
-			drawPos.y += font->lineHeight();
+			drawPos.y += font.lineHeight();
 			drawPos.x = pos.x;
-			skipKerning = true;
 			continue;
 		}
-		u32 glyph = static_cast<u32>(text[i]);
-		const auto& spriteGlyph = font->character(glyph);
-		auto tex = spriteGlyph.subtexture.texture();
-		auto rect = spriteGlyph.subtexture.rect();
-		auto subtex = spriteGlyph.subtexture.rect();
-		auto kerning = skipKerning ? 0 : spriteGlyph.kerning(prev);
-		texture(tex, Rect(drawPos.x + spriteGlyph.x_offset, drawPos.y + spriteGlyph.y_offset, rect.width, rect.height), subtex, pxl::Color::white);
-		drawPos.x += spriteGlyph.x_advance;
+
+		int kerning = i == 0 ? 0 : font.kerning(prev, glyph);
+		drawPos.x += kerning;
+
+		if(auto tex = character->subtexture.texture())
+		{
+			texture(character->subtexture, drawPos + character->offset, color);
+		}
+		drawPos.x += character->advance;
+
 		prev = glyph;
-		skipKerning = false;
+		i += text.utf8Size(i) - 1;
 	}
 }
 

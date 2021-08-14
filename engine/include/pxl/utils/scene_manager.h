@@ -3,28 +3,19 @@
 
 namespace pxl
 {
-	class SceneManager
+	namespace scenes
 	{
-	public:
 		template<class T>
-		T* set(T&& scene);
+		T* set(T &&s) {
+			auto next = new T();
+			*next = s;
+			void setNextScenePtr(Scene *);//.cpp
+			setNextScenePtr(next);
+			return next;
+		}
 		void update();
 		void draw();
 		void end();
-		const Scene* scene() const;
 		Scene* scene();
-	private:
-		Scene* _current_scene;
-		Scene* _next_scene;
-	};
-
-	template<class T>
-	T* SceneManager::set(T&& scene)
-	{
-		assert(_next_scene == nullptr);
-		T* next = new T();
-		*next = scene;
-		_next_scene = next;
-		return next;
 	}
 }

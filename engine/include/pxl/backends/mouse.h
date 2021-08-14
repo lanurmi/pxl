@@ -14,20 +14,17 @@ namespace pxl
 		Right = 2,
 	};
 
-	class Mouse
+	namespace mouse
 	{
-	public:
-		//
 		bool pressed(MouseButton button);
 		bool down(MouseButton button);
 		bool released(MouseButton button);
 		Vec2 position();
 		Vec2 drawPosition();
-	private:
-		void update();
-		void onButtonDown(MouseButton key);
-		void onButtonUp(MouseButton key);
-		void onMousePosition(const pxl::Vec2& position);
-		friend class PlatformBackend;
+
+		void update(); // called by engine
+		void onButtonDown(MouseButton key); // called by platform
+		void onButtonUp(MouseButton key); // called by platform
+		void onMousePosition(const pxl::Vec2& position); // called by platform
 	};
 }

@@ -16,13 +16,13 @@ pxl::Image::Image(int width, int height) : _pixels(nullptr), _width(width), _hei
 	memset(_pixels, 0, sizeof(Color) * _width * _height);
 }
 
-static pxl::Color* loadJPEG(const pxl::string& path, int *w, int *h)
+static pxl::Color* loadJPEG(const pxl::String& path, int *w, int *h)
 {
 	int comp;
-	auto data = stbi_load(path.c_str(), w, h, &comp, STBI_rgb);
+	auto data = stbi_load(path.cstr(), w, h, &comp, STBI_rgb);
 	if (data == nullptr)
 	{
-		pxl::log().error("Could not load rgb image");
+		pxl::log::error("Could not load rgb image");
 		assert(0);
 		return nullptr;
 	}
@@ -44,13 +44,13 @@ static pxl::Color* loadJPEG(const pxl::string& path, int *w, int *h)
 	return result;
 }
 
-static pxl::Color* loadPNG(const pxl::string& path, int* w, int* h)
+static pxl::Color* loadPNG(const pxl::String& path, int* w, int* h)
 {
 	int comp;
-	auto data = stbi_load(path.c_str(), w, h, &comp, STBI_rgb_alpha);
+	auto data = stbi_load(path.cstr(), w, h, &comp, STBI_rgb_alpha);
 	if (data == nullptr)
 	{
-		pxl::log().error("Could not load png image");
+		pxl::log::error("Could not load png image");
 		assert(0);
 		return nullptr;
 	}
@@ -61,7 +61,7 @@ static pxl::Color* loadPNG(const pxl::string& path, int* w, int* h)
 	return result;
 }
 
-pxl::Image::Image(const string& file)
+pxl::Image::Image(const String& file)
 {
 	load(file);
 }
@@ -119,7 +119,7 @@ pxl::Image::~Image()
 	delete [] _pixels;
 }
 
-void pxl::Image::load(const pxl::string& file)
+void pxl::Image::load(const pxl::String& file)
 {
 	auto ext = pxl::path::extension(file);
 	if (ext == ".png")

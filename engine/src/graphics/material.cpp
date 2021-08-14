@@ -14,7 +14,7 @@ static int calcUniformSize(const pxl::UniformInfo& uniform)
 		case pxl::UniformType::Mat3x2: components = 6; break;
 		case pxl::UniformType::Mat4x4: components = 16; break;
 		default:
-			pxl::log().error("Invalid uniform type");
+			pxl::log::error("Invalid uniform type");
 			assert(0);
 			break;
 	}
@@ -58,7 +58,7 @@ pxl::MaterialRef pxl::Material::create(const ShaderRef& shader)
 	return MaterialRef(new Material(shader));
 }
 
-void pxl::Material::setTexture(string name, const TextureRef& texture)
+void pxl::Material::setTexture(String name, const TextureRef& texture)
 {
 	int offset = 0;
 	auto& uniforms = _shader->uniforms();
@@ -75,7 +75,7 @@ void pxl::Material::setTexture(string name, const TextureRef& texture)
 		offset += u.array_length;
 		if (offset >= _textures.size())
 		{
-			pxl::log().error("Could not set texture");
+			pxl::log::error("Could not set texture");
 			assert(0);
 			break;
 		}
@@ -102,7 +102,7 @@ void pxl::Material::setTexture(int slot, const TextureRef& texture)
 	}
 }
 
-void pxl::Material::setSampler(string name, const TextureSampler& sampler)
+void pxl::Material::setSampler(String name, const TextureSampler& sampler)
 {
 	int offset = 0;
 	auto& uniforms = _shader->uniforms();
@@ -119,7 +119,7 @@ void pxl::Material::setSampler(string name, const TextureSampler& sampler)
 		offset += u.array_length;
 		if (offset >= _textures.size())
 		{
-			pxl::log().error("Could not set texture sampler");
+			pxl::log::error("Could not set texture sampler");
 			assert(0);
 			break;
 		}
@@ -146,7 +146,7 @@ void pxl::Material::setSampler(int slot, const TextureSampler& sampler)
 	}
 }
 
-void pxl::Material::setFloat(string name, const float* values, i64 length)
+void pxl::Material::setFloat(String name, const float* values, i64 length)
 {
 	int offset = 0;
 	int index = 0;
@@ -164,7 +164,7 @@ void pxl::Material::setFloat(string name, const float* values, i64 length)
 		{
 			if (length > uniformSize)
 			{
-				pxl::log().error("Too many uniform floats");
+				pxl::log::error("Too many uniform floats");
 				assert(0);
 				length = uniformSize;
 			}

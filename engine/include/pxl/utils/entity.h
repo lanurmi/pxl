@@ -32,7 +32,7 @@ namespace pxl
 
 	private:
 		Scene* _scene;
-		vector<Component*> _components;
+		Vector<Component*> _components;
 
 		friend class Scene;
 	};

@@ -12,7 +12,7 @@
 #include <pxl/graphics/material.h>
 #include <pxl/graphics/blend.h>
 #include <pxl/graphics/render_target.h>
-#include <pxl/graphics/sprite_font.h>
+#include <pxl/utils/sprite_font.h>
 
 namespace pxl
 {
@@ -74,7 +74,7 @@ namespace pxl
 		void texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect &srcrect, const pxl::Color& color);
 		void texture(const pxl::Subtexture& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color);
 		void texture(const pxl::Subtexture& texture, const pxl::Vec2& pos, const pxl::Color& color);
-		void text(const pxl::SpriteFontRef &font, const string &text, const pxl::Vec2 &pos, const pxl::Color &color);
+		void text(const pxl::SpriteFont &font, const String &text, const pxl::Vec2 &pos, const pxl::Color &color);
 		//
 		const BatchStatistics &stats() const;
 	private:
@@ -90,14 +90,14 @@ namespace pxl
 		BatchInfo& currentBatch();
 
 		Mat3x2 _current_matrix;
-		vector<Mat3x2> _matrix_stack;
-		vector<MaterialRef> _material_stack;
-		vector<BlendState> _blend_stack;
-		vector<BatchInfo> _batches;
-		vector<TextureSampler> _samplerStack;
+		Vector<Mat3x2> _matrix_stack;
+		Vector<MaterialRef> _material_stack;
+		Vector<BlendState> _blend_stack;
+		Vector<BatchInfo> _batches;
+		Vector<TextureSampler> _samplerStack;
 
-		vector<Vertex> _vertices;
-		vector<pxl::u32> _indices;
+		Vector<Vertex> _vertices;
+		Vector<pxl::u32> _indices;
 		MeshRef _mesh;
 		ShaderRef m_defaultShader;
 		MaterialRef m_defaultMaterial;

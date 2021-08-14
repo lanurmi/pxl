@@ -20,11 +20,11 @@ namespace pxl
 		Material& operator=(const Material&) = delete;
 		Material& operator=(Material&&) = delete;
 		~Material() = default;
-		void setTexture(string name, const TextureRef& texture);
+		void setTexture(String name, const TextureRef& texture);
 		void setTexture(int slot, const TextureRef& texture);
-		void setSampler(string name, const TextureSampler& sampler);
+		void setSampler(String name, const TextureSampler& sampler);
 		void setSampler(int slot, const TextureSampler& sampler);
-		void setFloat(string name, const float* values, i64 length);
+		void setFloat(String name, const float* values, i64 length);
 		ShaderRef shader() const { return _shader; }
 		TextureRef texture(int slot, int index) const;
 		TextureSampler sampler(int slot, int index) const;
@@ -32,8 +32,8 @@ namespace pxl
 	private:
 		Material(const ShaderRef& shader);
 		ShaderRef _shader;
-		vector<TextureRef> _textures;
-		vector<TextureSampler> _samplers;
-		vector<float> _floats;
+		Vector<TextureRef> _textures;
+		Vector<TextureSampler> _samplers;
+		Vector<float> _floats;
 	};
 }

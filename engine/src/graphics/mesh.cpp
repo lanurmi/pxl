@@ -35,5 +35,5 @@ pxl::VertexFormat::VertexFormat(std::initializer_list<VertexAttribute> attribs, 
 
 pxl::MeshRef pxl::Mesh::create()
 {
-	return pxl::graphics().createMesh();
+	return pxl::graphics::createMesh();
 }

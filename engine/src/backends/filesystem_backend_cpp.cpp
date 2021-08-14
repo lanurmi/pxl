@@ -6,40 +6,48 @@
 
 using namespace pxl;
 
-string path::extension(const string& path)
+String path::extension(const String& path)
 {
-	std::filesystem::path filePath(path);
-	return filePath.extension().u8string();
+	std::filesystem::path filePath(path.cstr());
+	auto str = filePath.extension().u8string();
+	return String(str.c_str(), str.size());
 }
 
-string path::combine(const string lowerPath, const string upperPath)
+String path::combine(const String lowerPath, const String upperPath)
 {
-	std::filesystem::path path(lowerPath);
-	path.append(upperPath);
-	return path.u8string();
+	std::filesystem::path path(lowerPath.cstr());
+	path.append(upperPath.cstr());
+	auto str = path.u8string();
+	return String(str.c_str(), str.size());
 }
 
-string path::withoutFile(const string& path)
+String path::withoutFile(const String& path)
 {
-	std::filesystem::path filePath(path);
-	return filePath.parent_path().u8string();
+	std::filesystem::path filePath(path.cstr());
+	auto str = filePath.parent_path().u8string();
+	return String(str.c_str(), str.size());
 }
 
-string path::filename(const string& path)
+String path::filename(const String& path)
 {
-	std::filesystem::path filePath(path);
-	return filePath.stem().u8string();
+	std::filesystem::path filePath(path.cstr());
+	auto str = filePath.stem().u8string();
+	return String(str.c_str(), str.size());
 }
 
-class STDIOFile : public file::File {
+class STDIOFile : public file::File 
+{
 public:
-	STDIOFile(FILE* file) : m_file(file) 	{
+	STDIOFile(FILE* file) : m_file(file)
+	{
 
 	}
-	~STDIOFile() {
+	~STDIOFile()
+	{
 		fclose(m_file);
 	}
-	size_t length() const override 	{
+	size_t length() const override
+	{
 
 		auto curr = stdioSeek(m_file, 0, SEEK_CUR);
 		if (curr < 0) {
@@ -49,21 +57,26 @@ public:
 		stdioSeek(m_file, curr, SEEK_SET);
 		return size;
 	}
-	size_t position() const override {
+	size_t position() const override
+	{
 		return stdioSeek(m_file, 0, SEEK_CUR);
 	}
 	size_t seek(size_t position) override 	{
 		return stdioSeek(m_file, position, SEEK_SET);
 	}
-	size_t read(u8* buffer, size_t length) const override 	{
+	size_t read(u8* buffer, size_t length) const override
+	{
 		return fread(buffer, sizeof(u8), length, m_file);
 	}
-	size_t write(const u8* buffer, size_t length) override 	{
+	size_t write(const u8* buffer, size_t length) override 
+	{
 		return fwrite(buffer, sizeof(u8), length, m_file);
 	}
 private:
-	static size_t stdioSeek(FILE* file, size_t offset, int whence) {
-		if (fseek(file, (long)offset, whence) == 0) {
+	static size_t stdioSeek(FILE* file, size_t offset, int whence)
+	{
+		if (fseek(file, (long)offset, whence) == 0) 
+		{
 			return ftell(file);
 		}
 		assert(0);
@@ -73,14 +86,14 @@ private:
 	FILE* m_file;
 };
 
-bool file::exists(const string& path)
+bool file::exists(const String& path)
 {
-	return std::filesystem::is_regular_file(path);
+	return std::filesystem::is_regular_file(path.cstr());
 }
 
-file::FileRef file::File::open(const string& file, file::FileMode mode)
+file::FileRef file::File::open(const String& file, file::FileMode mode)
 {
-	string smode = "";
+	String smode = "";
 	switch (mode)
 	{
 		case file::FileMode::ReadBinary:
@@ -94,7 +107,7 @@ file::FileRef file::File::open(const string& file, file::FileMode mode)
 			break;
 		}
 	}
-	FILE *ptr = fopen(file.c_str(), smode.c_str());
+	FILE *ptr = fopen(file.cstr(), smode.cstr());
 	if (ptr == nullptr)
 	{
 		return file::FileRef();
@@ -107,27 +120,29 @@ file::FileRef file::File::open(const string& file, file::FileMode mode)
 
 // directory
 
-bool directory::exists(const string& path)
+bool directory::exists(const String& path)
 {
-	return std::filesystem::is_directory(path);
+	return std::filesystem::is_directory(path.cstr());
 }
 
-vector<string> directory::files(const string& path, const string& extension)
+Vector<String> directory::files(const String& path, const String& extension)
 {
-	vector<string> result;
-	for (const auto& e : std::filesystem::directory_iterator(path))
+	Vector<String> result;
+	for (const auto& e : std::filesystem::directory_iterator(path.cstr()))
 	{
 		auto p = e.path();
 		if (extension.empty())
 		{
-			result.push_back(p.u8string());
+			auto str = p.u8string();
+			result.emplace_back(String(str.c_str(), str.length()));
 		}
 		else
 		{
 			auto ext = p.extension();
-			if (ext.u8string() == extension)
+			if (ext.u8string().c_str() == extension)
 			{
-				result.push_back(p.u8string());
+				auto str = p.u8string();
+				result.push_back(String(str.c_str(), str.size()));
 			}
 		}
 	}

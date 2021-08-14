@@ -12,7 +12,7 @@ namespace pxl
 	class Scene
 	{
 	public:
-		Scene(const string &name);
+		Scene(const String &name);
 		virtual ~Scene();
 		Entity* createEntity(const pxl::Vec2& position);
 		template<class T>
@@ -21,7 +21,7 @@ namespace pxl
 		void destroy(Entity* entity);
 
 		template<class T>
-		vector<Component*>& all();
+		Vector<Component*>& all();
 
 		template<class T>
 		T* first();
@@ -32,9 +32,9 @@ namespace pxl
 		virtual void draw();
 		virtual void end();
 
-		const pxl::vector<IDrawable*> &drawables();
-		const pxl::vector<IDebugDrawable*> &debugDrawables();
-		const pxl::vector<Entity*>& entities();
+		const Vector<IDrawable*> &drawables();
+		const Vector<IDebugDrawable*> &debugDrawables();
+		const Vector<Entity*>& entities();
 		Batch& batch();
 	private:
 		void sortUpdateables();
@@ -44,16 +44,16 @@ namespace pxl
 		bool _sort_drawables;
 		bool _sort_updateables;
 		bool _sort_debug_drawables;
-		string _name;
+		String _name;
 		Batch _batch;
 		u16 _current_max_component_type_id;
-		vector<Entity*> _entities;
-		vector<Component*> _components[s_max_component_types];
-		vector<IDrawable*> _drawable_components;
-		vector<IDebugDrawable*> _debug_drawable_components;
-		vector<IUpdateable*> _updateable_components;
-		unordered_set<Component*> _remove_components;
-		unordered_set<Entity*> _remove_entities;
+		Vector<Entity*> _entities;
+		Vector<Component*> _components[s_max_component_types];
+		Vector<IDrawable*> _drawable_components;
+		Vector<IDebugDrawable*> _debug_drawable_components;
+		Vector<IUpdateable*> _updateable_components;
+		Unordered_set<Component*> _remove_components;
+		Unordered_set<Entity*> _remove_entities;
 	};
 
 	template<class T>
@@ -80,7 +80,7 @@ namespace pxl
 		}
 		_components[c->_typeId].push_back((Component*)c);
 		entity->_components.push_back((Component*)c);
-		pxl::log().message(string_format("component %d added to entity", c->typeId()));
+		pxl::log::message(pxl::String("component %d added to entity", c->typeId()));
 		c->awake();
 		return c;
 	}
@@ -99,7 +99,7 @@ namespace pxl
 	}
 
 	template<class T>
-	vector<Component*>& Scene::all()
+	Vector<Component*>& Scene::all()
 	{
 		auto typeId = pxl::Component::findTypeId<T>();
 		return _components[typeId];

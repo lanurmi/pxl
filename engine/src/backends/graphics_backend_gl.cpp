@@ -353,7 +353,7 @@ struct GLState
 	int max_texture_image_units;
 	int max_texture_size;
 
-	pxl::GraphicsFeatures features;
+	pxl::graphics::GraphicsFeatures features;
 };
 
 GLState s_gl;
@@ -531,23 +531,19 @@ static GLenum blendFactorToGl(pxl::BlendFactor factor)
 }
 
 
-pxl::GraphicsBackend::GraphicsBackend()
-{
 
-}
-
-void pxl::GraphicsBackend::bind(pxl::PlatformBackend& platform)
+void pxl::graphics::bind()
 {
 	s_gl = GLState();
-	s_gl.context = platform.glCreateContext();
+	s_gl.context = pxl::platform::glCreateContext();
 	if (s_gl.context == nullptr)
 	{
-		pxl::log().error("Could not create gl context");
+		pxl::log::error("Could not create gl context");
 		assert(0);
 	}
-	platform.glBindContext(s_gl.context);
+	pxl::platform::glBindContext(s_gl.context);
 
-#define GL_FUNC(name, ...) s_gl.name = (GLState::name ## Func)(platform.glGetFunc("gl" #name));
+#define GL_FUNC(name, ...) s_gl.name = (GLState::name ## Func)(pxl::platform::glGetFunc("gl" #name));
 	GL_FUNCTIONS
 #undef GL_FUNC
 
@@ -574,22 +570,19 @@ void pxl::GraphicsBackend::bind(pxl::PlatformBackend& platform)
 	s_gl.features.max_texture_size = s_gl.max_texture_size;
 }
 
-pxl::GraphicsFeatures pxl::GraphicsBackend::features() const
+pxl::graphics::GraphicsFeatures pxl::graphics::features()
 {
 	return s_gl.features;
 }
 
-void pxl::GraphicsBackend::unbind(PlatformBackend& platform)
+void pxl::graphics::unbind()
 {
-	platform.glDestroyContext(s_gl.context);
+	pxl::platform::glDestroyContext(s_gl.context);
 	s_gl.context = nullptr;
 }
 
-pxl::GraphicsBackend::~GraphicsBackend()
-{
-}
 
-void pxl::GraphicsBackend::clearBackbuffer(const pxl::Color& color)
+void pxl::graphics::clearBackbuffer(const pxl::Color& color)
 {
 	s_gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
 	s_gl.Disable(GL_SCISSOR_TEST);
@@ -619,7 +612,7 @@ public:
 		}
 		else
 		{
-			pxl::log().error("Invalid texture format");
+			pxl::log::error("Invalid texture format");
 			assert(0);
 		}
 
@@ -694,7 +687,7 @@ private:
 	bool _renderTarget;
 };
 
-pxl::TextureRef pxl::GraphicsBackend::createTexture(int width, int height, TextureFormat format) const
+pxl::TextureRef pxl::graphics::createTexture(int width, int height, TextureFormat format)
 {
 	auto gltex = new GLTexture(width, height, format, false);
 	if (gltex->getId() <= 0)
@@ -719,28 +712,28 @@ public:
 
 		GLuint vertex_shader = s_gl.CreateShader(GL_VERTEX_SHADER);
 		{
-			const GLchar* src = (const GLchar*)data.vertex.c_str();
+			const GLchar* src = (const GLchar*)data.vertex.cstr();
 			s_gl.ShaderSource(vertex_shader, 1, &src, nullptr);
 			s_gl.CompileShader(vertex_shader);
 			s_gl.GetShaderInfoLog(vertex_shader, 1024, &log_length, log);
 			if (log_length > 0)
 			{
 				s_gl.DeleteShader(vertex_shader);
-				pxl::log().error("Vertex shader compilation failed");
+				pxl::log::error("Vertex shader compilation failed");
 				assert(0);
 				return;
 			}
 		}
 		GLuint pixel_shader = s_gl.CreateShader(GL_FRAGMENT_SHADER);
 		{
-			const GLchar* src = (const GLchar*)data.pixel.c_str();
+			const GLchar* src = (const GLchar*)data.pixel.cstr();
 			s_gl.ShaderSource(pixel_shader, 1, &src, nullptr);
 			s_gl.CompileShader(pixel_shader);
 			s_gl.GetShaderInfoLog(pixel_shader, 1024, &log_length, log);
 			if (log_length > 0)
 			{
 				s_gl.DeleteShader(pixel_shader);
-				pxl::log().error("Fragment shader compilation failed");
+				pxl::log::error("Fragment shader compilation failed");
 				assert(0);
 				return;
 			}
@@ -759,7 +752,7 @@ public:
 
 		if (log_length > 0)
 		{
-			pxl::log().error("Shader program link failed");
+			pxl::log::error("Shader program link failed");
 			assert(0);
 			return;
 		}
@@ -803,7 +796,7 @@ public:
 				addUniformInfo(tex_uniform);
 
 				pxl::UniformInfo sampler_uniform;
-				sampler_uniform.name = pxl::string(name).append("_sampler");
+				sampler_uniform.name = pxl::String(name).append("_sampler");
 				sampler_uniform.buffer_index = 0;
 				sampler_uniform.array_length = size;
 				sampler_uniform.type = pxl::UniformType::Sampler2D;
@@ -847,7 +840,7 @@ public:
 				}
 				else
 				{
-					pxl::log().error("Invalid uniform type");
+					pxl::log::error("Invalid uniform type");
 					valid_uniforms = false;
 					assert(0);
 					break;
@@ -882,16 +875,16 @@ public:
 	}
 
 private:
-	pxl::vector<GLint> _uniform_locations;
+	pxl::Vector<GLint> _uniform_locations;
 	GLuint _id;
 };
 
-pxl::ShaderRef pxl::GraphicsBackend::createShader(const pxl::ShaderData& data) const
+pxl::ShaderRef pxl::graphics::createShader(const pxl::ShaderData& data)
 {
 	auto shader = new GLShader(data);
 	if (shader->getId() <= 0)
 	{
-		pxl::log().error("Shader creation failed");
+		pxl::log::error("Shader creation failed");
 		delete shader;
 		assert(0);
 		return nullptr;
@@ -990,17 +983,17 @@ private:
 	pxl::i64 _vertex_count;
 	pxl::u16 _vertex_size;
 	pxl::u8 _vertex_attribs_enabled;
-	pxl::vector<GLuint> _vertex_attribs;
+	pxl::Vector<GLuint> _vertex_attribs;
 	GLenum _index_format;
 	int _index_size;
 };
 
-pxl::MeshRef pxl::GraphicsBackend::createMesh() const
+pxl::MeshRef pxl::graphics::createMesh()
 {
 	auto mesh = new GLMesh();
 	if (mesh->getId() <= 0)
 	{
-		pxl::log().error("Mesh creation failed");
+		pxl::log::error("Mesh creation failed");
 		delete mesh;
 		assert(0);
 		return nullptr;
@@ -1056,12 +1049,12 @@ private:
 	pxl::TextureRef _texture;
 };
 
-pxl::RenderTargetRef pxl::GraphicsBackend::createRenderTarget(int width, int height)
+pxl::RenderTargetRef pxl::graphics::createRenderTarget(int width, int height)
 {
 	auto target = new GLRenderTarget(width, height);
 	if (target->getId() <= 0)
 	{
-		pxl::log().error("Render target creation failed");
+		pxl::log::error("Render target creation failed");
 		assert(0);
 		delete target;
 		return nullptr;
@@ -1097,7 +1090,7 @@ static void setView(const pxl::RenderTargetRef& renderTarget, const pxl::Rect &v
 	if (renderTarget == nullptr)
 	{
 		s_gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
-		size = pxl::engine().drawSize();
+		size = pxl::platform::drawSize();
 	}
 	else
 	{
@@ -1111,7 +1104,7 @@ static void setView(const pxl::RenderTargetRef& renderTarget, const pxl::Rect &v
 	s_gl.Viewport((GLint)viewport.x, (GLint)usey, (GLint)viewport.width, (GLint)viewport.height);
 }
 
-void pxl::GraphicsBackend::render(const DrawCall& call)
+void pxl::graphics::render(const DrawCall& call)
 {
 	
 	setView(call.renderTarget, call.viewport);

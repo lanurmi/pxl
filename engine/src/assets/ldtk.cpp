@@ -2,25 +2,27 @@
 #include <pxl/utils/filestream.h>
 #include <pxl/3rdparty/json.hpp>
 
+#include <string>
+
 using namespace pxl;
 
 LDTKLevel::LDTKLevel()
 {
 }
 
-LDTKLevel::LDTKLevel(const string& path)
+LDTKLevel::LDTKLevel(const String& path)
 {
 	load(path);
 }
 
-void LDTKLevel::load(const string& path)
+void LDTKLevel::load(const String& path)
 {
 	FileStream file(path, file::FileMode::Read);
-	string data = file.all();
-	nlohmann::json ldtkLevelJson = nlohmann::json::parse(data);
+	String data = file.all();
+	nlohmann::json ldtkLevelJson = nlohmann::json::parse(data.cstr());
 
 
-	identifier = ldtkLevelJson["identifier"].get<string>();
+	identifier = ldtkLevelJson["identifier"].get<std::string>().c_str();
 	uid = ldtkLevelJson["uid"];
 	world_x = ldtkLevelJson["worldX"];
 	world_y = ldtkLevelJson["worldY"];
@@ -33,8 +35,8 @@ void LDTKLevel::load(const string& path)
 		for (auto& it : fieldInstancesJson)
 		{
 			FieldInstance field;
-			field._identifier = it["__identifier"].get<string>();
-			string type = it["__type"].get<string>();
+			field._identifier = it["__identifier"].get<std::string>().c_str();
+			String type = it["__type"].get<std::string>().c_str();
 			if (type == "Bool")
 			{
 				field._type = FieldInstance::Type::Bool;
@@ -50,9 +52,9 @@ void LDTKLevel::load(const string& path)
 		for (auto &itLayer : layerInstancesJson)
 		{
 			LayerInstance layerInstance;
-			layerInstance._identifier = itLayer["__identifier"].get<string>();
+			layerInstance._identifier = itLayer["__identifier"].get<std::string>().c_str();
 
-			string type = itLayer["__type"].get<string>();
+			String type = itLayer["__type"].get<std::string>().c_str();
 			if (type == "Entities")
 			{
 				layerInstance._type = LayerInstance::Type::Entities;
@@ -75,10 +77,10 @@ void LDTKLevel::load(const string& path)
 				for (auto& itgridTile: gridTilesJosn)
 				{
 					GridTile tile;
-					auto pxVector = itgridTile["px"].get<vector<int>>();
+					auto pxVector = itgridTile["px"].get<std::vector<int>>();
 					tile.px[0] = pxVector[0];
 					tile.px[1] = pxVector[1];
-					auto srcVector = itgridTile["src"].get<vector<int>>();
+					auto srcVector = itgridTile["src"].get<std::vector<int>>();
 					tile.src[0] = srcVector[0];
 					tile.src[1] = srcVector[1];
 
@@ -93,19 +95,19 @@ void LDTKLevel::load(const string& path)
 				for (auto& itEntity : entityInstancesJson)
 				{
 					EntityInstance entityInstance;
-					entityInstance._identifier = itEntity["__identifier"].get<string>(); 
-					auto grid = itEntity["__grid"].get<vector<int>>();
+					entityInstance._identifier = itEntity["__identifier"].get<std::string>().c_str();
+					auto grid = itEntity["__grid"].get<std::vector<int>>();
 					entityInstance._grid[0] = grid[0];
 					entityInstance._grid[1] = grid[1];
 
-					auto pivot = itEntity["__pivot"].get<vector<int>>();
+					auto pivot = itEntity["__pivot"].get<std::vector<int>>();
 					entityInstance._pivot[0] = pivot[0];
 					entityInstance._pivot[1] = pivot[1];
 
 					entityInstance.width = itEntity["width"].get<int>();
 					entityInstance.height = itEntity["height"].get<int>();
 
-					auto px = itEntity["px"].get<vector<int>>();
+					auto px = itEntity["px"].get<std::vector<int>>();
 					entityInstance.px[0] = px[0];
 					entityInstance.px[1] = px[1];
 
@@ -118,7 +120,7 @@ void LDTKLevel::load(const string& path)
 	}
 }
 
-const LDTKLevel::LayerInstance* LDTKLevel::tileLayer(const string& name) const
+const LDTKLevel::LayerInstance* LDTKLevel::tileLayer(const String& name) const
 {
 	for (auto& it : layer_instances)
 	{
@@ -130,7 +132,7 @@ const LDTKLevel::LayerInstance* LDTKLevel::tileLayer(const string& name) const
 	return nullptr;
 }
 
-const LDTKLevel::LayerInstance* LDTKLevel::entitiesLayer(const string& name) const
+const LDTKLevel::LayerInstance* LDTKLevel::entitiesLayer(const String& name) const
 {
 	for (auto& it : layer_instances)
 	{
@@ -142,7 +144,7 @@ const LDTKLevel::LayerInstance* LDTKLevel::entitiesLayer(const string& name) con
 	return nullptr;
 }
 
-bool LDTKLevel::checkBool(const string& name, bool value) const
+bool LDTKLevel::checkBool(const String& name, bool value) const
 {
 	for (auto& it : field_instances)
 	{

@@ -1,30 +1,17 @@
 #include <pxl/log.h>
+#include <pxl/types.h>
 #include <iostream>
 
 using namespace pxl;
 
-void Log::message(const string& message)
+void log::message(const String& message)
 {
-	const string msg = "[Message] " + message;
-	if (onLog != nullptr)
-	{
-		onLog(msg);
-	}
-	else
-	{
-		std::cout << msg << std::endl;
-	}
+	const String msg = "[Message] " + message;
+	std::cout << msg << std::endl;
 }
 
-void Log::error(const string& error)
+void log::error(const String& error)
 {
-	const string msg = "[Error] " + error;
-	if (onLog != nullptr)
-	{
-		onLog(msg);
-	}
-	else
-	{
-		std::cout << msg << std::endl;
-	}
+	const String msg = "[Error] " + error;
+	std::cout << msg << std::endl;
 }

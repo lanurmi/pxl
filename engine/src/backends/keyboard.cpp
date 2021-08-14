@@ -16,7 +16,7 @@ public:
 static KeyboardState s_keyboardState;
 static KeyboardState s_nextKeyboardState;
 
-void pxl::KeyboardBackend::update()
+void pxl::keyboard::update()
 {
 	s_keyboardState = s_nextKeyboardState;
 
@@ -27,7 +27,7 @@ void pxl::KeyboardBackend::update()
 	}
 }
 
-void pxl::KeyboardBackend::onKeyDown(Key key)
+void pxl::keyboard::onKeyDown(Key key)
 {
 	int i = (int)key;
 	if (i > 0 && i < s_max_keyboard_keys)
@@ -38,7 +38,7 @@ void pxl::KeyboardBackend::onKeyDown(Key key)
 	}
 }
 
-void pxl::KeyboardBackend::onKeyUp(Key key)
+void pxl::keyboard::onKeyUp(Key key)
 {
 	int i = (int)key;
 	if (i > 0 && i < s_max_keyboard_keys)
@@ -49,19 +49,19 @@ void pxl::KeyboardBackend::onKeyUp(Key key)
 	}
 }
 
-bool pxl::KeyboardBackend::pressed(Key key)
+bool pxl::keyboard::pressed(Key key)
 {
 	int i = (int)key;
 	return i > 0 && i < s_max_keyboard_keys&& s_keyboardState.pressed[i];
 }
 
-bool pxl::KeyboardBackend::down(Key key)
+bool pxl::keyboard::down(Key key)
 {
 	int i = (int)key;
 	return i > 0 && i < s_max_keyboard_keys&& s_keyboardState.down[i];
 }
 
-bool pxl::KeyboardBackend::released(Key key)
+bool pxl::keyboard::released(Key key)
 {
 	int i = (int)key;
 	return i > 0 && i < s_max_keyboard_keys && s_keyboardState.released[i];

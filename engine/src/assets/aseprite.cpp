@@ -9,7 +9,7 @@ using namespace file;
 
 Aseprite::Aseprite() = default;
 
-Aseprite::Aseprite(const string & path)
+Aseprite::Aseprite(const String & path)
 {
 	FileStream fs(path, FileMode::ReadBinary);
 	parse(fs);
@@ -184,7 +184,7 @@ void Aseprite::parse_layer(FileStream & stream, int frame)
 
 	auto size = stream.read<u16>();
 	layer.name.resize(size);
-	stream.read((u8*)layer.name.data(), layer.name.length());
+	stream.read((u8*)layer.name.cstr(), layer.name.size());
 
 	layer.userdata.color = 0xffffff;
 	layer.userdata.text = "";
@@ -313,7 +313,7 @@ void Aseprite::parse_user_data(FileStream & stream, int frame)
 		{
 			auto size = stream.read<u16>();
 			m_last_userdata->text.resize(size);
-			stream.read((u8*)m_last_userdata->text.data(), m_last_userdata->text.length());
+			stream.read((u8*)m_last_userdata->text.cstr(), m_last_userdata->text.size());
 		}
 
 		// has color
@@ -341,7 +341,7 @@ void Aseprite::parse_tag(FileStream & stream, int frame)
 		
 		auto s = stream.read<u16>();
 		tag.name.resize(s); 
-		stream.read((u8*)tag.name.data(), tag.name.length());
+		stream.read((u8*)tag.name.cstr(), tag.name.size());
 
 		tags.push_back(tag);
 	}
@@ -353,10 +353,10 @@ void Aseprite::parse_slice(FileStream & stream, int frame)
 	int flags = stream.read<u32>();
 	stream.read<u32>(); // reserved
 
-	string name;
+	String name;
 	auto size = stream.read<u16>();
 	name.resize(size);
-	stream.read((u8*)name.data(), name.length());
+	stream.read((u8*)name.cstr(), name.size());
 
 	for (int s = 0; s < count; s++)
 	{

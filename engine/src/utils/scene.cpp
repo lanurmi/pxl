@@ -7,7 +7,7 @@
 
 using namespace pxl;
 
-Scene::Scene(const string &name) : _current_max_component_type_id(0), _name(name)
+Scene::Scene(const String &name) : _current_max_component_type_id(0), _name(name)
 {
 }
 
@@ -18,7 +18,7 @@ Scene::~Scene()
 
 Entity* Scene::createEntity(const Vec2& position)
 {
-	pxl::log().message(string_format("Entity created at: (%.2f, %.2f)", position.x, position.y));
+	pxl::log::message(String::format("Entity created at: (%.2f, %.2f)", position.x, position.y));
 	auto entity = new Entity();
 	_entities.push_back(entity);
 	entity->position = position;
@@ -32,7 +32,7 @@ void Scene::destroy(Component* component)
 	{
 		component->destroyed();
 		_remove_components.insert(component);
-		pxl::log().message(string_format("component %d marked for destruction", component->typeId()));
+		pxl::log::message(String::format("component %d marked for destruction", component->typeId()));
 	}
 }
 
@@ -44,7 +44,7 @@ void Scene::destroy(Entity* entity)
 		{
 			destroy(it);
 		}
-		pxl::log().message("entity marked for destruction");
+		pxl::log::message("entity marked for destruction");
 		_remove_entities.insert(entity);
 	}
 }
@@ -89,20 +89,20 @@ void Scene::clearRemoveSets()
 
 	if (deleted_components > 0)
 	{
-		pxl::log().message(string_format("deleted %d components", deleted_components));
+		pxl::log::message(pxl::String::format("deleted %d components", deleted_components));
 		_remove_components.clear();
 	}
 
 	if (deleted_entities > 0)
 	{
-		pxl::log().message(string_format("deleted %d entities", deleted_entities));
+		pxl::log::message(pxl::String::format("deleted %d entities", deleted_entities));
 		_remove_entities.clear();
 	}
 }
 
 void Scene::begin()
 {
-	pxl::log().message("Begin scene: " + _name);
+	pxl::log::message("Begin scene: " + _name);
 }
 
 void Scene::end()
@@ -112,7 +112,7 @@ void Scene::end()
 		destroy(it);
 	}
 	clearRemoveSets();
-	pxl::log().message("End scene: " + _name);
+	pxl::log::message("End scene: " + _name);
 }
 
 void Scene::trueUpdate() {
