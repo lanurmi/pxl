@@ -81,7 +81,7 @@ static Node* findNode(Node* root, int w, int h)
 	}
 }
 
-static Node* splitNode(Node* node, int w, int h, std::vector<Node*> &nodeBuffer)
+static Node* splitNode(Node* node, int w, int h, Vector<Node*> &nodeBuffer)
 {
 	node->reserved = true;
 
@@ -97,8 +97,8 @@ static Node* splitNode(Node* node, int w, int h, std::vector<Node*> &nodeBuffer)
 	node->bottom->width = node->width;
 	node->bottom->height = node->height - h;
 
-	nodeBuffer.push_back(node->right);
-	nodeBuffer.push_back(node->bottom);
+	nodeBuffer.add(node->right);
+	nodeBuffer.add(node->bottom);
 
 	return node;
 }
@@ -111,7 +111,7 @@ int ImagePacker::doPack(int fromEntry)
 	rootNode->width = _width;
 	rootNode->height = _height;
 
-	nodes.push_back(rootNode);
+	nodes.add(rootNode);
 	int packed = fromEntry;
 	for (int p = fromEntry; p < _entries.size(); p++)
 	{

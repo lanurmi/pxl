@@ -28,6 +28,9 @@ namespace pxl
 		template<class T>
 		T* add(T&& component);
 
+		template<class T, class ...Args>
+		T* emplace(Args && ...args);
+
 		Scene* scene();
 
 	private:
@@ -70,7 +73,6 @@ namespace pxl
 	{
 		return _scene->add(this, std::forward<T>(component));
 	}
-
 }
 
 

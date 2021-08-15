@@ -18,6 +18,7 @@ add_library(pxl
 	src/containers/string.cpp
 	src/containers/vector.cpp
 	src/containers/map.cpp
+	src/containers/array.cpp
 
 	src/backends/platform_backend_sdl.cpp	
 	src/backends/filesystem_backend_cpp.cpp
@@ -64,7 +65,7 @@ add_library(pxl
 	src/utils/sprite_font.cpp
 
 	src/utils/components/camera.cpp
-)
+ "src/containers/array.cpp" "include/pxl/containers/array.h")
 
 target_include_directories(pxl
 	PUBLIC

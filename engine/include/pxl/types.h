@@ -2,6 +2,7 @@
 #include <pxl/containers/string.h>
 #include <pxl/containers/vector.h>
 #include <pxl/containers/map.h>
+#include <pxl/containers/array.h>
 
 #include <cstdint>
 #include <functional>
@@ -39,13 +40,6 @@ namespace pxl
 	using u16 = uint16_t;
 	using u32 = uint32_t;
 	using u64 = uint64_t;
-
-
-	template<class T>
-	void remove_all(Vector<T>& from, T value)
-	{
-		from.erase(std::remove(from.begin(), from.end(), value), from.end());
-	}
 
 	class Grid
 	{

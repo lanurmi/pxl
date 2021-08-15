@@ -169,7 +169,7 @@ void Aseprite::parse(FileStream & stream)
 
 void Aseprite::parse_layer(FileStream & stream, int frame)
 {
-	layers.emplace_back();
+	layers.add(pxl::Aseprite::Layer());
 
 	auto& layer = layers.back();
 	layer.flag = static_cast<LayerFlags>(stream.read<u16>());
@@ -195,7 +195,7 @@ void Aseprite::parse_cel(FileStream & stream, int frameIndex, size_t maxPosition
 {
 	Frame& frame = frames[frameIndex];
 
-	frame.cels.emplace_back();
+	frame.cels.add(pxl::Aseprite::Cel());
 	auto& cel = frame.cels.back();
 	cel.layer_index = stream.read<u16>();
 	cel.x = stream.read<u16>();
@@ -343,7 +343,7 @@ void Aseprite::parse_tag(FileStream & stream, int frame)
 		tag.name.resize(s); 
 		stream.read((u8*)tag.name.cstr(), tag.name.size());
 
-		tags.push_back(tag);
+		tags.add(tag);
 	}
 }
 
@@ -360,7 +360,7 @@ void Aseprite::parse_slice(FileStream & stream, int frame)
 
 	for (int s = 0; s < count; s++)
 	{
-		slices.emplace_back();
+		slices.add(Aseprite::Slice());
 
 		auto& slice = slices.back();
 		slice.name = name;

@@ -104,24 +104,24 @@ String& String::operator=(const char* str) {
 }
 
 String& String::operator+=(const String& str) {
-	return append(str);
+	return add(str);
 }
 
 String& String::operator+=(const char* str) {
-	return append(str);
+	return add(str);
 }
 
 String String::operator+(const String& str) {
 	String ns;
 	ns.set(_data, _size);
-	ns.append(str);
+	ns.add(str);
 	return ns;
 }
 
 String String::operator+(const char* str) {
 	String ns;
 	ns.set(_data, _size);
-	ns.append(str);
+	ns.add(str);
 	return ns;
 }
 
@@ -159,16 +159,16 @@ int String::utf8Size(int index) const {
 	return 1;
 }
 
-String& String::append(const String& str) {
-	return append(str.cstr(), str.size());
+String& String::add(const String& str) {
+	return add(str.cstr(), str.size());
 }
 
-String& String::append(const char* str) {
+String& String::add(const char* str) {
 	auto size = strlen(str);
-	return append(str, size);
+	return add(str, size);
 }
 
-String& String::append(const char* str, int size) {
+String& String::add(const char* str, int size) {
 	reserve(_size + size);
 	memcpy(_data + _size, str, size);
 	_size += size;
@@ -176,7 +176,7 @@ String& String::append(const char* str, int size) {
 	return *this;
 }
 
-String& String::append(char c)
+String& String::add(char c)
 {
 	reserve(_size + 1);
 	_data[_size] = c;

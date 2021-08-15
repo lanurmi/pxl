@@ -20,7 +20,7 @@ Entity* Scene::createEntity(const Vec2& position)
 {
 	pxl::log::message(String::format("Entity created at: (%.2f, %.2f)", position.x, position.y));
 	auto entity = new Entity();
-	_entities.push_back(entity);
+	_entities.add(entity);
 	entity->position = position;
 	entity->_scene = this;
 	return entity;
@@ -57,22 +57,20 @@ void Scene::clearRemoveSets()
 	{
 		// Remove from entity
 		auto entity = it->_entity;
-		auto& components = it->_entity->_components;
-		remove_all(components, it);
-
-		remove_all(_components[it->typeId()], it);
+		it->_entity->_components.erase(it);
+		_components[it->typeId()].erase(it);
 		// remove from lists
 		if (auto drawable = dynamic_cast<IDrawable*>(it))
 		{
-			remove_all(_drawable_components, drawable);
+			_drawable_components.erase(drawable);
 		}
 		if (auto debugDrawable = dynamic_cast<IDebugDrawable*>(it))
 		{
-			remove_all(_debug_drawable_components, debugDrawable);
+			_debug_drawable_components.erase(debugDrawable);
 		}
 		if (auto updateable = dynamic_cast<IUpdateable*>(it))
 		{
-			remove_all(_updateable_components, updateable);
+			_updateable_components.erase(updateable);
 		}
 		delete it;
 		deleted_components++;
@@ -82,7 +80,7 @@ void Scene::clearRemoveSets()
 	int deleted_entities = 0;
 	for (auto it : _remove_entities)
 	{
-		remove_all(_entities, it);
+		_entities.erase(it);
 		delete it;
 		deleted_entities++;
 	}
@@ -151,17 +149,17 @@ void Scene::draw()
 	_batch.end();
 }
 
-const std::vector<IDrawable*> &Scene::drawables()
+const Vector<IDrawable*> &Scene::drawables()
 {
 	return _drawable_components;
 }
 
-const std::vector<IDebugDrawable*> &Scene::debugDrawables()
+const Vector<IDebugDrawable*> &Scene::debugDrawables()
 {
 	return _debug_drawable_components;
 }
 
-const std::vector<Entity*>& Scene::entities()
+const Vector<Entity*>& Scene::entities()
 {
 	return _entities;
 }

@@ -90,7 +90,7 @@ void Ogmo::load(const String& path)
 				{
 					parseValues(entity.string_text_enum_color_values, entity.int_values, entity.float_values, entity.bool_values, e["values"]);
 				}
-				layer.entities.emplace_back(entity);
+				layer.entities.add(entity);
 			}
 			entity_layers.emplace_back(layer);
 		}
@@ -109,7 +109,7 @@ void Ogmo::load(const String& path)
 			auto data = it["data"];
 			for (auto& d : data)
 			{
-				layer.data.push_back(d.get<int>());
+				layer.data.add(d.get<int>());
 			}
 			layer.export_mode = it["exportMode"].get<int>();
 			layer.array_mode = it["arrayMode"].get<int>();

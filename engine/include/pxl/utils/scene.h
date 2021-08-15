@@ -5,6 +5,9 @@
 #include <pxl/graphics/batch.h>
 #include <pxl/types.h>
 
+#include <new>
+#include <initializer_list>
+
 namespace pxl
 {
 	class Batch;
@@ -17,6 +20,10 @@ namespace pxl
 		Entity* createEntity(const pxl::Vec2& position);
 		template<class T>
 		T* add(Entity* entity, T&& component);
+
+		template<class T, class ...Args>
+		T* emplace(Entity* entity, Args && ...args);
+
 		void destroy(Component* component);
 		void destroy(Entity* entity);
 
@@ -59,27 +66,26 @@ namespace pxl
 	template<class T>
 	T* Scene::add(Entity* entity, T&& component)
 	{
-		T* c = new T();
-		*c = component;
+		T* c = new T(std::move(component));
 		c->_entity = entity;
 		c->_typeId = pxl::Component::findTypeId<T>();
 		_current_max_component_type_id = calc::max(_current_max_component_type_id, c->_typeId + 1);
 		if (auto drawabla = dynamic_cast<IDrawable*>(c))
 		{
-			_drawable_components.push_back(drawabla);
+			_drawable_components.add(drawabla);
 			_sort_drawables = true;
 		}
 		if (auto debugDrawable = dynamic_cast<IDebugDrawable*>(c))
 		{
-			_debug_drawable_components.push_back(debugDrawable);
+			_debug_drawable_components.add(debugDrawable);
 		}
 		if (auto updateable = dynamic_cast<IUpdateable*>(c))
 		{
-			_updateable_components.push_back(updateable);
+			_updateable_components.add(updateable);
 			_sort_updateables = true;
 		}
-		_components[c->_typeId].push_back((Component*)c);
-		entity->_components.push_back((Component*)c);
+		_components[c->_typeId].add((Component*)c);
+		entity->_components.add((Component*)c);
 		pxl::log::message(pxl::String("component %d added to entity", c->typeId()));
 		c->awake();
 		return c;

@@ -47,10 +47,10 @@ namespace pxl
 		int size() const;
 		int utf8Size(int index) const;
 
-		String& append(const String& str);
-		String& append(const char* str);
-		String& append(const char* str, int size);
-		String& append(char c);
+		String& add(const String& str);
+		String& add(const char* str);
+		String& add(const char* str, int size);
+		String& add(char c);
 
 		static String format(const char *fmt, ...);
 		static String fromInt(int num);

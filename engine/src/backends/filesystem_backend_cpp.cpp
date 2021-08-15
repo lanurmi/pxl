@@ -134,7 +134,7 @@ Vector<String> directory::files(const String& path, const String& extension)
 		if (extension.empty())
 		{
 			auto str = p.u8string();
-			result.emplace_back(String(str.c_str(), str.length()));
+			result.add(String(str.c_str(), str.length()));
 		}
 		else
 		{
@@ -142,7 +142,7 @@ Vector<String> directory::files(const String& path, const String& extension)
 			if (ext.u8string().c_str() == extension)
 			{
 				auto str = p.u8string();
-				result.push_back(String(str.c_str(), str.size()));
+				result.add(String(str.c_str(), str.size()));
 			}
 		}
 	}

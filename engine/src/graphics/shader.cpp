@@ -13,7 +13,7 @@ pxl::ShaderRef pxl::Shader::create()
 
 void pxl::Shader::addUniformInfo(const pxl::UniformInfo& info)
 {
-	_uniforms.push_back(info);
+	_uniforms.add(info);
 }
 
 const pxl::Vector<pxl::UniformInfo>& pxl::Shader::uniforms() const
