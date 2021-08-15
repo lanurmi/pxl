@@ -10,11 +10,11 @@ namespace pxl
 		String(const String& str);
 		String(String&& str) noexcept;
 		String(const char* str);
-		String(const char* str, int length);
+		String(const char* str, unsigned length);
 		~String();
 
-		char& operator[](int index);
-		const char& operator[](int index) const;
+		char& operator[](unsigned index);
+		const char& operator[](unsigned index) const;
 
 		bool operator==(const String& str) const;
 		bool operator==(const char* str) const;
@@ -40,12 +40,12 @@ namespace pxl
 		char* cstr();
 		const char* cstr() const;
 
-		void resize(int size);
-		void reserve(int length);
+		void resize(unsigned size);
+		void reserve(unsigned length);
 
 		bool empty() const;
-		int size() const;
-		int utf8Size(int index) const;
+		unsigned size() const;
+		unsigned utf8Size(unsigned index) const;
 
 		String& add(const String& str);
 		String& add(const char* str);
@@ -55,11 +55,11 @@ namespace pxl
 		static String format(const char *fmt, ...);
 		static String fromInt(int num);
 	private:
-		void set(const char* from, int size);
+		void set(const char* from, unsigned size);
 		void set(const char* from);
 		char* _data;
-		int _size;
-		int _capasity;
+		unsigned _size;
+		unsigned _capasity;
 		static char s_empty_data[1];
 	};
 

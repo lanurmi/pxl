@@ -34,7 +34,7 @@ String::String(const char* str) : _data(s_empty_data), _size(0), _capasity(0)
 	set(str);
 }
 
-String::String(const char* str, int length) : _data(s_empty_data), _size(0), _capasity(0) 
+String::String(const char* str, unsigned length) : _data(s_empty_data), _size(0), _capasity(0)
 {
 	set(str, length);
 }
@@ -45,11 +45,11 @@ String::~String() {
 	}
 }
 
-char& String::operator[](int index) {
+char& String::operator[](unsigned index) {
 	return _data[index];
 }
 
-const char& String::operator[](int index) const {
+const char& String::operator[](unsigned index) const {
 	return _data[index];
 }
 
@@ -137,11 +137,11 @@ bool String::empty() const {
 	return _size == 0;
 }
 
-int String::size() const {
+unsigned String::size() const {
 	return _size;
 }
 
-int String::utf8Size(int index) const {
+unsigned String::utf8Size(unsigned index) const {
 	auto ch = _data[index];
 
 	if ((ch & 0xFE) == 0xFC) 	{
@@ -208,13 +208,13 @@ String String::fromInt(int num)
 	return String(data);
 }
 
-void String::resize(int size) {
+void String::resize(unsigned size) {
 	reserve(size);
 	_size = size;
 	_data[size] = '\0';
 }
 
-void String::reserve(int length) {
+void String::reserve(unsigned length) {
 	int buffer_size = length + 1;
 	if (buffer_size > _capasity) 	{
 		if (_capasity <= 0) {
@@ -240,7 +240,7 @@ void String::reserve(int length) {
 	}
 }
 
-void String::set(const char* from, int size) {
+void String::set(const char* from, unsigned size) {
 	reserve(size);
 	_size = size;
 	memcpy(_data, from, size);

@@ -23,7 +23,7 @@ namespace pxl
 
 	private:
 		char _data[sizeof(T) * C];
-		int _size;
+		unsigned _size;
 	};
 
 	template<class T, unsigned C>
