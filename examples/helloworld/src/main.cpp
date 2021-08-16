@@ -4,11 +4,23 @@
 #include <pxl/utils/input_binding.h>
 #include <pxl/utils/filestream.h>
 
-class HelloWorldComponent : public pxl::Component, public pxl::IDrawable
+class HelloWorldComponent : public pxl::Component, public pxl::IDrawable, public pxl::IUpdateable
 {
 public:
 	pxl::TextureRef texture;
-	void draw(pxl::Batch& batch)
+	void update() override
+	{
+		auto mousePosition = pxl::mouse::drawPosition();
+		auto windowPosition = pxl::platform::position();
+		auto windowSize = pxl::platform::drawSize();
+		if (mousePosition.x > windowPosition.x &&
+			mousePosition.y > windowPosition.y &&
+			mousePosition.x < windowPosition.x + windowSize.x &&
+			mousePosition.y < windowPosition.y + windowSize.y) {
+			entity()->position = mousePosition - windowPosition - pxl::Vec2(texture->width() / 2.0f, texture->height() / 2.0f);
+		}
+	}
+	void draw(pxl::Batch& batch) override
 	{
 		if (texture == nullptr) return;
 		batch.texture(texture, entity()->position, pxl::Color::white);
@@ -41,15 +53,6 @@ public:
 	}
 	void update()
 	{
-		auto mousePosition = pxl::mouse::drawPosition();
-		auto windowPosition = pxl::platform::position();
-		auto windowSize = pxl::platform::drawSize();
-		if(mousePosition.x > windowPosition.x &&
-			mousePosition.y > windowPosition.y &&
-			mousePosition.x < windowPosition.x + windowSize.x &&
-			mousePosition.y < windowPosition.y + windowSize.y) {
-			pxl::log::message(pxl::String::format("%d,%d", (int)mousePosition.x, (int)mousePosition.y));
-		}
 		if (esc->pressed())
 		{
 			//escape pressed, close the app
