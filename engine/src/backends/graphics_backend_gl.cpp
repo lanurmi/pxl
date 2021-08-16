@@ -1140,7 +1140,7 @@ static void setView(const pxl::RenderTargetRef& renderTarget, const pxl::Rect &v
 void pxl::graphics::render(const DrawCall& call)
 {
 	
-	setView(call.renderTarget, call.viewport);
+	setView(call.target, call.viewport);
 
 
 	auto shader = std::dynamic_pointer_cast<GLShader>(call.material->shader());

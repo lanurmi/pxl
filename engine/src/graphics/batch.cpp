@@ -11,13 +11,13 @@ pxl::BatchInfo::BatchInfo() :
 void pxl::DrawCall::draw()
 {
 	pxl::Vec2 size;
-	if (renderTarget == nullptr)
+	if (target == nullptr)
 	{
 		size = pxl::platform::drawSize();
 	}
 	else
 	{
-		size = pxl::Vec2(renderTarget->width(), renderTarget->height());
+		size = pxl::Vec2(target->width(), target->height());
 	}
 	viewport = pxl::Rect(0, 0, size.x, size.y);
 	assert(material);
@@ -485,7 +485,7 @@ void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x
 		drawcall.material->setTexture(0, batch.texture);
 		drawcall.material->setSampler(0, batch.sampler);
 	}
-	drawcall.renderTarget = renderTarget;
+	drawcall.target = renderTarget;
 	drawcall.material->setFloat("u_matrix", &matrix.m11, 16);
 	drawcall.indices_start = batch.offset * 3;
 	drawcall.indices_count = batch.elements * 3;

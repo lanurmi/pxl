@@ -34,7 +34,7 @@ namespace pxl
 	public:
 		MeshRef mesh;
 		MaterialRef material;
-		RenderTargetRef renderTarget;
+		RenderTargetRef target;
 		BlendState blend;
 		i64 indices_start;
 		i64 indices_count;
