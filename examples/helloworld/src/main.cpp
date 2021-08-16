@@ -25,14 +25,14 @@ public:
 
 
 		// entity holds components
-		auto entity = createEntity(pxl::Vec2(rand()%800, 100));
+		auto entity = createEntity(pxl::Vec2(0, 0));
 
 		// component does things (in this case draws texture)
 		auto component = entity->add(HelloWorldComponent());
-		component->texture = pxl::Texture::create(pxl::path::combine(pxl::platform().applicationPath(), "content/helloworld.png"));
+		component->texture = pxl::Texture::create(pxl::path::combine(pxl::platform::applicationPath(), "content/helloworld.png"));
 		
 		//escape key does things
-		esc = pxl::bindings().CreateButton();
+		esc = pxl::bindings::createButton();
 		esc->bind(pxl::Key::Escape);
 	}
 	void end() override
@@ -41,10 +41,19 @@ public:
 	}
 	void update()
 	{
+		auto mousePosition = pxl::mouse::drawPosition();
+		auto windowPosition = pxl::platform::position();
+		auto windowSize = pxl::platform::drawSize();
+		if(mousePosition.x > windowPosition.x &&
+			mousePosition.y > windowPosition.y &&
+			mousePosition.x < windowPosition.x + windowSize.x &&
+			mousePosition.y < windowPosition.y + windowSize.y) {
+			pxl::log::message(pxl::String::format("%d,%d", (int)mousePosition.x, (int)mousePosition.y));
+		}
 		if (esc->pressed())
 		{
 			//escape pressed, close the app
-			pxl::engine().end();
+			pxl::end();
 		}
 	}
 private:
@@ -56,7 +65,7 @@ private:
 int main()
 {
 	// set initial scene
-	pxl::sceneManager().set(HelloWorldScene());
+	pxl::scenes::set(HelloWorldScene());
 
 	// engine configuration
 	pxl::Config config;
@@ -69,7 +78,7 @@ int main()
 	config.height = 720;
 
 	// start
-	pxl::engine().begin(config);
+	pxl::begin(config);
 
 	return 0;
 }
