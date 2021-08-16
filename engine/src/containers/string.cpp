@@ -193,11 +193,15 @@ String String::format(const char* fmt, ...)
 	va_start(args, fmt);
 	int size = vsnprintf(NULL, 0, fmt, args);
 	va_end(args);
-	str.reserve(size);
+
+	str.reserve(size+1);
 	str._size = size;
+
 	va_start(args, fmt);
-	vsnprintf(str.cstr(), size, fmt, args);
+	vsnprintf(str.cstr(), size + 1, fmt, args);
 	va_end(args);
+
+	str._data[size] = '\0';
 	return str;
 }
 
