@@ -29,7 +29,7 @@ namespace pxl
 	{
 		VertexFormat(std::initializer_list<VertexAttribute> attributes, int stride = 0);
 		VertexFormat() = default;
-		Vector<VertexAttribute> attributes;
+		Array<VertexAttribute, 16> attributes;
 		int stride = 0;
 	};
 	enum class IndexFormat
