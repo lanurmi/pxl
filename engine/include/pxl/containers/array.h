@@ -17,9 +17,17 @@ namespace pxl
 		void add(T&& item);
 
 		T* data();
-		const T* data() const;
-		
+		const T* data() const;	
 		unsigned size() const;
+
+		T* begin();
+		const T* begin() const;
+		T* end();
+		const T* end() const;
+		T& front();
+		const T& front() const;
+		T& back();
+		const T& back() const;
 
 	private:
 		char _data[sizeof(T) * C];
@@ -83,5 +91,57 @@ namespace pxl
 	unsigned Array<T, C>::size() const
 	{
 		return _size;
+	}
+
+	template<class T, unsigned C>
+	T* Array<T, C>::begin() 
+	{
+		return (T*)_data;
+	}
+
+	template<class T, unsigned C>
+	const T* Array<T, C>::begin() const
+	{
+		return (T*)_data;
+	}
+
+	template<class T, unsigned C>
+	T* Array<T, C>::end()
+	{
+		return (T*)_data + _size;
+	}
+
+	template<class T, unsigned C>
+	const T* Array<T, C>::end() const
+	{
+		return (T*)_data + _size;
+	}
+
+	template<class T, unsigned C>
+	T& Array<T, C>::front()
+	{
+		auto d = data();
+		return d[0];
+	}
+
+	template<class T, unsigned C>
+	const T& Array<T, C>::front() const
+	{
+		auto d = data();
+		return d[0];
+	}
+
+	template<class T, unsigned C>
+	T& Array<T, C>::back()
+	{
+		auto d = data();
+		return d[_size - 1];
+	}
+
+	template<class T, unsigned C>
+	const T& Array<T, C>::back() const
+	{
+		auto d = data();
+		return d[_size - 1];
 	}
 }
