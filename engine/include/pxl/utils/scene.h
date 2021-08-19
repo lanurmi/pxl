@@ -42,7 +42,7 @@ namespace pxl
 		const Vector<IDrawable*> &drawables();
 		const Vector<IDebugDrawable*> &debugDrawables();
 		const Vector<Entity*>& entities();
-		Batch& batch();
+
 	private:
 		void sortUpdateables();
 		void sortDrawables();
@@ -52,7 +52,6 @@ namespace pxl
 		bool _sort_updateables;
 		bool _sort_debug_drawables;
 		String _name;
-		Batch _batch;
 		u16 _current_max_component_type_id;
 		Vector<Entity*> _entities;
 		Vector<Component*> _components[s_max_component_types];

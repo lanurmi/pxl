@@ -164,11 +164,6 @@ const Vector<Entity*>& Scene::entities()
 	return _entities;
 }
 
-Batch& Scene::batch()
-{
-	return _batch;
-}
-
 void Scene::sortUpdateables()
 {
 	std::sort(_updateable_components.begin(), _updateable_components.end(), [](IUpdateable* up1, IUpdateable* up2) -> bool {
