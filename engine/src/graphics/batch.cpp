@@ -24,7 +24,7 @@ void pxl::DrawCall::draw()
 	pxl::graphics::render(*this);
 }
 
-pxl::Batch::Batch()
+pxl::Batch::Batch() : _textureUniform("u_texture"), _samplerUniform("u_texture_sampler")
 {
 	clear();
 }
@@ -477,13 +477,13 @@ void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x
 	drawcall.material = batch.material == nullptr ? m_defaultMaterial : batch.material;
 	if (drawcall.material == m_defaultMaterial && batch.texture == nullptr)
 	{
-		drawcall.material->setTexture(0, m_defaultTexture);
-		drawcall.material->setSampler(0, batch.sampler);
+		drawcall.material->setTexture(_textureUniform, m_defaultTexture);
+		drawcall.material->setSampler(_samplerUniform, batch.sampler);
 	}
 	else
 	{
-		drawcall.material->setTexture(0, batch.texture);
-		drawcall.material->setSampler(0, batch.sampler);
+		drawcall.material->setTexture(_textureUniform, batch.texture);
+		drawcall.material->setSampler(_samplerUniform, batch.sampler);
 	}
 	drawcall.target = renderTarget;
 	drawcall.material->setFloat("u_matrix", &matrix.m11, 16);

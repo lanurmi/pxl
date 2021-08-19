@@ -106,5 +106,8 @@ namespace pxl
 		RenderTargetRef _target;
 
 		BatchStatistics _stats;
+
+		pxl::String _textureUniform;
+		pxl::String _samplerUniform;
 	};
 }
