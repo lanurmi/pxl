@@ -59,6 +59,15 @@ public:
 			pxl::end();
 		}
 	}
+	void draw()
+	{
+		auto &drawables = this->drawables();
+		batch.begin(nullptr, pxl::Color::black);
+		for (auto it : drawables) 	{
+			it->draw(batch);
+		}
+		batch.end();
+	}
 private:
 	pxl::VirtualButtonRef esc;
 	pxl::TextureRef tex;
@@ -68,7 +77,7 @@ private:
 int main()
 {
 	// set initial scene
-	pxl::scenes::set(HelloWorldScene());
+	pxl::scenes::set<HelloWorldScene>();
 
 	// engine configuration
 	pxl::Config config;
