@@ -135,20 +135,6 @@ void Scene::trueUpdate() {
 	}
 }
 
-void Scene::update()
-{
-}
-
-void Scene::draw()
-{
-	_batch.begin(nullptr, pxl::Color::black);
-	for (auto it : _drawable_components)
-	{
-		it->draw(_batch);
-	}
-	_batch.end();
-}
-
 const Vector<IDrawable*> &Scene::drawables()
 {
 	return _drawable_components;
