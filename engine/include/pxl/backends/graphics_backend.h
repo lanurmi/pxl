@@ -27,6 +27,7 @@ namespace pxl
 		TextureRef createTexture(int width, int height, TextureFormat format);
 		ShaderRef createShader(const ShaderData& data);
 		ShaderRef createDefaultShader();
+		ShaderRef createPaletteShader();
 		MeshRef createMesh();
 		RenderTargetRef createRenderTarget(int width, int height);
 	}
