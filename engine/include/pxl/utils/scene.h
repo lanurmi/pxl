@@ -86,7 +86,7 @@ namespace pxl
 		}
 		_components[c->_typeId].add((Component*)c);
 		entity->_components.add((Component*)c);
-		pxl::log::message(pxl::String("component %d added to entity", c->typeId()));
+		pxl::log::message(pxl::String::format("component %d added to entity", c->typeId()));
 		c->awake();
 		return c;
 	}
