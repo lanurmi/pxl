@@ -6,9 +6,8 @@ namespace pxl
 	namespace scenes
 	{
 		template<class T>
-		T* set(T &&s) {
+		T* set() {
 			auto next = new T();
-			*next = s;
 			void setNextScenePtr(Scene *);//.cpp
 			setNextScenePtr(next);
 			return next;
