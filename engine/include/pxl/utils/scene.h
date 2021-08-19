@@ -35,8 +35,8 @@ namespace pxl
 
 		virtual void begin();
 		void trueUpdate();
-		virtual void update();
-		virtual void draw();
+		virtual void update() = 0;
+		virtual void draw() = 0;
 		virtual void end();
 
 		const Vector<IDrawable*> &drawables();
