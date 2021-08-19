@@ -4,3 +4,4 @@ project(pxl_engine)
 
 add_subdirectory(engine)
 add_subdirectory(examples/helloworld)
+add_subdirectory(examples/palette)
