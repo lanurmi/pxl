@@ -65,7 +65,7 @@ add_library(pxl
 	src/utils/sprite_font.cpp
 
 	src/utils/components/camera.cpp
-)
+	src/backends/audio_backend_openal.cpp)
 
 target_include_directories(pxl
 	PUBLIC
