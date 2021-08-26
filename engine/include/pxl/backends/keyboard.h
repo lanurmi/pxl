@@ -3,7 +3,8 @@
 
 namespace pxl
 {
-	enum class Key 	{
+	enum class Key
+	{
 		A = 4,
 		B = 5,
 		C = 6,
