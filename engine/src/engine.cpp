@@ -3,7 +3,6 @@
 #include <pxl/time.h>
 
 
-
 namespace
 {
 	bool s_end = false;
@@ -42,6 +41,7 @@ void pxl::begin(const pxl::Config& config)
 	
 	pxl::graphics::bind();
 	pxl::platform::vsync(config.vertical_sync);
+	pxl::audio::init();
 
 	u64 time_last = pxl::platform::ticks();
 	u64 time_accumulator = 0;
@@ -134,6 +134,8 @@ void pxl::begin(const pxl::Config& config)
 	}
 
 	pxl::scenes::end();
+
+	pxl::audio::shutdown();
 	pxl::graphics::unbind();
 	pxl::platform::shutdown();
 }

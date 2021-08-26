@@ -1,5 +1,6 @@
 #pragma once
 #include <pxl/types.h>
+#include <functional>
 
 namespace pxl
 {
@@ -16,7 +17,6 @@ namespace pxl
 
 		class File;
 		using FileRef = std::shared_ptr<File>;
-		FileRef open(const String& path);
 
 		enum class FileMode
 		{

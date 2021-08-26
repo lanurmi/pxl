@@ -20,12 +20,15 @@ add_library(pxl
 	src/containers/map.cpp
 	src/containers/array.cpp
 
-	src/backends/platform_backend_sdl.cpp	
+
 	src/backends/filesystem_backend_cpp.cpp
 	src/backends/gamepad.cpp
 	src/backends/keyboard.cpp
 	src/backends/mouse.cpp
 	src/backends/graphics_backend_gl.cpp
+	src/backends/platform_backend_sdl.cpp
+	src/backends/audio_backend_openal.cpp
+	src/backends/audio_backend_dummy.cpp
 
 	src/graphics/batch.cpp
 	src/graphics/blend.cpp
@@ -37,12 +40,15 @@ add_library(pxl
 	src/graphics/texture.cpp
 	src/graphics/Subtexture.cpp
 
+	src/audio/audiosource.cpp
+	src/audio/audiobuffer.cpp
 	
 	src/assets/aseprite.cpp
 	src/assets/ogmo.cpp
 	src/assets/image.cpp
 	src/assets/ldtk.cpp
 	src/assets/font.cpp
+	src/assets/audio.cpp
 	
 	src/math/calc.cpp
 	src/math/color.cpp
@@ -65,7 +71,7 @@ add_library(pxl
 	src/utils/sprite_font.cpp
 
 	src/utils/components/camera.cpp
-	src/backends/audio_backend_openal.cpp)
+ )
 
 target_include_directories(pxl
 	PUBLIC
@@ -76,19 +82,30 @@ target_include_directories(pxl
 
 set(PLATFORM_SDL2 true CACHE BOOL "Use SDL2 Platform Backend")
 set(GRAPHICS_OPENGL true CACHE BOOL "Use OpenGL Graphics Backend")
-
-set(LIBS "")
+set(AUDIO_OPENAL true CACHE BOOL "Use OpenAL audio Backend")
+set(AUDIO_DUMMY false CACHE BOOL "Use OpenAL audio Backend")
 
 if (GRAPHICS_OPENGL)
 	add_compile_definitions(PXL_GRAPHICS_OPENGL)
 endif()
 
+set(LIBS "")
+
 if (PLATFORM_SDL2)
 	set(SDL2_PATH "libs/SDL")
-	add_compile_definitions(PXL_PLATFORM_SDL2)
+	add_compile_definitions(PXL_PLATFORM_SDL)
 	add_subdirectory( ${SDL2_PATH} )
 	set(LIBS ${LIBS} SDL2main SDL2-static)
 	target_include_directories(pxl PUBLIC ${SDL2_PATH}/include)
+endif()
+
+if (AUDIO_OPENAL)
+	set(OPENAL_PATH "libs/openal-soft")
+	add_compile_definitions(PXL_AUDIO_OPENAL)
+	add_subdirectory( ${OPENAL_PATH} )
+	target_include_directories(pxl PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/libs/openal-soft-bin/include")
+	target_link_directories(pxl PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}/libs/openal-soft-bin")
+	set(LIBS ${LIBS} ${CMAKE_CURRENT_SOURCE_DIR}/libs/openal-soft-bin/OpenAL32.lib)
 endif()
 
 target_link_libraries(pxl PUBLIC ${LIBS})

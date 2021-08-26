@@ -1,3 +1,5 @@
+#ifdef PXL_GRAPHICS_OPENGL
+
 #include <pxl/backends/graphics_backend.h>
 #include <pxl/engine.h>
 #include <pxl/graphics/sampler.h>
@@ -1258,3 +1260,5 @@ void pxl::graphics::render(const DrawCall& call)
 	s_gl.DrawElements(GL_TRIANGLES, (GLint)(call.indices_count), index_format, (void*)(index_size * call.indices_start));
 	s_gl.BindVertexArray(0);
 }
+
+#endif

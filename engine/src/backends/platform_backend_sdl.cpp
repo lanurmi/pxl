@@ -1,3 +1,5 @@
+#ifdef PXL_PLATFORM_SDL
+
 #include <pxl/backends/platform_backend.h>
 #include <pxl/time.h>
 #include <string>
@@ -340,3 +342,5 @@ pxl::Vec2 pxl::platform::size()
 	SDL_GetWindowSize(s_window, &w, &h);
 	return pxl::Vec2(w, h);
 }
+
+#endif

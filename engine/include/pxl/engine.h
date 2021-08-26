@@ -5,6 +5,7 @@
 #include <pxl/config.h>
 #include <pxl/backends/platform_backend.h>
 #include <pxl/backends/graphics_backend.h>
+#include <pxl/backends/audio_backend.h>
 #include <pxl/backends/gamepad.h>
 #include <pxl/backends/keyboard.h>
 #include <pxl/backends/mouse.h>
