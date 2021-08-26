@@ -100,7 +100,11 @@ void pxl::begin(const pxl::Config& config)
 				{
 					s_end = true;
 				}
-				pxl::platform::inputUpdate();
+				//Input things
+				pxl::mouse::update();
+				pxl::keyboard::update();
+				pxl::gamepad::update();
+
 				pxl::bindings::update();
 				pxl::scenes::update();
 			}
@@ -115,7 +119,12 @@ void pxl::begin(const pxl::Config& config)
 				s_end = true;
 				continue;
 			}
-			pxl::platform::inputUpdate();
+
+			//Input things
+			pxl::mouse::update();
+			pxl::keyboard::update();
+			pxl::gamepad::update();
+
 			pxl::bindings::update();
 			pxl::scenes::update();
 		}

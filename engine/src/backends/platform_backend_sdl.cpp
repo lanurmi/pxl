@@ -5,7 +5,6 @@
 #include <cstdio>
 #include <pxl/engine.h>
 
-
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <assert.h>
@@ -238,12 +237,6 @@ bool pxl::platform::update()
 	return true;
 }
 
-void pxl::platform::inputUpdate()
-{
-	pxl::mouse::update();
-	pxl::keyboard::update();
-	pxl::gamepad::update();
-}
 
 void pxl::platform::rumble(int index, float time, float strength)
 {
