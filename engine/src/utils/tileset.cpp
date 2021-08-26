@@ -3,6 +3,11 @@
 
 using namespace pxl;
 
+Tileset::Tileset()
+{
+
+}
+
 Tileset::Tileset(const TextureRef& texture, int tilesize)
 {
 	createTiles(texture, Rect(0,0,texture->width(), texture->height()), tilesize);
@@ -11,6 +16,20 @@ Tileset::Tileset(const TextureRef& texture, int tilesize)
 Tileset::Tileset(const Subtexture& texture, int tilesize)
 {
 	createTiles(texture.texture(), texture.rect(), tilesize);
+}
+
+Tileset::Tileset(Tileset&& other) noexcept
+{
+	_tiles = std::move(other._tiles);
+	_size = other._size;
+}
+
+Tileset& Tileset::operator=(Tileset&& other) noexcept
+{
+	_tiles = std::move(other._tiles);
+	_size = other._size;
+	other._size = 0;
+	return *this;
 }
 
 void Tileset::createTiles(const TextureRef& texture, const Rect& area, int tilesize)

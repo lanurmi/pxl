@@ -13,8 +13,19 @@ Grid::Grid() : _width(0), _height(0)
 
 }
 
-Grid::~Grid()
-{
+Grid::Grid(Grid&& other) noexcept {
+	_width = other._width;
+	_height = other._height;
+	_data = std::move(other._data);
+}
+
+Grid& Grid::operator=(Grid&& other) noexcept {
+	_width = other._width;
+	_height = other._height;
+	other._width = 0;
+	other._height = 0;
+	_data = std::move(other._data);
+	return *this;
 }
 
 void Grid::set(int x, int y, i16 value)
