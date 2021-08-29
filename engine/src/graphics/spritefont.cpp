@@ -1,7 +1,6 @@
-#include <pxl/utils/sprite_font.h>
+#include <pxl/graphics/spritefont.h>
 #include <pxl/utils/image_packer.h>
 #include <pxl/engine.h>
-
 
 using namespace pxl;
 

@@ -38,7 +38,11 @@ add_library(pxl
 	src/graphics/sampler.cpp
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
-	src/graphics/Subtexture.cpp
+	src/graphics/subtexture.cpp
+	src/graphics/atlas.cpp
+	src/graphics/sprite.cpp
+	src/graphics/tileset.cpp
+	src/graphics/spritefont.cpp
 
 	src/audio/audiosource.cpp
 	src/audio/audiobuffer.cpp
@@ -65,13 +69,10 @@ add_library(pxl
 	src/utils/component.cpp
 	src/utils/scene_manager.cpp
 	src/utils/image_packer.cpp
-	src/utils/sprite.cpp
-	src/utils/tileset.cpp
 	src/utils/filestream.cpp
-	src/utils/sprite_font.cpp
 
 	src/utils/components/camera.cpp
- )
+)
 
 target_include_directories(pxl
 	PUBLIC

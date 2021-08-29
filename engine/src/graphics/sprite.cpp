@@ -1,4 +1,4 @@
-#include <pxl/utils/sprite.h>
+#include <pxl/graphics/sprite.h>
 
 using namespace pxl;
 

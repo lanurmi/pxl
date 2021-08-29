@@ -12,7 +12,7 @@
 #include <pxl/graphics/material.h>
 #include <pxl/graphics/blend.h>
 #include <pxl/graphics/render_target.h>
-#include <pxl/utils/sprite_font.h>
+#include <pxl/graphics/spritefont.h>
 
 namespace pxl
 {
