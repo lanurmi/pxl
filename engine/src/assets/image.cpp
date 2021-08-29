@@ -1,13 +1,12 @@
 #include <pxl/assets/image.h>
 #include <pxl/engine.h>
 #include <pxl/utils/filestream.h>
+#include <pxl/assets/imageformats.h>
 #include <assert.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_ONLY_JPEG
-#define STBI_ONLY_PNG
 
-#include <pxl/3rdparty/stb_image.h>
+
+using namespace pxl;
 
 pxl::Image::Image(int width, int height) : _pixels(nullptr), _width(width), _height(height)
 {
@@ -16,50 +15,6 @@ pxl::Image::Image(int width, int height) : _pixels(nullptr), _width(width), _hei
 	memset(_pixels, 0, sizeof(Color) * _width * _height);
 }
 
-static pxl::Color* loadJPEG(const pxl::String& path, int *w, int *h)
-{
-	int comp;
-	auto data = stbi_load(path.cstr(), w, h, &comp, STBI_rgb);
-	if (data == nullptr)
-	{
-		pxl::log::error("Could not load rgb image");
-		assert(0);
-		return nullptr;
-	}
-	auto size = (*w) * (*h);
-	auto result = new pxl::Color[size];
-	for (int i = 0; i < size; i++)
-	{
-		auto r = data[3 * i + 0];
-		auto g = data[3 * i + 1];
-		auto b = data[3 * i + 2];
-		auto a = 255;
-
-		result[i].r = r;
-		result[i].g = g;
-		result[i].b = b;
-		result[i].a = a;
-	}
-	stbi_image_free(data);
-	return result;
-}
-
-static pxl::Color* loadPNG(const pxl::String& path, int* w, int* h)
-{
-	int comp;
-	auto data = stbi_load(path.cstr(), w, h, &comp, STBI_rgb_alpha);
-	if (data == nullptr)
-	{
-		pxl::log::error("Could not load png image");
-		assert(0);
-		return nullptr;
-	}
-	auto size = (*w) * (*h);
-	auto result = new pxl::Color[size];
-	memcpy(result, data, size * sizeof(pxl::Color));
-	stbi_image_free(data);
-	return result;
-}
 
 pxl::Image::Image(const String& file)
 {
@@ -121,15 +76,9 @@ pxl::Image::~Image()
 
 void pxl::Image::load(const pxl::String& file)
 {
-	auto ext = pxl::path::extension(file);
-	if (ext == ".png")
-	{
-		_pixels = loadPNG(file, &_width, &_height);
-	}
-	else if (ext == ".jpg" || ext == ".jpeg")
-	{
-		_pixels = loadJPEG(file, &_width, &_height);
-	}
+	FileStream filestream(file, file::FileMode::ReadBinary);
+
+	_pixels = pxl::imageformats::decode(filestream, &_width, &_height);
 
 	assert(_width > 0);
 	assert(_height > 0);

@@ -34,7 +34,7 @@ add_library(pxl
 	src/graphics/blend.cpp
 	src/graphics/material.cpp
 	src/graphics/mesh.cpp
-	src/graphics/render_target.cpp
+	src/graphics/rendertarget.cpp
 	src/graphics/sampler.cpp
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
@@ -50,6 +50,7 @@ add_library(pxl
 	src/assets/aseprite.cpp
 	src/assets/ogmo.cpp
 	src/assets/image.cpp
+	src/assets/imageformats.cpp
 	src/assets/ldtk.cpp
 	src/assets/font.cpp
 	src/assets/audio.cpp

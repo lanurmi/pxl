@@ -11,7 +11,7 @@
 #include <pxl/graphics/mesh.h>
 #include <pxl/graphics/material.h>
 #include <pxl/graphics/blend.h>
-#include <pxl/graphics/render_target.h>
+#include <pxl/graphics/rendertarget.h>
 #include <pxl/graphics/spritefont.h>
 
 namespace pxl

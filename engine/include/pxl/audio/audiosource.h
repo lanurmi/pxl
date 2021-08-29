@@ -1,7 +1,7 @@
 #pragma once
 
 #include <future>
-#include <pxl/assets/audioclip.h>
+#include <pxl/assets/audio.h>
 #include <pxl/audio/audiobuffer.h>
 
 namespace pxl

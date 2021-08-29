@@ -4,7 +4,7 @@
 #include <pxl/graphics/shader.h>
 #include <pxl/graphics/mesh.h>
 #include <pxl/graphics/batch.h>
-#include <pxl/graphics/render_target.h>
+#include <pxl/graphics/rendertarget.h>
 
 namespace pxl
 {
