@@ -47,7 +47,8 @@ namespace pxl
 			float p = _current_time / _time;
 			auto f = easingFunc(_easing);
 			_value = lerp(_start, _end, f(p));
-			if (_current_time == _time) {
+			if (_current_time == _time)
+			{
 				_running = false;
 			}
 		}
@@ -75,12 +76,14 @@ namespace pxl
 				return v0 + (v1 - v0) * t;
 			}
 		}
-		Vec2 lerp(const Vec2& v0, const Vec2& v1, float t) {
+		Vec2 lerp(const Vec2& v0, const Vec2& v1, float t)
+		{
 			return Vec2(
 				lerp(v0.x, v1.x, t),
 				lerp(v0.y, v1.y, t));
 		}
-		Color lerp(const Color& v0, const Color& v1, float t) {
+		Color lerp(const Color& v0, const Color& v1, float t)
+		{
 			return Color(
 				lerp(v0.r, v1.r, t),
 				lerp(v0.g, v1.g, t),
