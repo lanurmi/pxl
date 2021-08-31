@@ -20,10 +20,9 @@ add_custom_command(
 
 add_custom_command(
 	TARGET palette POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../../engine/libs/openal-soft-bin/OpenAL32.dll" "${CMAKE_CURRENT_BINARY_DIR}/OpenAL32.dll"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/../../engine/libs/openal-soft/OpenAL32.dll" "${CMAKE_CURRENT_BINARY_DIR}/OpenAL32.dll"
 	COMMENT "copy openal"
 )
-
 
 target_include_directories(palette PUBLIC  ${CMAKE_CURRENT_LIST_DIR}/include)
 target_link_libraries(palette pxl)

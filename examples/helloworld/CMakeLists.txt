@@ -16,7 +16,7 @@ add_custom_command(
 
 add_custom_command(
 	TARGET helloworld POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../../engine/libs/openal-soft-bin/OpenAL32.dll" "${CMAKE_CURRENT_BINARY_DIR}/OpenAL32.dll"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/../../engine/libs/openal-soft/OpenAL32.dll" "${CMAKE_CURRENT_BINARY_DIR}/OpenAL32.dll"
 	COMMENT "copy openal"
 )
 
