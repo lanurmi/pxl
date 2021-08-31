@@ -90,16 +90,20 @@ void pxl::begin(const pxl::Config& config)
 			{
 				time_accumulator = time_maximum;
 			}
-			time::delta = 1.0f / config.target_framerate;
-			time::unscaled_delta = time::delta;
-			time::delta *= pxl::time::scale;
 			while (time_accumulator >= time_target)
 			{
 				time_accumulator -= time_target;
+
+				time::delta = 1.0f / config.target_framerate;
+				time::unscaled_delta = time::delta;
+				time::delta *= pxl::time::scale;
+				pxl::time::seconds += time::delta;
+
 				if (!pxl::platform::update())
 				{
 					s_end = true;
 				}
+
 				//Input things
 				pxl::mouse::update();
 				pxl::keyboard::update();
@@ -114,6 +118,8 @@ void pxl::begin(const pxl::Config& config)
 			pxl::time::delta = (double)time_diff / pxl::time::ticks_per_second;
 			time::unscaled_delta = time::delta;
 			pxl::time::delta *= pxl::time::scale;
+			pxl::time::seconds += time::delta;
+
 			if (!pxl::platform::update())
 			{
 				s_end = true;

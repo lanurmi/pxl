@@ -10,8 +10,10 @@ namespace pxl
 		extern float unscaled_delta;
 		extern float scale;
 		extern float true_delta;
+		extern float seconds;
 		extern u64 ticks;
 
+		bool interval(float interval);
 		class Timer
 		{
 		public:
