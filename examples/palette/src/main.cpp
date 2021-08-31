@@ -27,9 +27,9 @@ public:
 
 		auto entity = createEntity(pxl::Vec2(0,0));
 
-		pxl::Aseprite p0(pxl::path::combine(pxl::platform::applicationPath(), "content/gb0.ase"));
-		pxl::Aseprite p1(pxl::path::combine(pxl::platform::applicationPath(), "content/gb1.ase"));
-		pxl::Aseprite p2(pxl::path::combine(pxl::platform::applicationPath(), "content/gb2.ase"));
+		pxl::Aseprite p0("content/gb0.ase");
+		pxl::Aseprite p1("content/gb1.ase");
+		pxl::Aseprite p2("content/gb2.ase");
 		palettes[0] = pxl::Texture::create(p0.frames[0].image);
 		palettes[1] = pxl::Texture::create(p1.frames[0].image);
 		palettes[2] = pxl::Texture::create(p2.frames[0].image);

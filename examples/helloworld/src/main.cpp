@@ -26,6 +26,7 @@ public:
 		batch.texture(texture, entity()->position, pxl::Color::white);
 	}
 };
+#include <pxl/time.h>
 
 class HelloWorldScene : public pxl::Scene
 {
@@ -41,7 +42,7 @@ public:
 
 		// component does things (in this case draws texture)
 		auto component = entity->add(HelloWorldComponent());
-		component->texture = pxl::Texture::create(pxl::path::combine(pxl::platform::applicationPath(), "content/helloworld.png"));
+		component->texture = pxl::Texture::create(pxl::Image("content/helloworld.png"));
 		
 		//escape key does things
 		esc = pxl::bindings::createButton();
