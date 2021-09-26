@@ -77,7 +77,7 @@ namespace std
 		{
 			std::size_t result = 2166136261U;
 			auto s = key.size();
-			for (int i = 0; i < s; i++)
+			for (unsigned i = 0; i < s; i++)
 			{
 				result ^= static_cast<std::size_t>(key[i]);
 				result *= 16777619U;
