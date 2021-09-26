@@ -32,5 +32,8 @@ namespace pxl
 		void glBindContext(void* context);
 		void glDestroyContext(void* context);
 		void* glGetFunc(const String& name);
+		//other
+		int cpuCount();
+
 	}
 }

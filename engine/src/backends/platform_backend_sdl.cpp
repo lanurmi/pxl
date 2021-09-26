@@ -343,4 +343,9 @@ pxl::Vec2 pxl::platform::size()
 	return pxl::Vec2(w, h);
 }
 
+int pxl::platform::cpuCount()
+{
+	return SDL_GetCPUCount();
+}
+
 #endif
