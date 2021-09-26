@@ -100,6 +100,14 @@ void pxl::Image::setPixels(const pxl::Color* pixels)
 	memcpy(_pixels, pixels, sizeof(pxl::Color) * _width * _height);
 }
 
+void  pxl::Image::setPixels(const Color& color)
+{
+	for(int i = 0; i < _width * _height; i++)
+	{
+		_pixels[i] = color;
+	}
+}
+
 void pxl::Image::setPixels(const pxl::Rect& rect, const Color* data)
 {
 	for (int i = 0; i < rect.width; i++)
@@ -110,6 +118,19 @@ void pxl::Image::setPixels(const pxl::Rect& rect, const Color* data)
 			int dstIdx = (rect.y + j) * _width + (i + rect.x);
 			auto src = data[srcIdx];
 			_pixels[dstIdx] = src;
+		}
+	}
+}
+
+
+void pxl::Image::setPixels(const pxl::Rect& rect, const Color& color)
+{
+	for (int i = 0; i < rect.width; i++)
+	{
+		for (int j = 0; j < rect.height; j++)
+		{
+			int dstIdx = (rect.y + j) * _width + (i + rect.x);
+			_pixels[dstIdx] = color;
 		}
 	}
 }

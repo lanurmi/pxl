@@ -22,6 +22,13 @@ pxl::Rect::Rect(const Vec2& pos, const Vec2& size)
 	height = size.y;
 }
 
+pxl::Rect::Rect(const Vec2& tl, const Vec2& tr, const Vec2& br, const Vec2& bl) {
+	x = tl.x;
+	y = tl.y;
+	width = (tr.x - tl.x) + 1;
+	height = (br.y - tr.y) + 1;
+}
+
 bool pxl::Rect::operator==(const Rect& rhs) const { return x == rhs.x && y == rhs.y && width == rhs.width && height == rhs.height; }
 bool pxl::Rect::operator!=(const Rect& rhs) const { return x != rhs.x || y != rhs.y || width != rhs.width || height != rhs.height; }
 pxl::Rect pxl::Rect::operator+(const Vec2& rhs) const { return pxl::Rect(x + rhs.x, y + rhs.y, width, height); }

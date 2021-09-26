@@ -11,6 +11,7 @@ namespace pxl
 		Rect();
 		Rect(float rx, float ry, float rw, float rh);
 		Rect(const Vec2& pos, const Vec2& size);
+		Rect(const Vec2& tl, const Vec2& tr, const Vec2& br, const Vec2& bl);
 		bool operator==(const Rect& rhs) const;
 		bool operator!=(const Rect& rhs) const;
 		Rect operator+(const Vec2& rhs) const;
