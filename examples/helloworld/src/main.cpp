@@ -4,6 +4,7 @@
 #include <pxl/utils/input_binding.h>
 #include <pxl/utils/filestream.h>
 #include <pxl/backbuffer.h>
+#include <pxl/time.h>
 
 class HelloWorldComponent : public pxl::Component, public pxl::IDrawable, public pxl::IUpdateable
 {
@@ -27,7 +28,7 @@ public:
 		batch.texture(texture, entity()->position, pxl::Color::white);
 	}
 };
-#include <pxl/time.h>
+
 
 class HelloWorldScene : public pxl::Scene
 {
@@ -61,15 +62,16 @@ public:
 			pxl::end();
 		}
 	}
-	void draw()
+	void draw() override
 	{
 		auto &drawables = this->drawables();
 		pxl::backbuffer->clear(pxl::Color::black);
 		batch.clear();
-		for (auto it : drawables) 	{
+		for (auto it : drawables)
+		{
 			it->draw(batch);
 		}
-		batch.draw(pxl::backbuffer)
+		batch.draw(pxl::backbuffer);
 	}
 private:
 	pxl::VirtualButtonRef esc;

@@ -5,6 +5,7 @@
 #include <pxl/utils/filestream.h>
 #include <pxl/assets/aseprite.h>
 #include <pxl/graphics/batch.h>
+#include <pxl/backbuffer.h>
 
 class TextureDrawComponent : public pxl::Component, public pxl::IDrawable
 {
