@@ -14,10 +14,8 @@
 #include <pxl/graphics/rendertarget.h>
 #include <pxl/graphics/spritefont.h>
 
-namespace pxl
-{
-	class BatchInfo
-	{
+namespace pxl {
+	class BatchInfo 	{
 	public:
 		BatchInfo();
 		int offset;
@@ -29,8 +27,7 @@ namespace pxl
 		bool flip_vertically;
 	};
 
-	class DrawCall
-	{
+	class DrawCall 	{
 	public:
 		MeshRef mesh;
 		MaterialRef material;
@@ -46,15 +43,13 @@ namespace pxl
 		int draw_calls;
 		int triangles;
 	};
-	class Batch
-	{
+	class Batch 	{
 	public:
 		Batch();
 		Batch(const Batch& other) = delete;
-	//	Batch& operator=(const Batch& other) = delete;
+		//	Batch& operator=(const Batch& other) = delete;
 		~Batch();
-		void begin(const RenderTargetRef& target, const pxl::Color &clearColor);
-		void end();
+		void draw(RenderTargetRef target);
 		void clear();
 		void pushMatrix(const Mat3x2& matrix);
 		void popMatrix();
@@ -67,20 +62,20 @@ namespace pxl
 		//draw
 		void triangle(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Color& color);
 		void rectangle(const Rect& rect, const Color& color);
-		void hollowRectangle(const Rect& rect, const Color& color);
+		void hollowRectangle(const Rect& rect, const Color& color, unsigned borderSize = 1);
 		void line(const Vec2& from, const Vec2& to, int lineSize, const Color& color);
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color);
 		void texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Color& color);
-		void texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect &srcrect, const pxl::Color& color);
+		void texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect& srcrect, const pxl::Color& color);
 		void texture(const pxl::Subtexture& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color);
 		void texture(const pxl::Subtexture& texture, const pxl::Vec2& pos, const pxl::Color& color);
-		void text(const pxl::SpriteFont &font, const String &text, const pxl::Vec2 &pos, const pxl::Color &color);
+		void text(const pxl::SpriteFont& font, const String& text, const pxl::Vec2& pos, const pxl::Color& color);
 		//
-		const BatchStatistics &stats() const;
+		const BatchStatistics& stats() const;
 	private:
 		void pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Vec2& p3,
 			const Vec2& t0, const Vec2& t1, const Vec2& t2, const Vec2& t3, const Color& color);
-		void pushQuad(const Rect& rect, const Rect &texcoords, const Color& color);
+		void pushQuad(const Rect& rect, const Rect& texcoords, const Color& color);
 		void setTexture(const TextureRef& texture);
 		void newBatch();
 		void draw(const RenderTargetRef& renderTarget, const Mat4x4& matrix);
@@ -103,7 +98,6 @@ namespace pxl
 		MaterialRef m_defaultMaterial;
 		TextureRef m_defaultTexture;
 
-		RenderTargetRef _target;
 
 		BatchStatistics _stats;
 

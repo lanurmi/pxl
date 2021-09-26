@@ -3,6 +3,7 @@
 #include <pxl/graphics/batch.h>
 #include <pxl/utils/input_binding.h>
 #include <pxl/utils/filestream.h>
+#include <pxl/backbuffer.h>
 
 class HelloWorldComponent : public pxl::Component, public pxl::IDrawable, public pxl::IUpdateable
 {
@@ -63,11 +64,12 @@ public:
 	void draw()
 	{
 		auto &drawables = this->drawables();
-		batch.begin(nullptr, pxl::Color::black);
+		pxl::backbuffer->clear(pxl::Color::black);
+		batch.clear();
 		for (auto it : drawables) 	{
 			it->draw(batch);
 		}
-		batch.end();
+		batch.draw(pxl::backbuffer)
 	}
 private:
 	pxl::VirtualButtonRef esc;

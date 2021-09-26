@@ -18,8 +18,8 @@ namespace pxl
 		RenderTarget& operator=(const RenderTarget&) = delete;
 		RenderTarget& operator=(RenderTarget&&) = delete;
 		virtual ~RenderTarget() = default;
-		int width() const;
-		int height() const;
+		virtual int width() const;
+		virtual int height() const;
 		virtual void clear(const pxl::Color& color) = 0;
 		virtual TextureRef texture() const = 0;
 	protected:

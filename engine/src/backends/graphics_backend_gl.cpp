@@ -533,24 +533,14 @@ static GLenum blendFactorToGl(pxl::BlendFactor factor)
 }
 
 
-
-void pxl::graphics::bind()
+void pxl::graphics::init()
 {
 	s_gl = GLState();
-	s_gl.context = pxl::platform::glCreateContext();
-	if (s_gl.context == nullptr)
-	{
-		pxl::log::error("Could not create gl context");
-		assert(0);
-	}
-	pxl::platform::glBindContext(s_gl.context);
-
 #define GL_FUNC(name, ...) s_gl.name = (GLState::name ## Func)(pxl::platform::glGetFunc("gl" #name));
 	GL_FUNCTIONS
 #undef GL_FUNC
 
-		if (s_gl.DebugMessageCallback != nullptr)
-		{
+		if (s_gl.DebugMessageCallback != nullptr) 		{
 			s_gl.Enable(GL_DEBUG_OUTPUT);
 			s_gl.Enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 			s_gl.DebugMessageCallback(gl_message_callback, nullptr);
@@ -570,6 +560,20 @@ void pxl::graphics::bind()
 
 	s_gl.features.origin_bottom_left = true;
 	s_gl.features.max_texture_size = s_gl.max_texture_size;
+}
+
+void pxl::graphics::bind()
+{
+	auto ctx = pxl::platform::glCreateContext();
+	init();
+	s_gl.context = ctx;
+	if (s_gl.context == nullptr)
+	{
+		pxl::log::error("Could not create gl context");
+		assert(0);
+	}
+	pxl::platform::glBindContext(s_gl.context);
+
 }
 
 pxl::graphics::GraphicsFeatures pxl::graphics::features()
@@ -1154,19 +1158,16 @@ static void setBlendMode(const pxl::BlendState& blend)
 
 static void setView(const pxl::RenderTargetRef& renderTarget, const pxl::Rect &viewport)
 {
-	pxl::Vec2 size;
-	if (renderTarget == nullptr)
+
+	if (auto frameBuffer = std::dynamic_pointer_cast<GLRenderTarget>(renderTarget))
 	{
-		s_gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
-		size = pxl::platform::drawSize();
+		s_gl.BindFramebuffer(GL_FRAMEBUFFER, frameBuffer->getId());	
 	}
 	else
 	{
-		auto frameBuffer = std::dynamic_pointer_cast<GLRenderTarget>(renderTarget);
-		s_gl.BindFramebuffer(GL_FRAMEBUFFER, frameBuffer->getId());
-		size = pxl::Vec2(renderTarget->width(), renderTarget->height());
+		s_gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-
+	pxl::Vec2 size(renderTarget->width(), renderTarget->height());
 	// View
 	float usey = size.y - viewport.y - viewport.height;
 	s_gl.Viewport((GLint)viewport.x, (GLint)usey, (GLint)viewport.width, (GLint)viewport.height);

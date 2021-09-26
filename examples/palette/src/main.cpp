@@ -79,7 +79,8 @@ public:
 
 	void draw() override {
 
-		batch.begin(nullptr, pxl::Color::black);
+		pxl::backbuffer->clear(pxl::Color::black);
+		batch.clear();
 		batch.pushMaterial(palette_material);
 
 		auto& drawus = drawables();
@@ -88,7 +89,7 @@ public:
 			d->draw(batch);
 		}
 
-		batch.end();
+		batch.draw(pxl::backbuffer);
 	}
 private:
 	pxl::VirtualButtonRef esc;

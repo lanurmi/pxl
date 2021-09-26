@@ -14,7 +14,8 @@ add_library(pxl
 	src/time.cpp
 	src/log.cpp
 	src/types.cpp
-	
+	src/backbuffer.cpp
+
 	src/containers/string.cpp
 	src/containers/vector.cpp
 	src/containers/map.cpp
