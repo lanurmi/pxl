@@ -18,6 +18,7 @@ namespace pxl
 			int max_texture_size = 0;
 		};
 
+		void init();
 		void bind();
 		void unbind();
 		void render(const DrawCall& pass);
