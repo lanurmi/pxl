@@ -162,7 +162,8 @@ const pxl::Mat3x2& pxl::Batch::currentMatrix() {
 void pxl::Batch::setTexture(const TextureRef& texture) {
 	{
 		auto& cBatch = currentBatch();
-		if (cBatch.elements > 0 && cBatch.texture != texture && cBatch.texture) 		{
+		if (cBatch.elements > 0 && cBatch.texture != texture && cBatch.texture)
+		{
 			newBatch();
 		}
 	}
