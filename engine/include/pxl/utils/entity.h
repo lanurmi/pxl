@@ -1,6 +1,6 @@
 #pragma once
 
-#include <pxl/utils/entity.h>
+#include <pxl/utils/component.h>
 #include <pxl/math/vec2.h>
 #include <pxl/types.h>
 #include <assert.h>
@@ -45,11 +45,12 @@ namespace pxl
 	template<class T>
 	T* Entity::get()
 	{
+		int type = ComponentId::get<T>();
 		for (auto it : _components)
 		{
-			if (auto c = dynamic_cast<T*>(it))
+			if (it->typeId() == type)
 			{
-				return c;
+				return dynamic_cast<T*>(it);
 			}
 		}
 		return nullptr;
@@ -58,11 +59,12 @@ namespace pxl
 	template<class T>
 	const T* Entity::get() const
 	{
+		int type = ComponentId::get<T>();
 		for (auto it : _components)
 		{
-			if (auto c = dynamic_cast<T*>(it))
+			if (it->typeId() == type)
 			{
-				return c;
+				return dynamic_cast<T*>(it);
 			}
 		}
 		return nullptr;

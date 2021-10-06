@@ -3,7 +3,7 @@
 
 using namespace pxl;
 
-u16 pxl::Component::s_type_counter = 0;
+u16 ComponentId::idCounter = 0;
 
 Component::Component() : _entity(nullptr), _typeId(0)
 {

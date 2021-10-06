@@ -67,7 +67,7 @@ namespace pxl
 	{
 		T* c = new T(std::move(component));
 		c->_entity = entity;
-		c->_typeId = pxl::Component::findTypeId<T>();
+		c->_typeId = pxl::ComponentId::get<T>();
 		_current_max_component_type_id = calc::max(_current_max_component_type_id, c->_typeId + 1);
 		if (auto drawabla = dynamic_cast<IDrawable*>(c))
 		{

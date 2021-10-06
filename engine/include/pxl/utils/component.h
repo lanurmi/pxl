@@ -28,6 +28,17 @@ namespace pxl
 		virtual i16 drawOrder() const { return 0; }
 	};
 
+	class ComponentId {
+	public:
+		template<class T>
+		static u16 get() {
+			static u16 id = idCounter++;
+			return id;
+		}
+	private:
+		static u16 idCounter;
+	};
+	
 	class Component
 	{
 	public:
@@ -46,16 +57,6 @@ namespace pxl
 		Entity* _entity;
 
 		friend class Scene;
-
-		//
-		static u16 s_type_counter;
-		template<class T>
-		static u16 findTypeId()
-		{
-			static const u16 type_id = s_type_counter++;
-			assert(type_id < s_max_component_types);
-			return type_id;
-		}
 	};
 
 	template<class T>
