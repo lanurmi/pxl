@@ -192,7 +192,7 @@ void pxl::Batch::rectangle(const Rect& rect, const Color& color) {
 	setTexture(nullptr);
 	auto position = rect.topLeft();
 	auto size = rect.size();
-	pushQuad(position, pxl::Vec2(position.x + size.x, position.y), pxl::Vec2(position.x + size.x, position.y + size.x), pxl::Vec2(position.x, position.y + size.x),
+	pushQuad(position, pxl::Vec2(position.x + size.x, position.y), pxl::Vec2(position.x + size.x, position.y + size.y), pxl::Vec2(position.x, position.y + size.y),
 		pxl::Vec2::zero, pxl::Vec2(1.0f, 0.0f), pxl::Vec2(1.0f, 1.0f), pxl::Vec2(0.0f, 1.0f), color);
 }
 
