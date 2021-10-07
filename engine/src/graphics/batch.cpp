@@ -304,10 +304,11 @@ void pxl::Batch::texture(const pxl::TextureRef& texture, const Rect& dstRect, co
 void pxl::Batch::text(const pxl::SpriteFont& font, const String& text, const pxl::Vec2& pos, const pxl::Color& color) {
 	Vec2 drawPos = pos;
 	u32 prev = 0;
-	for (int i = 0; i < text.size(); i++) 	{
+	for (unsigned i = 0; i < text.size(); i++) 	{
 		u32 glyph = static_cast<u32>(text[i]);
 		const auto character = font.character(glyph);
-		if (text[i] == '\n') 		{
+		if (text[i] == '\n')
+		{
 			drawPos.y += font.lineHeight();
 			drawPos.x = pos.x;
 			continue;

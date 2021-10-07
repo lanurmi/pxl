@@ -93,7 +93,7 @@ namespace pxl
 	template<class T>
 	T* Scene::first()
 	{
-		auto typeId = pxl::Component::findTypeId<T>();
+		auto typeId = pxl::ComponentId::get<T>();
 		if (_components[typeId].empty())
 		{
 			return nullptr;
@@ -106,7 +106,7 @@ namespace pxl
 	template<class T>
 	Vector<Component*>& Scene::all()
 	{
-		auto typeId = pxl::Component::findTypeId<T>();
+		auto typeId = pxl::ComponentId::get<T>();
 		return _components[typeId];
 	}
 }

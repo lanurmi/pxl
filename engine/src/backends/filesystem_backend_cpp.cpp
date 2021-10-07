@@ -10,7 +10,7 @@ String path::extension(const String& path)
 {
 	std::filesystem::path filePath(path.cstr());
 	auto str = filePath.extension().u8string();
-	return String(str.c_str(), str.size());
+	return String(str.c_str(), static_cast<unsigned>(str.size()) );
 }
 
 String path::combine(const String lowerPath, const String upperPath)
@@ -18,21 +18,21 @@ String path::combine(const String lowerPath, const String upperPath)
 	std::filesystem::path path(lowerPath.cstr());
 	path.append(upperPath.cstr());
 	auto str = path.u8string();
-	return String(str.c_str(), str.size());
+	return String(str.c_str(), static_cast<unsigned>(str.size()));
 }
 
 String path::withoutFile(const String& path)
 {
 	std::filesystem::path filePath(path.cstr());
 	auto str = filePath.parent_path().u8string();
-	return String(str.c_str(), str.size());
+	return String(str.c_str(), static_cast<unsigned>(str.size()));
 }
 
 String path::filename(const String& path)
 {
 	std::filesystem::path filePath(path.cstr());
 	auto str = filePath.stem().u8string();
-	return String(str.c_str(), str.size());
+	return String(str.c_str(), static_cast<unsigned>(str.size()));
 }
 
 class STDIOFile : public file::File 
@@ -134,7 +134,7 @@ Vector<String> directory::files(const String& path, const String& extension)
 		if (extension.empty())
 		{
 			auto str = p.u8string();
-			result.add(String(str.c_str(), str.length()));
+			result.add(String(str.c_str(), static_cast<unsigned>(str.length())));
 		}
 		else
 		{
@@ -142,7 +142,7 @@ Vector<String> directory::files(const String& path, const String& extension)
 			if (ext.u8string().c_str() == extension)
 			{
 				auto str = p.u8string();
-				result.add(String(str.c_str(), str.size()));
+				result.add(String(str.c_str(), static_cast<unsigned>(str.size()) ));
 			}
 		}
 	}

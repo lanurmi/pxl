@@ -51,13 +51,13 @@ void ImagePacker::add(u32 id, int width, int height, const Color* pixels)
 	e.id = id;
 	e.width = width;
 	e.height = height;
-	_entries.emplace_back(e);
+	_entries.add(e);
 
 	Buffer buf;
 	buf.id = id;
 	buf.pixels = new Color[width * height];
 	memcpy(buf.pixels, pixels, sizeof(Color) * width * height);
-	_pixels.emplace_back(buf);
+	_pixels.add(buf);
 }
 
 static Node* findNode(Node* root, int w, int h)
@@ -150,7 +150,7 @@ int ImagePacker::doPack(int fromEntry)
 
 	image.preMultiply();
 
-	_result.emplace_back(Result());
+	_result.expand(1);
 
 	for (int p = 0; p < _entries.size(); p++)
 	{
@@ -166,7 +166,7 @@ int ImagePacker::doPack(int fromEntry)
 	return packed;
 }
 
-const std::vector<ImagePacker::Result>& ImagePacker::pack()
+const Vector<ImagePacker::Result>& ImagePacker::pack()
 {
 	_result.clear();
 	std::sort(_entries.begin(), _entries.end(), [](const Entry& e0, const Entry& e1)

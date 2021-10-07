@@ -412,7 +412,7 @@ GLuint gl_mesh_assign_attributes(GLuint buffer, GLenum buffer_type, const pxl::V
 
 	// enable attributes
 	size_t ptr = 0;
-	for (int n = 0; n < format.attributes.size(); n++)
+	for (unsigned n = 0; n < format.attributes.size(); n++)
 	{
 		auto& attribute = format.attributes[n];
 		GLenum type = GL_UNSIGNED_BYTE;

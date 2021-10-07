@@ -15,7 +15,8 @@
 #include <pxl/graphics/spritefont.h>
 
 namespace pxl {
-	class BatchInfo 	{
+	class BatchInfo 
+	{
 	public:
 		BatchInfo();
 		int offset;
@@ -27,7 +28,8 @@ namespace pxl {
 		bool flip_vertically;
 	};
 
-	class DrawCall 	{
+	class DrawCall
+	{
 	public:
 		MeshRef mesh;
 		MaterialRef material;
@@ -39,11 +41,14 @@ namespace pxl {
 		void draw();
 	};
 
-	struct BatchStatistics {
+	struct BatchStatistics
+	{
 		int draw_calls;
 		int triangles;
 	};
-	class Batch 	{
+
+	class Batch 
+	{
 	public:
 		Batch();
 		Batch(const Batch& other) = delete;

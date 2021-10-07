@@ -24,7 +24,7 @@ namespace pxl
 		~ImagePacker();
 		void add(u32 id, const Image &image);
 		void add(u32 id, int width, int height, const Color *pixels);
-		const std::vector<Result>& pack();
+		const Vector<Result>& pack();
 	private:
 		int doPack(int fromEntry);
 		struct Buffer
@@ -35,8 +35,8 @@ namespace pxl
 		int _width;
 		int _height;
 		
-		std::vector<Entry> _entries;
-		std::vector<Buffer> _pixels;
-		std::vector<Result> _result;
+		Vector<Entry> _entries;
+		Vector<Buffer> _pixels;
+		Vector<Result> _result;
 	};
 }

@@ -156,7 +156,7 @@ namespace pxl
 	{
 		if (newCapasity > _capacity)
 		{
-			int nc = _capacity;
+			auto nc = _capacity;
 			if (nc <= 0)
 			{
 				nc = 8;
@@ -168,7 +168,7 @@ namespace pxl
 
 			T* newData = (T*)::operator new (sizeof(T) * nc);
 
-			for (int i = 0; i < _size; i++)
+			for (unsigned i = 0; i < _size; i++)
 			{
 				if (i < nc)
 				{
@@ -218,12 +218,12 @@ namespace pxl
 	{
 		if (amount >= 1)
 		{
-			for (int i = index; i < _size - amount; i++) 
+			for (unsigned i = index; i < _size - amount; i++) 
 			{
 				_data[i] = std::move(_data[i + amount]);
 			}
 
-			for (int i = _size - amount; i < _size; i++)
+			for (unsigned i = _size - amount; i < _size; i++)
 			{
 				_data[i].~T();
 			}
@@ -233,7 +233,7 @@ namespace pxl
 
 	template<class T>
 	void Vector<T>::erase(const T& item) {
-		for(int i = 0; i < _size; i++)
+		for(unsigned i = 0; i < _size; i++)
 		{
 			if (_data[i] == item)
 			{
@@ -249,7 +249,7 @@ namespace pxl
 		{
 			int s = _size;
 			reserve(s + amount);
-			for (int i = 0; i < amount; i++)
+			for (unsigned i = 0; i < amount; i++)
 			{
 				new (_data + s + i) T();
 			}
@@ -270,7 +270,7 @@ namespace pxl
 	template<class T>
 	void Vector<T>::clear()
 	{
-		for (int i = 0; i < _size; i++)
+		for (unsigned i = 0; i < _size; i++)
 		{
 			_data[i].~T();
 		}
@@ -284,12 +284,14 @@ namespace pxl
 	}
 
 	template<class T>
-	T* Vector<T>::data() 	{
+	T* Vector<T>::data()
+	{
 		return _data;
 	}
 
 	template<class T>
-	const T* Vector<T>::data() const 	{
+	const T* Vector<T>::data() const
+	{
 		return _data;
 	}
 
