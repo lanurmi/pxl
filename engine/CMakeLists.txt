@@ -72,8 +72,6 @@ add_library(pxl
 	src/utils/scene_manager.cpp
 	src/utils/image_packer.cpp
 	src/utils/filestream.cpp
-
-	src/utils/components/camera.cpp
 )
 
 target_include_directories(pxl

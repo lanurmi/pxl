@@ -1,7 +1,6 @@
 #include <pxl/engine.h>
 #include <pxl/utils/scene.h>
 #include <pxl/utils/entity.h>
-#include <pxl/utils/components/camera.h>
 #include <pxl/graphics/batch.h>
 #include <pxl/math/calc.h>
 
