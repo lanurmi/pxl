@@ -4,7 +4,6 @@
 
 namespace pxl
 {
-	class Scene;
 	class Entity;
 
 	class IUpdateable
@@ -52,7 +51,8 @@ namespace pxl
 		virtual ~Component();
 
 		u16 typeId() const override;
-		Entity* entity() const;
+		const Entity* entity() const;
+		Entity* entity();
 
 		T* next();
 		const T* next() const;
@@ -60,9 +60,6 @@ namespace pxl
 		T* prev();
 		const T* prev() const;
 
-		Entity* entity() {
-			return _entity;
-		}
 		void reset() override final
 		{
 
@@ -92,6 +89,18 @@ namespace pxl
 
 	template<typename T>
 	Component<T>::~Component() {}
+
+	template<typename T>
+	const Entity* Component<T>::entity() const
+	{
+		return _entity;
+	}
+
+	template<typename T>
+	Entity* Component<T>::entity()
+	{
+		return _entity;
+	}
 
 	template<typename T>
 	u16 Component<T>::typeId() const
