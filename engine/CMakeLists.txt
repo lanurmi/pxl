@@ -66,13 +66,15 @@ add_library(pxl
 	src/math/tween.cpp
 	
 	src/utils/input_binding.cpp
-	src/utils/scene.cpp
-	src/utils/entity.cpp
-	src/utils/component.cpp
-	src/utils/scene_manager.cpp
+	
+	
 	src/utils/image_packer.cpp
 	src/utils/filestream.cpp
-)
+
+	src/ec/entity.cpp
+	src/ec/component.cpp
+	src/ec/world.cpp
+ )
 
 target_include_directories(pxl
 	PUBLIC

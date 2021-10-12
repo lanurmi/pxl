@@ -13,5 +13,7 @@ namespace pxl
 		bool fixed_update;
 		bool vertical_sync;
 		Func awake;
+		Func update;
+		Func draw;
 	};
 }

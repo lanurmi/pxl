@@ -635,7 +635,7 @@ bool Decoder_ffmpeg::decode(FrameInfo* fillInfo)
 	return done;
 }
 
-void Decoder_ffmpeg::preProcess()
+void Decoder_ffmpeg::calculateFrames()
 {
 	FrameInfo info;
 	info.pts = 0;

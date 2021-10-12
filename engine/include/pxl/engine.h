@@ -9,7 +9,6 @@
 #include <pxl/backends/gamepad.h>
 #include <pxl/backends/keyboard.h>
 #include <pxl/backends/mouse.h>
-#include <pxl/utils/scene_manager.h>
 #include <pxl/utils/input_binding.h>
 #include <pxl/log.h>
 

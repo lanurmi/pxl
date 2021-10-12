@@ -110,7 +110,8 @@ void pxl::begin(const pxl::Config& config)
 				pxl::gamepad::update();
 
 				pxl::bindings::update();
-				pxl::scenes::update();
+
+				config.update();
 			}
 		}
 		else
@@ -132,14 +133,14 @@ void pxl::begin(const pxl::Config& config)
 			pxl::gamepad::update();
 
 			pxl::bindings::update();
-			pxl::scenes::update();
+
+			config.update();
 		}
 
-		pxl::scenes::draw();
+
+		config.draw();
 		pxl::platform::present();
 	}
-
-	pxl::scenes::end();
 
 	pxl::audio::shutdown();
 	pxl::graphics::unbind();

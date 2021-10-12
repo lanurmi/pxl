@@ -1,6 +1,7 @@
 #include <pxl/utils/input_binding.h>
 #include <pxl/engine.h>
 #include <pxl/time.h>
+#include <pxl/math/calc.h>
 
 using namespace pxl;
 

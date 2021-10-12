@@ -65,7 +65,7 @@ namespace pxl
 			virtual ~Decoder() {};
 			virtual void open(const pxl::String &file) = 0;
 			virtual void close() = 0;
-			virtual void preProcess() = 0;
+			virtual void calculateFrames() = 0;
 			virtual pxl::Image currentFrameImage() = 0;
 			virtual pxl::i64 currentFrameNumber() const = 0;
 			virtual void flushDecoder() = 0;

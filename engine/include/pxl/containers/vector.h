@@ -5,6 +5,7 @@
 
 namespace pxl
 {
+
 	template<class T>
 	class Vector {
 	public:
@@ -20,7 +21,7 @@ namespace pxl
 		T& operator[](unsigned idx);
 		const T& operator[](unsigned idx) const;
 
-		int size() const;
+		unsigned size() const;
 		void reserve(unsigned newCapasity);
 		void resize(unsigned newSize);
 
@@ -31,6 +32,7 @@ namespace pxl
 		void erase(const T &item);
 
 		void expand(unsigned amount);
+
 		T pop();
 
 		void clear();
@@ -146,7 +148,7 @@ namespace pxl
 	}
 
 	template<class T>
-	int Vector<T>::size() const
+	unsigned Vector<T>::size() const
 	{
 		return _size;
 	}
