@@ -8,6 +8,7 @@ namespace pxl
 	{
 	public:
 		Audio(const String& file);
+		Audio(const Audio& src);
 		Audio(Audio&& src) noexcept;
 		Audio& operator=(Audio&& src) noexcept;
 		Audio& operator=(const Audio& src);

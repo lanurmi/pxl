@@ -74,7 +74,8 @@ bool String::operator<(const String& str) const {
 }
 
 String& String::operator=(const String& str) {
-	set(str.cstr(), str.size());
+	String copy(str);
+	std::swap(*this, copy);
 	return *this;
 }
 

@@ -58,14 +58,8 @@ pxl::Image& pxl::Image::operator=(Image&& src) noexcept
 
 pxl::Image& pxl::Image::operator=(const Image& src)
 {
-	delete[] _pixels;
-	_width = src._width;
-	_height = src._height;
-	if (src._pixels != nullptr && _width > 0 && _height > 0)
-	{
-		_pixels = new Color[_width * _height];
-		memcpy(_pixels, src._pixels, sizeof(Color) * _width * _height);
-	}
+	pxl::Image img(src);
+	std::swap(*this, img);
 	return *this;
 }
 

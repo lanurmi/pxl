@@ -102,17 +102,8 @@ namespace pxl
 	template<class T>
 	Vector<T>& Vector<T>::operator=(const Vector<T>& src)
 	{
-		clear();
-		::operator delete (_data, sizeof(T) * _capacity);
-		_capacity = 0;
-		_data = nullptr;
-
-		reserve(src._capacity);
-		for (auto& it : src)
-		{
-			add(it);
-		}
-
+		auto copy = Vector<T>(src);
+		std::swap(*this, copy);
 		return *this;
 
 	}

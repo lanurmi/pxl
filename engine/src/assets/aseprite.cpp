@@ -41,14 +41,8 @@ Aseprite::Aseprite(Aseprite && src) noexcept
 
 Aseprite& Aseprite::operator=(const Aseprite & src)
 {
-	mode = src.mode;
-	width = src.width;
-	height = src.height;
-	layers = src.layers;
-	frames = src.frames;
-	tags = src.tags;
-	slices = src.slices;
-	palette = src.palette;
+	Aseprite copy(src);
+	std::swap(*this, copy);
 	return *this;
 }
 

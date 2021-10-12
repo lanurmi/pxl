@@ -21,6 +21,13 @@ Audio::Audio() : _data(nullptr), _size(0), _samples(0), _channels(0) {
 
 }
 
+Audio::Audio(const Audio& src) : _data(nullptr), _size(0), _samples(0), _channels(0) {
+	_data = (short*)malloc(src._size);
+	memcpy(_data, src._data, src._size);
+	_samples = src._samples;
+	_channels = src._channels;
+	_size = src._size;
+}
 
 Audio::Audio(Audio&& src) noexcept : _data(nullptr), _size(0), _samples(0), _channels(0) {
 	_data = src._data;
@@ -48,11 +55,9 @@ Audio& Audio::operator=(Audio&& src) noexcept {
 }
 
 Audio& Audio::operator=(const Audio& src) {
-	_data = (short*)malloc(src._size);
-	memcpy(_data, src._data, src._size);
-	_samples = src._samples;
-	_channels = src._channels;
-	_size = src._size;
+
+	Audio copy(src);
+	std::swap(*this, copy);
 	return *this;
 }
 
