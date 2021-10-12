@@ -3,7 +3,7 @@ Simple 2D game engine made in C++.
 **Project is a work in progress. Breaking changes are expected**
 
 ### Features
-* scene - entity - component architecture
+* entity - component architecture
 
 
 #### Acknowledgements/Attributions
