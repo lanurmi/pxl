@@ -1,12 +1,13 @@
 #include <pxl/engine.h>
-#include <pxl/utils/scene.h>
+#include <pxl/ec/world.h>
+#include <pxl/ec/component.h>
 #include <pxl/graphics/batch.h>
 #include <pxl/utils/input_binding.h>
 #include <pxl/utils/filestream.h>
 #include <pxl/backbuffer.h>
 #include <pxl/time.h>
 
-class HelloWorldComponent : public pxl::Component, public pxl::IDrawable, public pxl::IUpdateable
+class HelloWorldComponent : public pxl::Component<HelloWorldComponent>, public pxl::IDrawable, public pxl::IUpdateable
 {
 public:
 	pxl::TextureRef texture;
@@ -19,70 +20,68 @@ public:
 			mousePosition.y > windowPosition.y &&
 			mousePosition.x < windowPosition.x + windowSize.x &&
 			mousePosition.y < windowPosition.y + windowSize.y) {
-			entity()->position = mousePosition - windowPosition - pxl::Vec2(texture->width() / 2.0f, texture->height() / 2.0f);
+			entity()->transform.position = mousePosition - windowPosition - pxl::Vec2(texture->width() / 2.0f, texture->height() / 2.0f);
 		}
 	}
 	void draw(pxl::Batch& batch) override
 	{
 		if (texture == nullptr) return;
-		batch.texture(texture, entity()->position, pxl::Color::white);
+		batch.texture(texture, entity()->transform.position, pxl::Color::white);
 	}
 };
 
 
-class HelloWorldScene : public pxl::Scene
+pxl::VirtualButtonRef esc;
+pxl::TextureRef tex;
+pxl::Batch batch;
+pxl::World world;
+
+void awake()
 {
-public:
-	HelloWorldScene() : pxl::Scene("Hello World Scene"){}
-	void begin() override
-	{
-		pxl::Scene::begin();
+	auto e = world.entity(pxl::Vec2::zero);
+	auto helloComponent = e->add(HelloWorldComponent());
+	tex = pxl::Texture::create(pxl::Image("content/helloworld.png"));
+	helloComponent->texture = tex;
 
+	esc = pxl::bindings::createButton();
+	esc->bind(pxl::Key::Escape);
+}
 
-		// entity holds components
-		auto entity = createEntity(pxl::Vec2(0, 0));
+void update()
+{
+	world.update();
 
-		// component does things (in this case draws texture)
-		auto component = entity->add(HelloWorldComponent());
-		component->texture = pxl::Texture::create(pxl::Image("content/helloworld.png"));
-		
-		//escape key does things
-		esc = pxl::bindings::createButton();
-		esc->bind(pxl::Key::Escape);
-	}
-	void end() override
+	auto hellocomponent = world.first<HelloWorldComponent>();
+	while (hellocomponent != nullptr)
 	{
-		pxl::Scene::end();
+		hellocomponent->update();
+		hellocomponent = hellocomponent->next();
 	}
-	void update()
+
+	if (esc->pressed())
 	{
-		if (esc->pressed())
-		{
-			//escape pressed, close the app
-			pxl::end();
-		}
+		//escape pressed, close the app
+		pxl::end();
 	}
-	void draw() override
+}
+
+void draw() 
+{
+	pxl::backbuffer->clear(pxl::Color::black);
+	batch.clear();
+
+	auto hello = world.first<HelloWorldComponent>();
+	while (hello != nullptr)
 	{
-		auto &drawables = this->drawables();
-		pxl::backbuffer->clear(pxl::Color::black);
-		batch.clear();
-		for (auto it : drawables)
-		{
-			it->draw(batch);
-		}
-		batch.draw(pxl::backbuffer);
+		hello->draw(batch);
+		hello = hello->next();
 	}
-private:
-	pxl::VirtualButtonRef esc;
-	pxl::TextureRef tex;
-	pxl::Batch batch;
-};
+
+	batch.draw(pxl::backbuffer);
+}
 
 int main()
 {
-	// set initial scene
-	pxl::scenes::set<HelloWorldScene>();
 
 	// engine configuration
 	pxl::Config config;
@@ -93,6 +92,9 @@ int main()
 	config.target_framerate = 60;
 	config.width = 1280;
 	config.height = 720;
+	config.awake = std::bind(awake);
+	config.update = std::bind(update);
+	config.draw = std::bind(draw);
 
 	// start
 	pxl::begin(config);
