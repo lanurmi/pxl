@@ -22,7 +22,6 @@ namespace pxl
 		static TextureRef create(const pxl::Image &image);
 		virtual ~Texture() = default;
 		Texture(const Texture&) = delete;
-		Texture(Texture&) = delete;
 		Texture& operator=(const Texture&) = delete;
 		Texture& operator=(Texture&&) = delete;
 		virtual int width() const = 0;
