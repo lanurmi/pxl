@@ -24,13 +24,13 @@ namespace pxl
 			int bitrate;
 			int gop_size;
 			pxl::String file;
+			Codec codec;
 		};
 
 		class Encoder
 		{
 		public:
 			Encoder(const Encoder&) = delete;
-			Encoder(Encoder&) = delete;
 			Encoder& operator=(const Encoder&) = delete;
 			Encoder& operator=(Encoder&&) = delete;
 			virtual ~Encoder(){}
@@ -54,18 +54,23 @@ namespace pxl
 		using EncoderRef = std::shared_ptr<Encoder>;
 		EncoderRef createEncoder(const EncoderInfo &info);
 
+		struct Progress
+		{
+			pxl::i64 max;
+			pxl::i64 current;
+			pxl::Func update;
+		};
 
 		class Decoder {
 		public:
 			Decoder(const Decoder&) = delete;
-			Decoder(Decoder&) = delete;
 			Decoder& operator=(const Decoder&) = delete;
 			Decoder& operator=(Decoder&&) = delete;
 
 			virtual ~Decoder() {};
 			virtual void open(const pxl::String &file) = 0;
 			virtual void close() = 0;
-			virtual void calculateFrames() = 0;
+			virtual void calculateFrames(Progress &progress) = 0;
 			virtual pxl::Image currentFrameImage() = 0;
 			virtual pxl::i64 currentFrameNumber() const = 0;
 			virtual void flushDecoder() = 0;

@@ -22,14 +22,34 @@ extern "C"
 namespace
 {
 	bool s_ffmpeg_inited = false;
+	
+	struct FrameInfo
+	{
+		pxl::i64 pts;
+		pxl::i64 dts;
+		int frameNumber;
+	};
+
+	AVCodecID pxlToFFmpeg(pxl::video::Codec codec)
+	{
+		switch (codec) {
+			case pxl::video::Codec::MPEG4: return AV_CODEC_ID_MPEG4;
+			case pxl::video::Codec::H264: return AV_CODEC_ID_H264;
+		}
+
+		assert(0);
+		return AV_CODEC_ID_MPEG4;
+	}
+
+	pxl::video::Codec ffmpegToPxl(AVCodecID codec)
+	{
+		if (codec == AV_CODEC_ID_MPEG4) return pxl::video::Codec::MPEG4;
+		else if (codec == AV_CODEC_ID_H264) return pxl::video::Codec::H264;
+
+		assert(0);
+		return pxl::video::Codec::MPEG4;
+	}
 }
-
-struct FrameInfo {
-	pxl::i64 pts;
-	pxl::i64 dts;
-	int frameNumber;
-};
-
 
 class Encoder_ffmpeg : public pxl::video::Encoder
 {
@@ -52,21 +72,12 @@ private:
 	pxl::i64 pts;
 };
 
-static AVCodecID pxlToFFmpeg(pxl::video::Codec codec)
-{
-	switch(codec)
-	{
-		case pxl::video::Codec::MPEG4: return AV_CODEC_ID_MPEG4;
-		case pxl::video::Codec::H264: return AV_CODEC_ID_H264;
-	}
-	assert(0);
-	return AV_CODEC_ID_MPEG4;
-}
-
 Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info) {
 	if (!s_ffmpeg_inited)
 	{
 		av_register_all();
+		avcodec_register_all();
+		av_log_set_level(AV_LOG_QUIET);
 		s_ffmpeg_inited = true;
 	}
 
@@ -356,7 +367,7 @@ public:
 	~Decoder_ffmpeg();
 	void open(const pxl::String &file) override;
 	void close() override;
-	void preProcess() override;
+	void calculateFrames(pxl::video::Progress &progress) override;
 	pxl::Image currentFrameImage() override;
 	pxl::i64 currentFrameNumber() const override;
 	void flushDecoder() override;
@@ -388,6 +399,7 @@ formatCtx(nullptr), codecCtxOrig(nullptr), codecCtx(nullptr), frame(nullptr), fr
 	{
 		av_register_all();
 		avcodec_register_all();
+		av_log_set_level(AV_LOG_QUIET);
 		s_ffmpeg_inited = true;
 	}
 }
@@ -565,6 +577,7 @@ pxl::video::FileInfo Decoder_ffmpeg::info() const
 	info.bitrate = codecCtx->bit_rate;
 	info.gop_size = codecCtx->gop_size;
 	info.file = file;
+	info.codec = ffmpegToPxl( formatCtx->streams[videoStreamId]->codecpar->codec_id);
 	return info;
 }
 
@@ -635,8 +648,9 @@ bool Decoder_ffmpeg::decode(FrameInfo* fillInfo)
 	return done;
 }
 
-void Decoder_ffmpeg::calculateFrames()
+void Decoder_ffmpeg::calculateFrames(pxl::video::Progress &progress)
 {
+	progress.max = formatCtx->streams[videoStreamId]->nb_frames;
 	FrameInfo info;
 	info.pts = 0;
 	info.dts = 0;
@@ -646,6 +660,11 @@ void Decoder_ffmpeg::calculateFrames()
 	{
 		info.frameNumber++;
 		dtsToTime[info.frameNumber] = info.dts;
+		progress.current = info.frameNumber;
+		if(progress.update != nullptr)
+		{
+			progress.update();
+		}
 	}
 
 	seek(1);
