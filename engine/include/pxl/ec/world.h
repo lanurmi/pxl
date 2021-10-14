@@ -11,24 +11,7 @@ namespace pxl
 {
 	class Entity;
 
-	constexpr pxl::u16 s_max_entities = 50000;
-	constexpr pxl::u16 s_max_component_types = 256;
-
-	class ComponentId {
-	public:
-		template<class T>
-		static u16 get() {
-			static u16 id = idCounter++;
-			return id;
-		}
-		static u16 max()
-		{
-			return idCounter;
-		}
-	private:
-		static u16 idCounter;
-	};
-
+	constexpr pxl::u16 s_max_entities = 1000;
 
 	class World
 	{

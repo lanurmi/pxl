@@ -1,6 +1,6 @@
 #pragma once
 
-#include <pxl/ec/component.h>
+#include <pxl/ec/component_interface.h>
 #include <pxl/math/vec2.h>
 #include <pxl/types.h>
 #include <assert.h>
@@ -18,7 +18,7 @@ namespace pxl
 		int facing = 1;
 	};
 
-	class Entity
+	class Entity : IResettable
 	{
 	public:
 		Entity() : _id(s_unused_entity), _world(nullptr) {};
@@ -35,6 +35,19 @@ namespace pxl
 
 		template<class T>
 		T* add(T&& component);
+
+
+		World* world();
+		const World* world() const;
+
+		void reset() override
+		{
+			transform = Transform();
+			_id = s_unused_entity;
+			_components.clear();
+			_world = nullptr;
+		}
+
 
 	private:
 		pxl::Vector<pxl::IComponent*> _components;

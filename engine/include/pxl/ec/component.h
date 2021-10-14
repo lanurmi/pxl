@@ -1,4 +1,6 @@
 #pragma once
+#include "component_interface.h"
+#include "entity.h"
 #include <pxl/types.h>
 
 
@@ -6,42 +8,6 @@ namespace pxl
 {
 	class Entity;
 
-	class IUpdateable
-	{
-	public:
-		virtual void update() = 0;
-		virtual i16 updateOrder() const { return 0; }
-	};
-	
-	class Batch;
-	class IDrawable
-	{
-	public:
-		virtual void draw(Batch &batch) = 0;
-		virtual i16 drawOrder() const { return 0; }
-	};
-
-	class IDebugDrawable
-	{
-	public:
-		virtual void debugDraw(Batch& batch) = 0;
-		virtual i16 drawOrder() const { return 0; }
-	};
-
-	class IComponent
-	{
-	public:
-		virtual ~IComponent() {}
-		virtual void awake() {}
-		virtual void destroy() {};
-		virtual u16 typeId() const = 0;
-	};
-
-	class IResettable
-	{
-	public:
-		virtual void reset() = 0;
-	};
 
 	template<typename T>
 	class Component : public IComponent, IResettable
@@ -77,6 +43,15 @@ namespace pxl
 			_entity = nullptr;
 		}
 
+		template<typename C>
+		C* get() const;
+
+		template<typename C>
+		C* get();
+
+		const World* world() const;
+		World* world();
+
 	private:
 		T* _next = nullptr;
 		T* _prev = nullptr;
@@ -85,7 +60,7 @@ namespace pxl
 	};
 
 	template<typename T>
-	Component<T>::Component() {}
+	Component<T>::Component() : _next(nullptr), _prev(nullptr), _entity(nullptr) {}
 
 	template<typename T>
 	Component<T>::~Component() {}
@@ -97,9 +72,35 @@ namespace pxl
 	}
 
 	template<typename T>
+	template<typename C>
+	C* Component<T>::get() const
+	{
+		return _entity->get<C>();
+	}
+
+	template<typename T>
+	template<typename C>
+	C* Component<T>::get()
+	{
+		return _entity->get<C>();
+	}
+
+	template<typename T>
 	Entity* Component<T>::entity()
 	{
 		return _entity;
+	}
+
+	template<typename T>
+	const World* Component<T>::world() const
+	{
+		return _entity->world();
+	}
+
+	template<typename T>
+	World* Component<T>::world()
+	{
+		return _entity->world();
 	}
 
 	template<typename T>

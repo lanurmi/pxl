@@ -49,8 +49,6 @@ void World::update()
 {
 	for (auto it : entitiesToBeDestroyed)
 	{
-		it->transform = pxl::Transform();
-		it->_id = s_unused_entity;
 		for (auto c : it->_components)
 		{
 			auto list = componentsByType.find(c->typeId());
@@ -59,7 +57,7 @@ void World::update()
 			r->reset();
 			delete c;
 		}
-		it->_components.clear();
+		it->reset();
 	}
 	entitiesToBeDestroyed.clear();
 }
