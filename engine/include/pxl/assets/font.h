@@ -4,8 +4,6 @@
 #include <pxl/math/color.h>
 #include <pxl/containers/string.h>
 
-class stbtt_fontinfo;
-
 namespace pxl
 {
 	struct CharacterRange
@@ -51,8 +49,7 @@ namespace pxl
 		bool image(const Font::Character &ch, Color *pixels) const;
 	private:
 		void load(const String &path);
-		u8 *_data;
-		stbtt_fontinfo* _font;
+		void* _data;
 		String _family_name;
 		String _style_name;
 		int _ascent;
