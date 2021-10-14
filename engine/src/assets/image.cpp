@@ -42,6 +42,8 @@ pxl::Image::Image(Image&& src) noexcept
 	_width = src._width;
 	_height = src._height;
 	_pixels = src._pixels;
+	src._width = 0;
+	src._height = 0;
 	src._pixels = nullptr;
 }
 
@@ -53,6 +55,8 @@ pxl::Image& pxl::Image::operator=(Image&& src) noexcept
 	_height = src._height;
 	_pixels = src._pixels;
 	src._pixels = nullptr;
+	src._width = 0;
+	src._height = 0;
 	return *this;
 }
 
