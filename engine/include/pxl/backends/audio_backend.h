@@ -8,8 +8,8 @@ namespace pxl
 {
 	namespace audio 
 	{
-		void init();
-		void shutdown();
+		void awake();
+		void destroy();
 		AudioSourceRef createAudioSource();
 		AudioBufferRef createAudioBuffer(const Audio& clip);
 	}

@@ -12,15 +12,20 @@ namespace pxl
 
 	namespace graphics
 	{
+		enum class Api
+		{
+			OpenGL
+		};
+
 		struct GraphicsFeatures
 		{
 			bool origin_bottom_left = false;
 			int max_texture_size = 0;
 		};
-
+		Api api();
 		void init();
-		void bind();
-		void unbind();
+		void awake();
+		void destroy();
 		void render(const DrawCall& pass);
 		void clearBackbuffer(const Color& color);
 		GraphicsFeatures features();

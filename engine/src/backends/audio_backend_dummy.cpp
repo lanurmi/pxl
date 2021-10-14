@@ -40,14 +40,21 @@ public:
 };
 
 
-void audio::init() {
+void audio::awake()
+{
 }
 
-AudioSourceRef audio::createAudioSource() {
+void audio::destroy()
+{
+}
+
+AudioSourceRef audio::createAudioSource()
+{
 	return nullptr;
 }
 
-AudioBufferRef audio::createAudioSource(const Audio&) {
+AudioBufferRef audio::createAudioSource(const Audio&)
+{
 	return nullptr;
 }
 

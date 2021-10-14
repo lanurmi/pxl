@@ -43,11 +43,16 @@ namespace
 void pxl::begin(const pxl::Config& config)
 {
 	s_end = false;
-	pxl::platform::init(config);
+	pxl::platform::awake(config);
 	
-	pxl::graphics::bind();
+	if (pxl::graphics::api() == pxl::graphics::Api::OpenGL)
+	{
+		auto ctx = pxl::platform::glCreateContext();
+	}
+
+	pxl::graphics::awake();
 	pxl::platform::vsync(config.vertical_sync);
-	pxl::audio::init();
+	pxl::audio::awake();
 
 	u64 time_last = pxl::platform::ticks();
 	u64 time_accumulator = 0;
@@ -55,11 +60,9 @@ void pxl::begin(const pxl::Config& config)
 	
 	Fps fps;
 //#ifdef PXLDEBUG
-	fps.onFps = [](int fps)
+	fps.onFps = [&config](int fps)
 	{
-
-		pxl::platform::setTitle(String::fromInt(fps));
-
+		pxl::platform::setTitle(String::format("%s - %d", config.title.cstr(), fps));
 	};
 //#endif
 
@@ -75,8 +78,6 @@ void pxl::begin(const pxl::Config& config)
 		auto time_diff = time_curr - time_last;
 		time_last = time_curr;
 		pxl::time::true_delta = (double)time_diff / pxl::time::ticks_per_second;
-
-		fps.update();
 
 		if (config.fixed_update)
 		{
@@ -133,14 +134,16 @@ void pxl::begin(const pxl::Config& config)
 
 		config.draw();
 		pxl::platform::present();
+
+		fps.update();
 	}
 	if (config.destroy)
 	{
 		config.destroy();
 	}
-	pxl::audio::shutdown();
-	pxl::graphics::unbind();
-	pxl::platform::shutdown();
+	pxl::audio::destroy();
+	pxl::graphics::destroy();
+	pxl::platform::destroy();
 }
 
 void pxl::end()

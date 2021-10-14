@@ -21,7 +21,7 @@ static char* s_applicationPath = nullptr;
 static char* s_userPath = nullptr;
 
 
-void pxl::platform::init(const pxl::Config& config)
+void pxl::platform::awake(const pxl::Config& config)
 {
 	if (SDL_Init(SDL_INIT_VIDEO |SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC) < 0)
 	{
@@ -56,7 +56,7 @@ void pxl::platform::init(const pxl::Config& config)
 	s_userPath = SDL_GetPrefPath(nullptr, config.name.cstr());
 }
 
-void pxl::platform::shutdown()
+void pxl::platform::destroy()
 {
 	for (int i = 0; i < pxl::s_max_Gamepad; i++)
 	{

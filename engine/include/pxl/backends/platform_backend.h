@@ -10,8 +10,8 @@ namespace pxl
 {
 	namespace platform
 	{
-		void init(const pxl::Config& config);
-		void shutdown();
+		void awake(const pxl::Config& config);
+		void destroy();
 		bool update();
 		void setTitle(const String& title);
 		void present();

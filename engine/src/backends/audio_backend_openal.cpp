@@ -99,14 +99,14 @@ namespace
 	ALCcontext *s_context;
 }
 
-void audio::init()
+void audio::awake()
 {
 	s_device = alcOpenDevice(nullptr);
 	s_context = alcCreateContext(s_device, nullptr);
 	alcMakeContextCurrent(s_context);
 }
 
-void audio::shutdown()
+void audio::destroy()
 {
 	alcDestroyContext(s_context);
 	alcCloseDevice(s_device);

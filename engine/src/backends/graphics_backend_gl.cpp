@@ -562,7 +562,7 @@ void pxl::graphics::init()
 	s_gl.features.max_texture_size = s_gl.max_texture_size;
 }
 
-void pxl::graphics::bind()
+void pxl::graphics::awake()
 {
 	auto ctx = pxl::platform::glCreateContext();
 	init();
@@ -581,10 +581,15 @@ pxl::graphics::GraphicsFeatures pxl::graphics::features()
 	return s_gl.features;
 }
 
-void pxl::graphics::unbind()
+void pxl::graphics::destroy()
 {
 	pxl::platform::glDestroyContext(s_gl.context);
 	s_gl.context = nullptr;
+}
+
+pxl::graphics::Api pxl::graphics::api()
+{
+	return pxl::graphics::Api::OpenGL;
 }
 
 
