@@ -1,6 +1,6 @@
 #include <pxl/assets/ogmo.h>
 #include <pxl/utils/filestream.h>
-#include <pxl/3rdparty/json.h>
+#include <pxl/assets/json.h>
 
 using namespace pxl;
 

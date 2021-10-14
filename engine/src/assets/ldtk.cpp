@@ -1,6 +1,6 @@
 #include <pxl/assets/ldtk.h>
 #include <pxl/utils/filestream.h>
-#include <pxl/3rdparty/json.h>
+#include <pxl/assets/json.h>
 
 #include <string>
 

@@ -20,16 +20,3 @@ namespace pxl
 {
     using Json = PxlCustomJson<>;
 }
-
-/*
-namespace nlohmann {
-    template <>
-    struct adl_serializer<pxl::String> {
-        static pxl::String from_json(const json& j) {
-            return pxl::String(j.get<std::string>().c_str());
-        }
-        static void to_json(json& j, pxl::String t) {
-        }
-    };
-}
-*/
