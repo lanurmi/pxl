@@ -50,6 +50,8 @@ void Atlas::addTileset(const String& name, const Aseprite& ase, int tilesize) {
 
 void Atlas::build()
 {
+	if (_tilesetInfos.empty() && _spriteInfos.empty()) return;
+
 	Map<u32, Subtexture> subtextures;
 	const auto& result = _packer.pack();
 	for (auto& it : result)
@@ -99,6 +101,8 @@ void Atlas::build()
 	{
 		_tilesets[it.name] = Tileset(subtextures[it.pack_index], it.size);
 	}
+
+	_packer.clear();
 }
 
 const Sprite* Atlas::sprite(const String& name) const
