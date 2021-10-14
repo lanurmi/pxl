@@ -184,3 +184,8 @@ const Vector<ImagePacker::Result>& ImagePacker::pack()
 	_entries.clear();
 	return _result;
 }
+
+void ImagePacker::clear()
+{
+	_result.clear();
+}

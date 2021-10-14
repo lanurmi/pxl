@@ -25,6 +25,7 @@ namespace pxl
 		void add(u32 id, const Image &image);
 		void add(u32 id, int width, int height, const Color *pixels);
 		const Vector<Result>& pack();
+		void clear();
 	private:
 		int doPack(int fromEntry);
 		struct Buffer
