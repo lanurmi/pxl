@@ -1,20 +1,14 @@
 #include <pxl/assets/audio.h>
-#include <pxl/log.h>
-#include <pxl/3rdparty/stb_vorbis.h>
 #include <pxl/backends/filesystem_backend.h>
+#include <pxl/assets/audioformats.h>
+#include <pxl/log.h>
 
 using namespace pxl;
 
 Audio::Audio(const String& file) : _data(nullptr), _size(0), _samples(0), _channels(0)
 {
-	auto f = file::File::open(file, file::FileMode::ReadBinary);
-	u8 *decoded = new u8[f->length()];
-	f->read(decoded, f->length());
-	_size = stb_vorbis_decode_memory(decoded, f->length(), &_channels, &_samples, &_data);
-	if (_size <= 0) {
-		pxl::log::error("Could not load audio file");
-	}
-	delete [] decoded;
+	pxl::FileStream stream(file, file::FileMode::ReadBinary);
+	_data = pxl::audioformats::decode(stream, _size, _samples, _channels);
 }
 
 Audio::Audio() : _data(nullptr), _size(0), _samples(0), _channels(0) {
@@ -22,7 +16,7 @@ Audio::Audio() : _data(nullptr), _size(0), _samples(0), _channels(0) {
 }
 
 Audio::Audio(const Audio& src) : _data(nullptr), _size(0), _samples(0), _channels(0) {
-	_data = (short*)malloc(src._size);
+	_data = new short[src._size];
 	memcpy(_data, src._data, src._size);
 	_samples = src._samples;
 	_channels = src._channels;
@@ -62,7 +56,7 @@ Audio& Audio::operator=(const Audio& src) {
 }
 
 Audio::~Audio() {
-	free(_data);
+	delete [] _data;
 }
 
 

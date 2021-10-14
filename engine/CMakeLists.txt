@@ -53,6 +53,7 @@ add_library(pxl
 	src/assets/ldtk.cpp
 	src/assets/font.cpp
 	src/assets/audio.cpp
+	src/assets/audioformats.cpp
 	
 	src/math/calc.cpp
 	src/math/color.cpp
