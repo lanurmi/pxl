@@ -175,11 +175,7 @@ namespace pxl
 
 	namespace keyboard
 	{
-		bool pressed(Key key);
 		bool down(Key key);
-		bool released(Key key);
-
-		void update(); //called by engine
 		void onKeyDown(Key key); // called by platform
 		void onKeyUp(Key key); // called by platform
 	}

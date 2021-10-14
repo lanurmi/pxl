@@ -31,22 +31,22 @@ pxl::VirtualButton& pxl::VirtualButton::bind(Button button)
 
 void pxl::VirtualButton::update()
 {
+	bool wasDown = _down;
 	_pressed = false;
 	_down = false;
 	_released = false;
 	for (auto& key : _key_binds)
 	{
-		_pressed |= pxl::keyboard::pressed(key);
 		_down |= pxl::keyboard::down(key);
-		_released |= pxl::keyboard::released(key);
 	} 
 
 	for (auto& btn : _button_binds)
 	{
-		_pressed |= pxl::gamepad::pressed(_controller_index, btn);
 		_down |= pxl::gamepad::down(_controller_index, btn);
-		_released |= pxl::gamepad::released(_controller_index, btn);
 	}
+	_pressed = wasDown == false && _down == true;
+	_released = wasDown == true && _down == false;
+
 	_buffer_timer = pxl::calc::approach(_buffer_timer, 0.0f, pxl::time::delta);
 	if (_pressed)
 	{

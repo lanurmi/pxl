@@ -22,7 +22,6 @@ namespace pxl
 		Vec2 position();
 		Vec2 drawPosition();
 
-		void update(); // called by engine
 		void onButtonDown(MouseButton key); // called by platform
 		void onButtonUp(MouseButton key); // called by platform
 		void onMousePosition(const pxl::Vec2& position); // called by platform

@@ -9,12 +9,10 @@ namespace
 	bool updateInternal()
 	{
 		bool rtn = pxl::platform::update();
-		pxl::mouse::update();
-		pxl::keyboard::update();
-		pxl::gamepad::update();
 		pxl::bindings::update();
 		return rtn;
 	}
+
 	class Fps
 	{
 	public:
@@ -112,9 +110,6 @@ void pxl::begin(const pxl::Config& config)
 					s_end = true;
 					continue;
 				}
-
-				//Input things
-
 
 				config.update();
 			}

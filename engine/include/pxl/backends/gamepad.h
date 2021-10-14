@@ -46,7 +46,6 @@ namespace pxl
 		void rumble(int index, float time, float strength);
 		float axis(int index, Axis axis);
 
-		void update(); //called by engine
 		void onConnect(int index, const String& name, u16 vendor, u16 product, u16 version); // called by platform
 		void onDisconnect(int index); // called by platform
 		void onButtonDown(int index, int button); // called by platform
