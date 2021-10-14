@@ -141,7 +141,10 @@ void pxl::begin(const pxl::Config& config)
 		config.draw();
 		pxl::platform::present();
 	}
-
+	if (config.destroy)
+	{
+		config.destroy();
+	}
 	pxl::audio::shutdown();
 	pxl::graphics::unbind();
 	pxl::platform::shutdown();

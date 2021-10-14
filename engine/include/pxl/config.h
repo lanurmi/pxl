@@ -15,5 +15,6 @@ namespace pxl
 		Func awake;
 		Func update;
 		Func draw;
+		Func destroy;
 	};
 }
