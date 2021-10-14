@@ -30,6 +30,7 @@ add_library(pxl
 	src/backends/platform_backend_sdl.cpp
 	src/backends/audio_backend_openal.cpp
 	src/backends/audio_backend_dummy.cpp
+	src/backends/imageproc_backend_cpp.cpp
 
 	src/graphics/batch.cpp
 	src/graphics/blend.cpp
