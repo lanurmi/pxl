@@ -6,33 +6,41 @@
 namespace
 {
 	bool s_end = false;
-}
-
-class Fps
-{
-public:
-	Fps() : _fps_update(0), _frame_counter(0)
+	bool updateInternal()
 	{
-		_fps_update = pxl::time::ticks + pxl::time::ticks_per_second;
+		bool rtn = pxl::platform::update();
+		pxl::mouse::update();
+		pxl::keyboard::update();
+		pxl::gamepad::update();
+		pxl::bindings::update();
+		return rtn;
 	}
-	void update()
+	class Fps
 	{
-		_frame_counter++;
-		if (pxl::time::ticks >= _fps_update)
+	public:
+		Fps() : _fps_update(0), _frame_counter(0)
 		{
-			if (onFps != nullptr)
-			{
-				onFps(_frame_counter);
-			}
-			_frame_counter = 0;
 			_fps_update = pxl::time::ticks + pxl::time::ticks_per_second;
 		}
-	}
-	std::function<void(int)> onFps;
-private:
-	int _frame_counter;
-	pxl::u64 _fps_update;
-};
+		void update()
+		{
+			_frame_counter++;
+			if (pxl::time::ticks >= _fps_update)
+			{
+				if (onFps != nullptr)
+				{
+					onFps(_frame_counter);
+				}
+				_frame_counter = 0;
+				_fps_update = pxl::time::ticks + pxl::time::ticks_per_second;
+			}
+		}
+		std::function<void(int)> onFps;
+	private:
+		int _frame_counter;
+		pxl::u64 _fps_update;
+	};
+}
 
 void pxl::begin(const pxl::Config& config)
 {
@@ -99,17 +107,14 @@ void pxl::begin(const pxl::Config& config)
 				time::delta *= pxl::time::scale;
 				pxl::time::seconds += time::delta;
 
-				if (!pxl::platform::update())
+				if (!updateInternal())
 				{
 					s_end = true;
+					continue;
 				}
 
 				//Input things
-				pxl::mouse::update();
-				pxl::keyboard::update();
-				pxl::gamepad::update();
 
-				pxl::bindings::update();
 
 				config.update();
 			}
@@ -121,18 +126,11 @@ void pxl::begin(const pxl::Config& config)
 			pxl::time::delta *= pxl::time::scale;
 			pxl::time::seconds += time::delta;
 
-			if (!pxl::platform::update())
+			if (!updateInternal())
 			{
 				s_end = true;
 				continue;
 			}
-
-			//Input things
-			pxl::mouse::update();
-			pxl::keyboard::update();
-			pxl::gamepad::update();
-
-			pxl::bindings::update();
 
 			config.update();
 		}
