@@ -1,13 +1,23 @@
 #pragma once
 
-#include <new>
 #include <cassert>
+
+#ifdef PXL_USE_STL_CONTAINERS
+	#include <vector>
+#else
+	#include <new>
+#endif
 
 namespace pxl
 {
 
+#ifdef PXL_USE_STL_CONTAINERS
 	template<class T>
-	class Vector {
+	using Vector = std::vector<T>;
+#else
+	template<class T>
+	class Vector 
+	{
 	public:
 		Vector();
 		Vector(unsigned initialCapasity);
@@ -25,15 +35,15 @@ namespace pxl
 		void reserve(unsigned newCapasity);
 		void resize(unsigned newSize);
 
-		void add(const T &item);
-		void add(T &&item);
+		void push_back(const T& item);
+		void push_back(T&& item);
 
 		void erase(unsigned index, unsigned amount);
-		void erase(const T &item);
+		void erase(const T& item);
 
 		void expand(unsigned amount);
 
-		T pop();
+		T pop_back();
 
 		void clear();
 
@@ -51,7 +61,7 @@ namespace pxl
 		T& back();
 		const T& back() const;
 	private:
-		T *_data;
+		T* _data;
 		unsigned _size;
 		unsigned _capacity;
 	};
@@ -69,12 +79,12 @@ namespace pxl
 		reserve(initialCapasity);
 	}
 	template<class T>
-	Vector<T>::Vector(const Vector &src) : _data(nullptr), _size(0), _capacity(0)
+	Vector<T>::Vector(const Vector& src) : _data(nullptr), _size(0), _capacity(0)
 	{
 		reserve(src._capacity);
 		for (auto& it : src)
 		{
-			add(it);
+			push_back(it);
 		}
 	}
 
@@ -154,7 +164,7 @@ namespace pxl
 			{
 				nc = 8;
 			}
-			while(nc < newCapasity)
+			while (nc < newCapasity)
 			{
 				nc *= 2;
 			}
@@ -180,7 +190,7 @@ namespace pxl
 	template<class T>
 	void Vector<T>::resize(unsigned newSize)
 	{
-		if(newSize < _size) 
+		if (newSize < _size)
 		{
 			erase(newSize, _size - newSize);
 		}
@@ -191,7 +201,7 @@ namespace pxl
 	}
 
 	template<class T>
-	void Vector<T>::add(const T& item)
+	void Vector<T>::push_back(const T& item)
 	{
 		reserve(_size + 1);
 		new (_data + _size) T(item);
@@ -199,7 +209,7 @@ namespace pxl
 	}
 
 	template<class T>
-	void Vector<T>::add(T&& item)
+	void Vector<T>::push_back(T&& item)
 	{
 		reserve(_size + 1);
 		new (_data + _size) T(std::move(item));
@@ -211,7 +221,7 @@ namespace pxl
 	{
 		if (amount >= 1)
 		{
-			for (unsigned i = index; i < _size - amount; i++) 
+			for (unsigned i = index; i < _size - amount; i++)
 			{
 				_data[i] = std::move(_data[i + amount]);
 			}
@@ -226,11 +236,11 @@ namespace pxl
 
 	template<class T>
 	void Vector<T>::erase(const T& item) {
-		for(unsigned i = 0; i < _size; i++)
+		for (unsigned i = 0; i < _size; i++)
 		{
 			if (_data[i] == item)
 			{
-				erase(i,1);
+				erase(i, 1);
 			}
 		}
 	}
@@ -251,7 +261,7 @@ namespace pxl
 	}
 
 	template<class T>
-	T Vector<T>::pop()
+	T Vector<T>::pop_back()
 	{
 		assert(_size > 0);
 		T r = std::move(_data[_size - 1]);
@@ -295,13 +305,13 @@ namespace pxl
 	}
 
 	template<class T>
-	const T* Vector<T>::begin() const 
+	const T* Vector<T>::begin() const
 	{
 		return _data;
 	}
 
 	template<class T>
-	T* Vector<T>::end() 
+	T* Vector<T>::end()
 	{
 		return _data + _size;
 	}
@@ -335,4 +345,5 @@ namespace pxl
 	{
 		return _data[_size - 1];
 	}
+#endif
 }

@@ -11,7 +11,7 @@ World::World()
 {
 	for (int i = 0; i < s_max_entities; i++)
 	{
-		entities.add(Entity());
+		entities.push_back(Entity());
 	}
 }
 
@@ -41,7 +41,7 @@ void World::destroy(Entity* entity)
 	{
 		c->destroy();
 	}
-	entitiesToBeDestroyed.add(entity);
+	entitiesToBeDestroyed.push_back(entity);
 
 }
 
@@ -52,7 +52,15 @@ void World::update()
 		for (auto c : it->_components)
 		{
 			auto list = componentsByType.find(c->typeId());
-			list->second.erase(c);
+			auto& v = list->second;
+
+			// I Dont like this if def, maybe our own vector should work like stl
+#ifdef PXL_USE_STL_CONTAINERS
+			v.erase( std::remove(v.begin(), v.end(), c), v.end() );
+#else
+			v.erase(c);
+#endif
+
 			auto r = (IResettable*)c;
 			r->reset();
 			delete c;

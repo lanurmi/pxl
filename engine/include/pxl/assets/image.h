@@ -1,7 +1,9 @@
 #pragma once
+
 #include <pxl/math/color.h>
 #include <pxl/math/rect.h>
 #include <pxl/types.h>
+#include <pxl/containers/string.h>
 
 namespace pxl
 {

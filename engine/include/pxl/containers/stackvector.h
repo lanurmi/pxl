@@ -4,17 +4,17 @@
 namespace pxl
 {
 	template<class T, unsigned C>
-	class Array
+	class StackVector
 	{
 	public:
-		Array();
-		~Array();
+		StackVector();
+		~StackVector();
 
 		T& operator[](unsigned index);
 		const T& operator[](unsigned index) const;
 
-		void add(const T& item);
-		void add(T&& item);
+		void push_back(const T& item);
+		void push_back(T&& item);
 
 		T* data();
 		const T* data() const;	
@@ -35,32 +35,32 @@ namespace pxl
 	};
 
 	template<class T, unsigned C>
-	Array<T, C>::Array() : _size(0)
+	StackVector<T, C>::StackVector() : _size(0)
 	{
 	}
 
 	template<class T, unsigned C>
-	Array<T, C>::~Array()
+	StackVector<T, C>::~StackVector()
 	{
 		
 	}
 
 	template<class T, unsigned C>
-	T& Array<T, C>::operator[](unsigned index)
+	T& StackVector<T, C>::operator[](unsigned index)
 	{
 		auto d = data();
 		return d[index];
 	}
 
 	template<class T, unsigned C>
-	const T& Array<T, C>::operator[](unsigned index) const
+	const T& StackVector<T, C>::operator[](unsigned index) const
 	{
 		auto d = data();
 		return d[index];
 	}
 
 	template<class T, unsigned C>
-	void Array<T, C>::add(const T& item)
+	void StackVector<T, C>::push_back(const T& item)
 	{
 		assert(_size < C);
 		new (data() + _size) T(item);
@@ -68,7 +68,7 @@ namespace pxl
 	}
 
 	template<class T, unsigned C>
-	void Array<T, C>::add(T&& item)
+	void StackVector<T, C>::push_back(T&& item)
 	{
 		assert(_size < C);
 		new (data() + _size) T( std::move(item) );
@@ -76,70 +76,70 @@ namespace pxl
 	}
 
 	template<class T, unsigned C>
-	T* Array<T, C>::data()
+	T* StackVector<T, C>::data()
 	{
 		return (T*)_data;
 	}
 
 	template<class T, unsigned C>
-	const T* Array<T, C>::data() const
+	const T* StackVector<T, C>::data() const
 	{
 		return (T*)_data;
 	}
 
 	template<class T, unsigned C>
-	unsigned Array<T, C>::size() const
+	unsigned StackVector<T, C>::size() const
 	{
 		return _size;
 	}
 
 	template<class T, unsigned C>
-	T* Array<T, C>::begin() 
+	T* StackVector<T, C>::begin()
 	{
 		return (T*)_data;
 	}
 
 	template<class T, unsigned C>
-	const T* Array<T, C>::begin() const
+	const T* StackVector<T, C>::begin() const
 	{
 		return (T*)_data;
 	}
 
 	template<class T, unsigned C>
-	T* Array<T, C>::end()
+	T* StackVector<T, C>::end()
 	{
 		return (T*)_data + _size;
 	}
 
 	template<class T, unsigned C>
-	const T* Array<T, C>::end() const
+	const T* StackVector<T, C>::end() const
 	{
 		return (T*)_data + _size;
 	}
 
 	template<class T, unsigned C>
-	T& Array<T, C>::front()
+	T& StackVector<T, C>::front()
 	{
 		auto d = data();
 		return d[0];
 	}
 
 	template<class T, unsigned C>
-	const T& Array<T, C>::front() const
+	const T& StackVector<T, C>::front() const
 	{
 		auto d = data();
 		return d[0];
 	}
 
 	template<class T, unsigned C>
-	T& Array<T, C>::back()
+	T& StackVector<T, C>::back()
 	{
 		auto d = data();
 		return d[_size - 1];
 	}
 
 	template<class T, unsigned C>
-	const T& Array<T, C>::back() const
+	const T& StackVector<T, C>::back() const
 	{
 		auto d = data();
 		return d[_size - 1];

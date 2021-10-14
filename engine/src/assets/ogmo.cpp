@@ -1,6 +1,6 @@
 #include <pxl/assets/ogmo.h>
 #include <pxl/utils/filestream.h>
-#include <pxl/3rdparty/json.hpp>
+#include <pxl/3rdparty/json.h>
 
 using namespace pxl;
 
@@ -47,7 +47,7 @@ void Ogmo::load(const String& path)
 {
 	FileStream file(path, file::FileMode::Read);
 	String data = file.all();
-	nlohmann::json ogmoJson = nlohmann::json::parse(data.cstr());
+	nlohmann::json ogmoJson = nlohmann::json::parse(data.data());
 	
 	ogmo_version = ogmoJson["ogmoVersion"].get<std::string>().c_str();
 	width = ogmoJson["width"].get<int>();
@@ -90,7 +90,7 @@ void Ogmo::load(const String& path)
 				{
 					parseValues(entity.string_text_enum_color_values, entity.int_values, entity.float_values, entity.bool_values, e["values"]);
 				}
-				layer.entities.add(entity);
+				layer.entities.push_back(entity);
 			}
 			entity_layers.emplace_back(layer);
 		}
@@ -109,7 +109,7 @@ void Ogmo::load(const String& path)
 			auto data = it["data"];
 			for (auto& d : data)
 			{
-				layer.data.add(d.get<int>());
+				layer.data.push_back(d.get<int>());
 			}
 			layer.export_mode = it["exportMode"].get<int>();
 			layer.array_mode = it["arrayMode"].get<int>();

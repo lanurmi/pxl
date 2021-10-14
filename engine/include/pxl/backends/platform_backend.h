@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pxl/types.h>
+#include <pxl/containers/string.h>
 #include <pxl/config.h>
 #include <pxl/math/vec2.h>
 #include <pxl/backends/keyboard.h>

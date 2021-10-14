@@ -1,5 +1,6 @@
 #include <pxl/log.h>
 #include <pxl/types.h>
+#include <pxl/containers/string.h>
 #include <iostream>
 
 using namespace pxl;

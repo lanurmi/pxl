@@ -5,7 +5,7 @@ pxl::VertexFormat::VertexFormat(std::initializer_list<VertexAttribute> attribs, 
 {
 	for (auto& it : attribs)
 	{
-		this->attributes.add(it);
+		this->attributes.push_back(it);
 	}
 
 	if (stride <= 0)

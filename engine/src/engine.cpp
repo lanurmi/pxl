@@ -1,5 +1,6 @@
 #include <pxl/engine.h>
 #include <pxl/types.h>
+#include <pxl/containers/string.h>
 #include <pxl/time.h>
 
 
@@ -62,7 +63,7 @@ void pxl::begin(const pxl::Config& config)
 //#ifdef PXLDEBUG
 	fps.onFps = [&config](int fps)
 	{
-		pxl::platform::setTitle(String::format("%s - %d", config.title.cstr(), fps));
+		pxl::platform::setTitle(String::format("%s - %d", config.title.data(), fps));
 	};
 //#endif
 

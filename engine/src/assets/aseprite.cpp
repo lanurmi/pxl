@@ -163,7 +163,7 @@ void Aseprite::parse(FileStream & stream)
 
 void Aseprite::parse_layer(FileStream & stream, int frame)
 {
-	layers.add(pxl::Aseprite::Layer());
+	layers.push_back(pxl::Aseprite::Layer());
 
 	auto& layer = layers.back();
 	layer.flag = static_cast<LayerFlags>(stream.read<u16>());
@@ -178,7 +178,7 @@ void Aseprite::parse_layer(FileStream & stream, int frame)
 
 	auto size = stream.read<u16>();
 	layer.name.resize(size);
-	stream.read((u8*)layer.name.cstr(), layer.name.size());
+	stream.read((u8*)layer.name.data(), layer.name.size());
 
 	layer.userdata.color = 0xffffff;
 	layer.userdata.text = "";
@@ -189,7 +189,7 @@ void Aseprite::parse_cel(FileStream & stream, int frameIndex, size_t maxPosition
 {
 	Frame& frame = frames[frameIndex];
 
-	frame.cels.add(pxl::Aseprite::Cel());
+	frame.cels.push_back(pxl::Aseprite::Cel());
 	auto& cel = frame.cels.back();
 	cel.layer_index = stream.read<u16>();
 	cel.x = stream.read<u16>();
@@ -307,7 +307,7 @@ void Aseprite::parse_user_data(FileStream & stream, int frame)
 		{
 			auto size = stream.read<u16>();
 			m_last_userdata->text.resize(size);
-			stream.read((u8*)m_last_userdata->text.cstr(), m_last_userdata->text.size());
+			stream.read((u8*)m_last_userdata->text.data(), m_last_userdata->text.size());
 		}
 
 		// has color
@@ -335,9 +335,9 @@ void Aseprite::parse_tag(FileStream & stream, int frame)
 		
 		auto s = stream.read<u16>();
 		tag.name.resize(s); 
-		stream.read((u8*)tag.name.cstr(), tag.name.size());
+		stream.read((u8*)tag.name.data(), tag.name.size());
 
-		tags.add(tag);
+		tags.push_back(tag);
 	}
 }
 
@@ -350,11 +350,11 @@ void Aseprite::parse_slice(FileStream & stream, int frame)
 	String name;
 	auto size = stream.read<u16>();
 	name.resize(size);
-	stream.read((u8*)name.cstr(), name.size());
+	stream.read((u8*)name.data(), name.size());
 
 	for (int s = 0; s < count; s++)
 	{
-		slices.add(Aseprite::Slice());
+		slices.push_back(Aseprite::Slice());
 
 		auto& slice = slices.back();
 		slice.name = name;

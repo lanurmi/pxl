@@ -723,7 +723,7 @@ public:
 
 		GLuint vertex_shader = s_gl.CreateShader(GL_VERTEX_SHADER);
 		{
-			const GLchar* src = (const GLchar*)data.vertex.cstr();
+			const GLchar* src = (const GLchar*)data.vertex.data();
 			s_gl.ShaderSource(vertex_shader, 1, &src, nullptr);
 			s_gl.CompileShader(vertex_shader);
 			s_gl.GetShaderInfoLog(vertex_shader, 1024, &log_length, log);
@@ -737,7 +737,7 @@ public:
 		}
 		GLuint pixel_shader = s_gl.CreateShader(GL_FRAGMENT_SHADER);
 		{
-			const GLchar* src = (const GLchar*)data.pixel.cstr();
+			const GLchar* src = (const GLchar*)data.pixel.data();
 			s_gl.ShaderSource(pixel_shader, 1, &src, nullptr);
 			s_gl.CompileShader(pixel_shader);
 			s_gl.GetShaderInfoLog(pixel_shader, 1024, &log_length, log);
@@ -803,16 +803,16 @@ public:
 				tex_uniform.array_length = size;
 				tex_uniform.type = pxl::UniformType::Texture2D;
 				tex_uniform.shader = pxl::ShaderType::Fragment;
-				_uniform_locations.add(s_gl.GetUniformLocation(id, name));
+				_uniform_locations.push_back(s_gl.GetUniformLocation(id, name));
 				addUniformInfo(tex_uniform);
 
 				pxl::UniformInfo sampler_uniform;
-				sampler_uniform.name = pxl::String(name).add("_sampler");
+				sampler_uniform.name = pxl::String(name).push_back("_sampler");
 				sampler_uniform.buffer_index = 0;
 				sampler_uniform.array_length = size;
 				sampler_uniform.type = pxl::UniformType::Sampler2D;
 				sampler_uniform.shader = pxl::ShaderType::Fragment;
-				_uniform_locations.add(s_gl.GetUniformLocation(id, name));
+				_uniform_locations.push_back(s_gl.GetUniformLocation(id, name));
 				addUniformInfo(sampler_uniform);
 			}
 			else
@@ -822,7 +822,7 @@ public:
 				uniform.type = pxl::UniformType::None;
 				uniform.buffer_index = 0;
 				uniform.array_length = size;
-				_uniform_locations.add(s_gl.GetUniformLocation(id, name));
+				_uniform_locations.push_back(s_gl.GetUniformLocation(id, name));
 				uniform.shader = (pxl::ShaderType)((int)pxl::ShaderType::Vertex | (int)pxl::ShaderType::Fragment);
 
 				if (type == GL_FLOAT)

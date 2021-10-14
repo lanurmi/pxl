@@ -51,13 +51,13 @@ void ImagePacker::add(u32 id, int width, int height, const Color* pixels)
 	e.id = id;
 	e.width = width;
 	e.height = height;
-	_entries.add(e);
+	_entries.push_back(e);
 
 	Buffer buf;
 	buf.id = id;
 	buf.pixels = new Color[width * height];
 	memcpy(buf.pixels, pixels, sizeof(Color) * width * height);
-	_pixels.add(buf);
+	_pixels.push_back(buf);
 }
 
 static Node* findNode(Node* root, int w, int h)
@@ -97,8 +97,8 @@ static Node* splitNode(Node* node, int w, int h, Vector<Node*> &nodeBuffer)
 	node->bottom->width = node->width;
 	node->bottom->height = node->height - h;
 
-	nodeBuffer.add(node->right);
-	nodeBuffer.add(node->bottom);
+	nodeBuffer.push_back(node->right);
+	nodeBuffer.push_back(node->bottom);
 
 	return node;
 }
@@ -111,7 +111,7 @@ int ImagePacker::doPack(int fromEntry)
 	rootNode->width = _width;
 	rootNode->height = _height;
 
-	nodes.add(rootNode);
+	nodes.push_back(rootNode);
 	int packed = fromEntry;
 	for (int p = fromEntry; p < _entries.size(); p++)
 	{
@@ -150,7 +150,7 @@ int ImagePacker::doPack(int fromEntry)
 
 	image.preMultiply();
 
-	_result.expand(1);
+	_result.push_back(pxl::ImagePacker::Result());
 
 	for (int p = 0; p < _entries.size(); p++)
 	{

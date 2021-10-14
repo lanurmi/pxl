@@ -43,7 +43,7 @@ void pxl::platform::awake(const pxl::Config& config)
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
-	s_window = SDL_CreateWindow(config.title.cstr(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.width, config.height, flags);
+	s_window = SDL_CreateWindow(config.title.data(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, config.width, config.height, flags);
 	if (s_window == nullptr)
 	{
 		pxl::log::error("Window creation failed");
@@ -53,7 +53,7 @@ void pxl::platform::awake(const pxl::Config& config)
 	SDL_SetWindowMinimumSize(s_window, 256, 256);
 
 	s_applicationPath = SDL_GetBasePath();
-	s_userPath = SDL_GetPrefPath(nullptr, config.name.cstr());
+	s_userPath = SDL_GetPrefPath(nullptr, config.name.data());
 }
 
 void pxl::platform::destroy()
@@ -269,7 +269,7 @@ pxl::String pxl::platform::userPath()
 void pxl::platform::setTitle(const pxl::String& title)
 {
 	assert(s_window);
-	SDL_SetWindowTitle(s_window, title.cstr());
+	SDL_SetWindowTitle(s_window, title.data());
 }
 
 void pxl::platform::present()
@@ -319,7 +319,7 @@ void pxl::platform::glDestroyContext(void* context)
 
 void* pxl::platform::glGetFunc(const pxl::String& name)
 {
-	return SDL_GL_GetProcAddress(name.cstr());
+	return SDL_GL_GetProcAddress(name.data());
 }
 
 pxl::u64 pxl::platform::ticks()

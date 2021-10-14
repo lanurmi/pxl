@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <pxl/types.h>
+#include <pxl/containers/stackvector.h>
 
 namespace pxl
 {
@@ -29,7 +30,7 @@ namespace pxl
 	{
 		VertexFormat(std::initializer_list<VertexAttribute> attributes, int stride = 0);
 		VertexFormat() = default;
-		Array<VertexAttribute, 16> attributes;
+		StackVector<VertexAttribute, 16> attributes;
 		int stride = 0;
 	};
 	enum class IndexFormat

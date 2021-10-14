@@ -20,7 +20,7 @@ String FileStream::line()
 	u8 c;
 	while (read(&c, 1) && c != '\n' && c != '\0')
 	{
-		r.add(c);
+		r.push_back(c);
 	}
 	return r;
 }
@@ -31,7 +31,7 @@ String FileStream::all()
 	u8 c;
 	while (read(&c, 1) && c != '\0')
 	{
-		r.add(c);
+		r.push_back(c);
 	}
 	return r;
 }

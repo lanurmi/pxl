@@ -34,26 +34,32 @@ namespace pxl
 		String operator+(const String& str);
 		String operator+(const char* str);
 
-		operator char* () { return cstr(); }
-		operator const char* () const { return cstr(); }
+		operator char* () { return data(); }
+		operator const char* () const { return data(); }
 
-		char* cstr();
-		const char* cstr() const;
+		char* data();
+		const char* data() const;
+
 
 		void resize(unsigned size);
 		void reserve(unsigned length);
+
+		void clear();
 
 		bool empty() const;
 		unsigned size() const;
 		unsigned utf8Size(unsigned index) const;
 
-		String& add(const String& str);
-		String& add(const char* str);
-		String& add(const char* str, int size);
-		String& add(char c);
+		String& push_back(const String& str);
+		String& push_back(const char* str);
+		String& push_back(const char* str, int size);
+		String& push_back(char c);
 
 		static String format(const char *fmt, ...);
 		static String fromInt(int num);
+
+		using value_type = char;
+
 	private:
 		void set(const char* from, unsigned size);
 		void set(const char* from);

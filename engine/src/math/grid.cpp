@@ -1,4 +1,4 @@
-#include <pxl/types.h>
+#include <pxl/math/grid.h>
 
 using namespace pxl;
 
@@ -85,5 +85,3 @@ int Grid::height() const
 {
 	return _height;
 }
-
-

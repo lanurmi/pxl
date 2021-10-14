@@ -10,12 +10,11 @@ char String::s_empty_data[1] = { '\0' };
 
 String::String() : _data(s_empty_data), _size(0), _capasity(0)
 {
-
 }
 
 String::String(const String& str) : _data(s_empty_data), _size(0), _capasity(0)
 {
-	set(str.cstr(), str.size());
+	set(str.data(), str.size());
 }
 
 String::String(String&& str) noexcept
@@ -54,23 +53,23 @@ const char& String::operator[](unsigned index) const {
 }
 
 bool String::operator==(const String& str) const {
-	return strcmp(cstr(), str.cstr()) == 0;
+	return strcmp(data(), str.data()) == 0;
 }
 
 bool String::operator==(const char* str) const {
-	return strcmp(cstr(), str) == 0;
+	return strcmp(data(), str) == 0;
 }
 
 bool String::operator!=(const String& str) const {
-	return strcmp(cstr(), str.cstr()) != 0;
+	return strcmp(data(), str.data()) != 0;
 }
 
 bool String::operator!=(const char* str) const {
-	return strcmp(cstr(), str) != 0;
+	return strcmp(data(), str) != 0;
 }
 
 bool String::operator<(const String& str) const {
-	return strcmp(cstr(), str.cstr()) == -1;
+	return strcmp(data(), str.data()) == -1;
 }
 
 String& String::operator=(const String& str) {
@@ -105,32 +104,32 @@ String& String::operator=(const char* str) {
 }
 
 String& String::operator+=(const String& str) {
-	return add(str);
+	return push_back(str);
 }
 
 String& String::operator+=(const char* str) {
-	return add(str);
+	return push_back(str);
 }
 
 String String::operator+(const String& str) {
 	String ns;
 	ns.set(_data, _size);
-	ns.add(str);
+	ns.push_back(str);
 	return ns;
 }
 
 String String::operator+(const char* str) {
 	String ns;
 	ns.set(_data, _size);
-	ns.add(str);
+	ns.push_back(str);
 	return ns;
 }
 
-char* String::cstr() {
+char* String::data() {
 	return _data;
 }
 
-const char* String::cstr() const {
+const char* String::data() const {
 	return _data;
 }
 
@@ -160,16 +159,16 @@ unsigned String::utf8Size(unsigned index) const {
 	return 1;
 }
 
-String& String::add(const String& str) {
-	return add(str.cstr(), str.size());
+String& String::push_back(const String& str) {
+	return push_back(str.data(), str.size());
 }
 
-String& String::add(const char* str) {
+String& String::push_back(const char* str) {
 	auto size = strlen(str);
-	return add(str, size);
+	return push_back(str, size);
 }
 
-String& String::add(const char* str, int size) {
+String& String::push_back(const char* str, int size) {
 	reserve(_size + size);
 	memcpy(_data + _size, str, size);
 	_size += size;
@@ -177,7 +176,7 @@ String& String::add(const char* str, int size) {
 	return *this;
 }
 
-String& String::add(char c)
+String& String::push_back(char c)
 {
 	reserve(_size + 1);
 	_data[_size] = c;
@@ -199,7 +198,7 @@ String String::format(const char* fmt, ...)
 	str._size = size;
 
 	va_start(args, fmt);
-	vsnprintf(str.cstr(), size + 1, fmt, args);
+	vsnprintf(str.data(), size + 1, fmt, args);
 	va_end(args);
 
 	str._data[size] = '\0';
@@ -213,24 +212,29 @@ String String::fromInt(int num)
 	return String(data);
 }
 
-void String::resize(unsigned size) {
+void String::resize(unsigned size)
+{
 	reserve(size);
 	_size = size;
 	_data[size] = '\0';
 }
 
-void String::reserve(unsigned length) {
+void String::reserve(unsigned length)
+{
 	int buffer_size = length + 1;
-	if (buffer_size > _capasity) 	{
+	if (buffer_size > _capasity)
+	{
 		if (_capasity <= 0) {
 			_capasity = 16;
 		}
 
-		while (_capasity < buffer_size) {
+		while (_capasity < buffer_size)
+		{
 			_capasity *= 2;
 		}
 
-		if (_data == String::s_empty_data) 		{
+		if (_data == String::s_empty_data)
+		{
 			_data = nullptr;
 			_data = new char[_capasity];
 			memset(_data, 0, _capasity);
@@ -245,7 +249,17 @@ void String::reserve(unsigned length) {
 	}
 }
 
-void String::set(const char* from, unsigned size) {
+void String::clear()
+{
+	if (_capasity > 0)
+	{
+		data()[0] = '\0';
+	}
+	_size = 0;
+}
+
+void String::set(const char* from, unsigned size)
+{
 	reserve(size);
 	_size = size;
 	memcpy(_data, from, size);

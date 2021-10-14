@@ -1,4 +1,6 @@
 #pragma once
+#include <pxl/containers/string.h>
+#include <pxl/containers/vector.h>
 #include <pxl/types.h>
 #include <functional>
 

@@ -35,7 +35,7 @@ pxl::Material::Material(const pxl::ShaderRef& shader) : _shader(shader)
 		{
 			for (int i = 0; i < u.array_length; i++)
 			{
-				_textures.add(TextureRef());
+				_textures.push_back(TextureRef());
 			}
 			continue;
 		}
@@ -43,7 +43,7 @@ pxl::Material::Material(const pxl::ShaderRef& shader) : _shader(shader)
 		{
 			for (int i = 0; i < u.array_length; i++)
 			{
-				_samplers.add(TextureSampler());
+				_samplers.push_back(TextureSampler());
 			}
 			continue;
 		}

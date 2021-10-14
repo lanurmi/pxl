@@ -35,8 +35,9 @@ void pxl::Batch::clear() {
 	_samplerStack.clear();
 	_blend_stack.clear();
 
-	_samplerStack.add(pxl::TextureSampler::NearestClamp);
-	_blend_stack.add(pxl::BlendState::Normal);
+
+	_samplerStack.push_back(pxl::TextureSampler::NearestClamp);
+	_blend_stack.push_back(pxl::BlendState::Normal);
 
 	_current_matrix = Mat3x2::identity;
 
@@ -44,13 +45,13 @@ void pxl::Batch::clear() {
 }
 
 void pxl::Batch::pushMatrix(const Mat3x2& matrix) {
-	_matrix_stack.add(matrix);
+	_matrix_stack.push_back(matrix);
 	_current_matrix = matrix * _current_matrix;
 }
 
 void pxl::Batch::popMatrix() {
 	assert(_matrix_stack.size() >= 1U);
-	_matrix_stack.pop();
+	_matrix_stack.pop_back();
 	if (_matrix_stack.empty()) 	{
 		_current_matrix = Mat3x2::identity;
 	} 	else 	{
@@ -58,11 +59,13 @@ void pxl::Batch::popMatrix() {
 	}
 }
 
-void pxl::Batch::pushMaterial(const MaterialRef& material) {
+void pxl::Batch::pushMaterial(const MaterialRef& material)
+{
 	{
 		auto& cBatch = currentBatch();
-		_material_stack.add(material);
-		if (cBatch.elements > 0 && cBatch.material != material) 		{
+		_material_stack.push_back(material);
+		if (cBatch.elements > 0 && cBatch.material != material)
+		{
 			newBatch();
 		}
 	}
@@ -72,8 +75,9 @@ void pxl::Batch::pushMaterial(const MaterialRef& material) {
 void pxl::Batch::pushBlend(const BlendState& blend) {
 	{
 		auto& cBatch = currentBatch();
-		_blend_stack.add(blend);
-		if (cBatch.elements > 0 && cBatch.blend != blend) 		{
+		_blend_stack.push_back(blend);
+		if (cBatch.elements > 0 && cBatch.blend != blend)
+		{
 			newBatch();
 		}
 	}
@@ -84,9 +88,10 @@ void pxl::Batch::pushBlend(const BlendState& blend) {
 void pxl::Batch::popBlend() {
 	{
 		auto& cBatch = currentBatch();
-		_blend_stack.pop();
+		_blend_stack.pop_back();
 		auto& blend = _blend_stack.back();
-		if (cBatch.elements > 0 && cBatch.blend != blend) 		{
+		if (cBatch.elements > 0 && cBatch.blend != blend)
+		{
 			newBatch();
 		}
 	}
@@ -96,7 +101,7 @@ void pxl::Batch::popBlend() {
 
 void pxl::Batch::popMaterial() {
 	auto& cBatch = currentBatch();
-	_material_stack.pop();
+	_material_stack.pop_back();
 	auto mat = _material_stack.back();
 	if (cBatch.elements > 0 && cBatch.material != mat) 	{
 		newBatch();
@@ -106,21 +111,24 @@ void pxl::Batch::popMaterial() {
 
 void pxl::Batch::pushSampler(const pxl::TextureSampler& sampler) {
 	{
-		_samplerStack.add(sampler);
+		_samplerStack.push_back(sampler);
 		auto& cBatch = currentBatch();
-		if (cBatch.elements > 0 && cBatch.sampler != sampler) 		{
+		if (cBatch.elements > 0 && cBatch.sampler != sampler)
+		{
 			newBatch();
 		}
 	}
 	currentBatch().sampler = sampler;
 }
 
-void pxl::Batch::popSampler() {
+void pxl::Batch::popSampler()
+{
 	{
-		_samplerStack.pop();
+		_samplerStack.pop_back();
 		auto& cBatch = currentBatch();
 		auto& sampler = _samplerStack.back();
-		if (cBatch.elements > 0 && cBatch.sampler != sampler) 		{
+		if (cBatch.elements > 0 && cBatch.sampler != sampler)
+		{
 			newBatch();
 		}
 	}
@@ -134,7 +142,7 @@ void pxl::Batch::newBatch() {
 		newBatch.elements = 0;
 		newBatch.blend = _blend_stack.back();
 		newBatch.sampler = _samplerStack.back();
-		_batches.add(newBatch);
+		_batches.push_back(newBatch);
 	} 	else 	{
 		auto& cBatch = currentBatch();
 		BatchInfo newBatch;
@@ -143,7 +151,7 @@ void pxl::Batch::newBatch() {
 		newBatch.blend = _blend_stack.back();
 		newBatch.sampler = _samplerStack.back();
 		newBatch.flip_vertically = cBatch.flip_vertically;
-		_batches.add(newBatch);
+		_batches.push_back(newBatch);
 	}
 }
 
@@ -175,14 +183,14 @@ void pxl::Batch::setTexture(const TextureRef& texture) {
 void pxl::Batch::triangle(const pxl::Vec2& p0, const pxl::Vec2& p1, const pxl::Vec2& p2, const pxl::Color& color) {
 	auto& mat = currentMatrix();
 	auto idx = _vertices.size();
-	_indices.add(idx);
-	_vertices.add(pxl::Vertex(pxl::Vec2::transform(p0, mat), pxl::Vec2::zero, color));
+	_indices.push_back(idx);
+	_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p0, mat), pxl::Vec2::zero, color));
 
-	_indices.add(idx + 1);
-	_vertices.add(pxl::Vertex(pxl::Vec2::transform(p1, mat), pxl::Vec2::zero, color));
+	_indices.push_back(idx + 1);
+	_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p1, mat), pxl::Vec2::zero, color));
 
-	_indices.add(idx + 2);
-	_vertices.add(pxl::Vertex(pxl::Vec2::transform(p2, mat), pxl::Vec2::zero, color));
+	_indices.push_back(idx + 2);
+	_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p2, mat), pxl::Vec2::zero, color));
 
 	auto& cBatch = currentBatch();
 	cBatch.elements++;
@@ -214,24 +222,26 @@ void pxl::Batch::pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const 
 	const Vec2& t0, const Vec2& t1, const Vec2& t2, const Vec2& t3, const Color& color) {
 	auto& mat = currentMatrix();
 	auto idx = _vertices.size();
-	_indices.add(idx + 0);
-	_indices.add(idx + 1);
-	_indices.add(idx + 2);
+	_indices.push_back(idx + 0);
+	_indices.push_back(idx + 1);
+	_indices.push_back(idx + 2);
 
-	_indices.add(idx + 0);
-	_indices.add(idx + 2);
-	_indices.add(idx + 3);
+	_indices.push_back(idx + 0);
+	_indices.push_back(idx + 2);
+	_indices.push_back(idx + 3);
 
-	if (currentBatch().flip_vertically) 	{
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p0, mat), t3, color));
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p1, mat), t2, color));
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p2, mat), t1, color));
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p3, mat), t0, color));
-	} 	else 	{
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p0, mat), t0, color));
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p1, mat), t1, color));
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p2, mat), t2, color));
-		_vertices.add(pxl::Vertex(pxl::Vec2::transform(p3, mat), t3, color));
+	if (currentBatch().flip_vertically)
+	{
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p0, mat), t3, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p1, mat), t2, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p2, mat), t1, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p3, mat), t0, color));
+	} 	else
+	{
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p0, mat), t0, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p1, mat), t1, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p2, mat), t2, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p3, mat), t3, color));
 	}
 
 	auto& cBatch = currentBatch();

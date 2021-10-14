@@ -56,7 +56,7 @@ namespace pxl
 		auto it = componentsByType.find(type);
 		if (it == componentsByType.end())
 		{
-			componentsByType[type] = pxl::Vector<IComponent*>(32);
+			componentsByType[type] = pxl::Vector<IComponent*>();
 			it = componentsByType.find(type);
 		}
 
@@ -69,8 +69,8 @@ namespace pxl
 		}
 		c->_next = nullptr;
 		c->_entity = entity;
-		it->second.add(c);
-		entity->_components.add(c);
+		it->second.push_back(c);
+		entity->_components.push_back(c);
 
 		c->awake();
 		return c;

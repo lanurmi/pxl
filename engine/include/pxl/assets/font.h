@@ -2,6 +2,7 @@
 
 #include <pxl/types.h>
 #include <pxl/math/color.h>
+#include <pxl/containers/string.h>
 
 class stbtt_fontinfo;
 

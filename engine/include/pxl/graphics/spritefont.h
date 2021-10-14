@@ -3,6 +3,7 @@
 #include <pxl/assets/Font.h>
 #include <pxl/math/rect.h>
 #include <pxl/graphics/Subtexture.h>
+#include <pxl/containers/map.h>
 #include <pxl/types.h>
 #include <pxl/math/vec2.h>
 

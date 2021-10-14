@@ -1,6 +1,8 @@
 #pragma once
 
 #include <pxl/types.h>
+#include <pxl/containers/map.h>
+#include <pxl/containers/string.h>
 #include <pxl/utils/image_packer.h>
 #include <pxl/graphics/texture.h>
 #include <pxl/assets/aseprite.h>

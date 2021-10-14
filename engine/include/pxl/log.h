@@ -1,5 +1,6 @@
 #pragma once
 #include <pxl/types.h>
+#include <pxl/containers/string.h>
 #include <functional>
 
 namespace pxl

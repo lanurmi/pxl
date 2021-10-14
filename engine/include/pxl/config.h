@@ -1,5 +1,7 @@
 #pragma once
 #include <pxl/types.h>
+#include <pxl/containers/string.h>
+
 namespace pxl
 {
 	struct Config

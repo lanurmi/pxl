@@ -49,7 +49,7 @@ void Tileset::createTiles(const TextureRef& texture, const Rect& area, int tiles
 	{
 		for (int i = area.x; i < (int)(area.x + area.width); i += tilesize)
 		{
-			_tiles.add(Subtexture(texture, pxl::Rect(i, j, tilesize, tilesize)));
+			_tiles.push_back(Subtexture(texture, pxl::Rect(i, j, tilesize, tilesize)));
 		}
 	}
 	_size = tilesize;

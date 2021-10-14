@@ -23,7 +23,7 @@ Atlas::~Atlas()
 
 void Atlas::addSprite(const String& name, const Aseprite& ase)
 {
-	_spriteInfos.add(Info(name, _packIndex, ase));
+	_spriteInfos.push_back(Info(name, _packIndex, ase));
 	auto &sprite = _spriteInfos.back();
 	if(!sprite.aseprite.frames.empty())
 	{
@@ -36,7 +36,7 @@ void Atlas::addSprite(const String& name, const Aseprite& ase)
 }
 
 void Atlas::addTileset(const String& name, const Aseprite& ase, int tilesize) {
-	_tilesetInfos.add(Info(name, _packIndex, tilesize, ase));
+	_tilesetInfos.push_back(Info(name, _packIndex, tilesize, ase));
 	auto& t = _tilesetInfos.back();
 	if (!t.aseprite.frames.empty())
 	{
@@ -89,9 +89,9 @@ void Atlas::build()
 				Sprite::Frame frame;
 				frame.duration = it.aseprite.frames[i].duration / 1000.0f;
 				frame.texture = subtextures[it.pack_index + i];
-				anim.frames.add(frame);
+				anim.frames.push_back(frame);
 			}
-			sprite.animations.add(anim);
+			sprite.animations.push_back(anim);
 		}
 		_sprites[it.name] = sprite;
 	}

@@ -1,6 +1,6 @@
 #include <pxl/assets/ldtk.h>
 #include <pxl/utils/filestream.h>
-#include <pxl/3rdparty/json.hpp>
+#include <pxl/3rdparty/json.h>
 
 #include <string>
 
@@ -19,7 +19,7 @@ void LDTKLevel::load(const String& path)
 {
 	FileStream file(path, file::FileMode::Read);
 	String data = file.all();
-	nlohmann::json ldtkLevelJson = nlohmann::json::parse(data.cstr());
+	nlohmann::json ldtkLevelJson = nlohmann::json::parse(data.data());
 
 
 	identifier = ldtkLevelJson["identifier"].get<std::string>().c_str();

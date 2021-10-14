@@ -13,13 +13,10 @@ add_library(pxl
 	src/config.cpp
 	src/time.cpp
 	src/log.cpp
-	src/types.cpp
+	
 	src/backbuffer.cpp
 
 	src/containers/string.cpp
-	src/containers/vector.cpp
-	src/containers/map.cpp
-	src/containers/array.cpp
 
 
 	src/backends/filesystem_backend_cpp.cpp
@@ -65,7 +62,8 @@ add_library(pxl
 	src/math/vec2.cpp
 	src/math/vec3.cpp	
 	src/math/tween.cpp
-	
+	src/math/grid.cpp
+
 	src/utils/input_binding.cpp
 	
 	
@@ -75,7 +73,7 @@ add_library(pxl
 	src/ec/entity.cpp
 	src/ec/component.cpp
 	src/ec/world.cpp
- )
+)
 
 target_include_directories(pxl
 	PUBLIC
@@ -88,6 +86,14 @@ set(PLATFORM_SDL2 true CACHE BOOL "Use SDL2 Platform Backend")
 set(GRAPHICS_OPENGL true CACHE BOOL "Use OpenGL Graphics Backend")
 set(AUDIO_OPENAL true CACHE BOOL "Use OpenAL audio Backend")
 set(AUDIO_DUMMY false CACHE BOOL "Use OpenAL audio Backend")
+
+set(STL_CONTAINERS true CACHE BOOL "Use STL containers")
+
+
+if (STL_CONTAINERS)
+	target_compile_definitions(pxl PUBLIC PXL_USE_STL_CONTAINERS)
+endif()
+
 
 if (GRAPHICS_OPENGL)
 	add_compile_definitions(PXL_GRAPHICS_OPENGL)

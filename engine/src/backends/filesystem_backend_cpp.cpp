@@ -1,4 +1,6 @@
-#include <pxl/types.h>
+#include <pxl/backends/filesystem_backend.h>
+#include <pxl/containers/string.h>
+#include <pxl/containers/vector.h>
 #include <pxl/utils/filestream.h>
 #include <filesystem>
 #include <cstdio>
@@ -8,29 +10,29 @@ using namespace pxl;
 
 String path::extension(const String& path)
 {
-	std::filesystem::path filePath(path.cstr());
+	std::filesystem::path filePath(path.data());
 	auto str = filePath.extension().u8string();
 	return String(str.c_str(), static_cast<unsigned>(str.size()) );
 }
 
 String path::combine(const String lowerPath, const String upperPath)
 {
-	std::filesystem::path path(lowerPath.cstr());
-	path.append(upperPath.cstr());
+	std::filesystem::path path(lowerPath.data());
+	path.append(upperPath.data());
 	auto str = path.u8string();
 	return String(str.c_str(), static_cast<unsigned>(str.size()));
 }
 
 String path::withoutFile(const String& path)
 {
-	std::filesystem::path filePath(path.cstr());
+	std::filesystem::path filePath(path.data());
 	auto str = filePath.parent_path().u8string();
 	return String(str.c_str(), static_cast<unsigned>(str.size()));
 }
 
 String path::filename(const String& path)
 {
-	std::filesystem::path filePath(path.cstr());
+	std::filesystem::path filePath(path.data());
 	auto str = filePath.stem().u8string();
 	return String(str.c_str(), static_cast<unsigned>(str.size()));
 }
@@ -88,7 +90,7 @@ private:
 
 bool file::exists(const String& path)
 {
-	return std::filesystem::is_regular_file(path.cstr());
+	return std::filesystem::is_regular_file(path.data());
 }
 
 file::FileRef file::File::open(const String& file, file::FileMode mode)
@@ -107,7 +109,7 @@ file::FileRef file::File::open(const String& file, file::FileMode mode)
 			break;
 		}
 	}
-	FILE *ptr = fopen(file.cstr(), smode.cstr());
+	FILE *ptr = fopen(file.data(), smode.data());
 	if (ptr == nullptr)
 	{
 		return file::FileRef();
@@ -122,19 +124,19 @@ file::FileRef file::File::open(const String& file, file::FileMode mode)
 
 bool directory::exists(const String& path)
 {
-	return std::filesystem::is_directory(path.cstr());
+	return std::filesystem::is_directory(path.data());
 }
 
 Vector<String> directory::files(const String& path, const String& extension)
 {
 	Vector<String> result;
-	for (const auto& e : std::filesystem::directory_iterator(path.cstr()))
+	for (const auto& e : std::filesystem::directory_iterator(path.data()))
 	{
 		auto p = e.path();
 		if (extension.empty())
 		{
 			auto str = p.u8string();
-			result.add(String(str.c_str(), static_cast<unsigned>(str.length())));
+			result.push_back(String(str.c_str(), static_cast<unsigned>(str.length())));
 		}
 		else
 		{
@@ -142,7 +144,7 @@ Vector<String> directory::files(const String& path, const String& extension)
 			if (ext.u8string().c_str() == extension)
 			{
 				auto str = p.u8string();
-				result.add(String(str.c_str(), static_cast<unsigned>(str.size()) ));
+				result.push_back(String(str.c_str(), static_cast<unsigned>(str.size()) ));
 			}
 		}
 	}
