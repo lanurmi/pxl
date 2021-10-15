@@ -14,9 +14,9 @@ namespace pxl
 		int target_framerate;
 		bool fixed_update;
 		bool vertical_sync;
-		Func awake;
-		Func update;
-		Func draw;
-		Func destroy;
+		Func<> awake;
+		Func<> update;
+		Func<> draw;
+		Func<> destroy;
 	};
 }

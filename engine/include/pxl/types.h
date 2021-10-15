@@ -8,8 +8,8 @@
 
 namespace pxl
 {
-	using Func = std::function<void()>;
-
+	template <typename ... Args>
+	using Func = std::function<void(Args...)>;
 
 	using i8 = int8_t;
 	using i16 = int16_t;
