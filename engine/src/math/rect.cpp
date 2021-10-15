@@ -1,5 +1,6 @@
 #include <pxl/math/Rect.h>
 #include <pxl/math/mat3x2.h>
+#include <pxl/math/calc.h>
 
 pxl::Rect::Rect()
 {
@@ -144,6 +145,43 @@ bool pxl::Rect::overlaps(const pxl::Rect& rect) const
 	return x + width >= rect.x && y + height >= rect.y && x < rect.x + rect.width && y < rect.y + rect.height;
 }
 
+pxl::Rect pxl::Rect::intersection(const pxl::Rect& rect) const
+{
+	auto tl1 = rect.topLeft();
+	auto br1 = rect.bottomRight();
+
+	auto tl2 = topLeft();
+	auto br2 = bottomRight();
+
+	auto l = pxl::calc::max(tl1.x, tl2.x);
+	auto r = pxl::calc::min(br1.x, br2.x);
+	auto t = pxl::calc::max(tl1.y, tl2.y);
+	auto b = pxl::calc::min(br1.y, br2.y);
+
+	if (r < l)
+	{
+		return pxl::Rect(0, 0, 0, 0);
+		r = l;
+	}
+	if (b < t)
+	{
+		return pxl::Rect(0, 0, 0, 0);
+	}
+
+	return pxl::Rect(l, t, r - l, b - t);
+}
+
+float pxl::Rect::area() const
+{
+	return width * height;
+}
+
+pxl::Rect pxl::Rect::unionrect(const pxl::Rect& rect) const
+{
+	auto xx = pxl::calc::min(x,  rect.x);
+	auto yy = pxl::calc::min(y, rect.y);
+	return pxl::Rect(xx, yy, pxl::calc::max(right(), rect.right()) - xx, pxl::calc::max(bottom(), rect.bottom()) - yy);
+}
 
 pxl::Rect pxl::Rect::inflate(float amount) const
 {

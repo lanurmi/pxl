@@ -42,6 +42,9 @@ namespace pxl
 		Vec2 size() const;
 		bool contains(const Vec2& pt) const;
 		bool overlaps(const Rect& rectangle) const;
+		pxl::Rect intersection(const Rect& rect) const;
+		pxl::Rect unionrect(const Rect& r) const;
+		float area() const;
 		Rect inflate(float amount) const;
 		static Rect transform(const Rect& vec, const Mat3x2& matrix);
 	};
