@@ -74,6 +74,7 @@ add_library(pxl
 	src/ec/entity.cpp
 	src/ec/component.cpp
 	src/ec/world.cpp
+	src/ec/component_interface.cpp
 )
 
 target_include_directories(pxl

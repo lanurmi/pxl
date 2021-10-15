@@ -17,6 +17,7 @@ namespace pxl
 		virtual ~Component();
 
 		u16 typeId() const override;
+		u16 order() const override;
 		const Entity* entity() const;
 		Entity* entity();
 
@@ -107,6 +108,11 @@ namespace pxl
 	u16 Component<T>::typeId() const
 	{
 		return ComponentId::get<T>();
+	}
+
+	template<typename T>
+	u16 Component<T>::order() const {
+		return 0;
 	}
 
 	template<typename T>
