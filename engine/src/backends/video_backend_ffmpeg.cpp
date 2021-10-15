@@ -1,7 +1,8 @@
-#if PXL_VIDEO_FFMPEG
+#ifdef PXL_VIDEO_FFMPEG
+
 #include <pxl/backends/video_backend.h>
 #include <pxl/backends/platform_backend.h>
-
+#include <pxl/containers/map.h>
 
 extern "C"
 {
@@ -91,12 +92,12 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 	buffer = nullptr;
 
 	//
-	format = av_guess_format(nullptr, info.file.cstr(), nullptr);
+	format = av_guess_format(nullptr, info.file.data(), nullptr);
 	if (format == nullptr)
 	{
 		assert(0);
 	}
-	if (avformat_alloc_output_context2(&formatContext, format, nullptr, info.file.cstr()) < 0)
+	if (avformat_alloc_output_context2(&formatContext, format, nullptr, info.file.data()) < 0)
 	{
 		assert(0);
 	}
@@ -163,7 +164,7 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 
 	if (!(format->flags & AVFMT_NOFILE))
 	{
-		if ((avio_open(&formatContext->pb, info.file.cstr(), AVIO_FLAG_WRITE)) < 0)
+		if ((avio_open(&formatContext->pb, info.file.data(), AVIO_FLAG_WRITE)) < 0)
 		{
 			assert(0);
 		}
@@ -415,7 +416,7 @@ void Decoder_ffmpeg::open(const pxl::String& file)
 	frame = av_frame_alloc();
 	frameRgba = av_frame_alloc();
 
-	if (avformat_open_input(&formatCtx, file.cstr(), nullptr, nullptr) < 0)
+	if (avformat_open_input(&formatCtx, file.data(), nullptr, nullptr) < 0)
 	{
 		assert(0);
 	}
@@ -427,12 +428,12 @@ void Decoder_ffmpeg::open(const pxl::String& file)
 	{
 		if (formatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
 		{
-			videoStreamIds.add(i);
+			videoStreamIds.push_back(i);
 			break;
 		}
 		else if (formatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO)
 		{
-			audioStreamIds.add(i);
+			audioStreamIds.push_back(i);
 			break;
 		}
 	}
@@ -548,6 +549,25 @@ pxl::i64 Decoder_ffmpeg::currentFrameNumber() const
 
 void Decoder_ffmpeg::flushDecoder()
 {
+	//flush codec
+	auto ret = avcodec_send_packet(codecCtx, nullptr);
+	if (ret < 0)
+	{
+		assert(0);
+	}
+	while (ret >= 0)
+	{
+		ret = avcodec_receive_frame(codecCtx, frame);
+		if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+		{
+			// EOF exit loop
+			break;
+		}
+		else if (ret < 0)
+		{
+			assert(0);
+		}
+	}
 	avcodec_flush_buffers(codecCtx);
 	currentFrame = 0;
 }

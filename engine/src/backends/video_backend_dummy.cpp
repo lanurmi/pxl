@@ -1,4 +1,4 @@
-#if PXL_VIDEO_DUMMY
+#ifdef PXL_VIDEO_DUMMY
 
 pxl::video::EncoderRef pxl::video::createEncoder(const EncoderInfo&)
 {
