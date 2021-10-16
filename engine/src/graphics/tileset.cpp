@@ -44,7 +44,6 @@ void Tileset::createTiles(const TextureRef& texture, const Rect& area, int tiles
 		pxl::log::error("tileset texture width is not divisible by tilesize");
 	}
 
-	pxl::log::error("Invalid tileset index");
 	for (int j = area.y; j < (int)(area.y + area.height); j += tilesize)
 	{
 		for (int i = area.x; i < (int)(area.x + area.width); i += tilesize)
