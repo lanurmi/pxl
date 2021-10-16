@@ -61,10 +61,10 @@ namespace pxl
 	template<class T>
 	T* Entity::get()
 	{
-		auto type = ComponentId::get<T>();
+		auto type = ComponentInfo<T>::id;
 		for (auto it : _components)
 		{
-			if (it->typeId() == type) {
+			if (it->id() == type) {
 				return  (T*)it;
 			}
 		}

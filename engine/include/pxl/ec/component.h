@@ -16,7 +16,7 @@ namespace pxl
 		Component();
 		virtual ~Component();
 
-		u16 typeId() const override;
+		i64 id() const override;
 		u16 order() const override;
 		const Entity* entity() const;
 		Entity* entity();
@@ -104,10 +104,10 @@ namespace pxl
 		return _entity->world();
 	}
 
-	template<typename T>
-	u16 Component<T>::typeId() const
+	template<class T>
+	i64 Component<T>::id() const
 	{
-		return ComponentId::get<T>();
+		return ComponentInfo<T>::id;
 	}
 
 	template<typename T>

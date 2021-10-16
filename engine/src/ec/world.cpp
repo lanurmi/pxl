@@ -4,9 +4,6 @@
 
 using namespace pxl;
 
-u16 ComponentId::idCounter = 0;
-
-
 World::World() 
 {
 	for (int i = 0; i < s_max_entities; i++)
@@ -51,7 +48,7 @@ void World::update()
 	{
 		for (auto c : it->_components)
 		{
-			auto list = componentsByType.find(c->typeId());
+			auto list = componentsByType.find(c->id());
 			auto& v = list->second;
 
 			// I Dont like this if def, maybe our own vector should work like stl

@@ -42,7 +42,7 @@ namespace pxl
 		pxl::Vector<Entity> entities;
 		pxl::Vector<Entity*> entitiesToBeDestroyed;
 
-		pxl::Map < u16, pxl::Vector<IComponent*>> componentsByType;
+		pxl::Map <i32, pxl::Vector<IComponent*>> componentsByType;
 	};
 
 
@@ -51,7 +51,7 @@ namespace pxl
 	{
 		assert(entity->get<T>() == nullptr);
 
-		auto type = ComponentId::get<T>();
+		auto type = ComponentInfo<T>::id;
 
 		auto it = componentsByType.find(type);
 		if (it == componentsByType.end())
@@ -79,17 +79,17 @@ namespace pxl
 	template<typename T>
 	const T* World::first() const
 	{
-		auto type = pxl::ComponentId::get<T>();
+		auto type = ComponentInfo<T>::id;
 		auto it = componentsByType.find(type);
 		if (it == componentsByType.end()) return nullptr;
 
 		return (T*)it->second[0];
 	}
 
-	template<typename T>
+	template<class T>
 	T* World::first()
 	{
-		auto type = pxl::ComponentId::get<T>();
+		auto type = pxl::ComponentInfo<T>::id;
 		auto it = componentsByType.find(type);
 
 		if (it == componentsByType.end()) return nullptr;
