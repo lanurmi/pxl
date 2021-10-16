@@ -13,17 +13,6 @@ CharacterRange::CharacterRange(u32 from, u32 to) : from(from), to(to) {}
 
 CharacterRange CharacterRange::ASCII = CharacterRange(32, 128);
 
-static String getFontName(stbtt_fontinfo* font, int nameId)
-{
-	int length = 0;
-	const char* ptr = stbtt_GetFontNameString(font, &length,
-		STBTT_PLATFORM_ID_MICROSOFT,
-		STBTT_MS_EID_UNICODE_BMP,
-		STBTT_MS_LANG_ENGLISH,
-		nameId);
-
-	return String(ptr, length);
-}
 
 pxl::Font::Font(const pxl::String &path)
 {
@@ -33,14 +22,9 @@ pxl::Font::Font(const pxl::String &path)
 Font::Font(Font&& src) noexcept
 {
 	_data = src._data;
-	_family_name = src._family_name;
-	_style_name = src._style_name;
 	_ascent = src._ascent;
 	_descent = src._descent;
 	_line_gap = src._line_gap;
-
-	src._family_name = "";
-	src._style_name = "";
 	src._data = nullptr;
 }
 
@@ -63,22 +47,7 @@ void Font::load(const String& path)
 
 	stbtt_InitFont(f, _data, 0);
 
-	_family_name = getFontName(f, 1);
-	_style_name = getFontName(f, 2);
-
-	pxl::log::message(_style_name);
-
 	stbtt_GetFontVMetrics(f, &_ascent, &_descent, &_line_gap);
-}
-
-String Font::familyName() const
-{
-	return _family_name;
-}
-
-String Font::styleName() const
-{
-	return _style_name;
 }
 
 int Font::ascent() const

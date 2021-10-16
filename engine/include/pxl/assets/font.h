@@ -51,8 +51,6 @@ namespace pxl
 		void load(const String &path);
 		void* _handle;
 		u8* _data;
-		String _family_name;
-		String _style_name;
 		int _ascent;
 		int _descent;
 		int _line_gap;
