@@ -13,8 +13,10 @@ public:
 	}
 	bool pixels(u32 ch, Color* pixels)
 	{
-		auto scale = _font.scale(_size);
 		auto glyph = _font.glyph(ch);
+		if (glyph <= 0) return false;
+
+		auto scale = _font.scale(_size);
 		auto character = _font.character(glyph, scale);
 		if(character.has_glyph) {
 			_font.image(character, pixels);
@@ -101,12 +103,12 @@ void SpriteFont::build(const String& file, int size, const CharacterRange &range
 		{
 			auto size = font.pixelSize(i);
 			packer.add(i, size.x, size.y, buffer);
-		}
-		Character ch;
-		ch.advance = font.advance(i);
-		ch.offset = font.offset(i);
-		_characters.emplace(i, ch);
-		
+
+			Character ch;
+			ch.advance = font.advance(i);
+			ch.offset = font.offset(i);
+			_characters.emplace(i, ch);
+		}	
 	}
 	delete [] buffer;
 
