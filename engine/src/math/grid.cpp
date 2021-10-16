@@ -30,6 +30,14 @@ Grid& Grid::operator=(Grid&& other) noexcept
 	return *this;
 }
 
+void Grid::resize(int w, int h, i16 value)
+{
+	_data.resize(w * h);
+	_width = w;
+	_height = h;
+	setAll(value);
+}
+
 void Grid::set(int x, int y, i16 value)
 {
 	auto idx = y * _width + x;

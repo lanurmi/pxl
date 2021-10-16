@@ -12,6 +12,7 @@ namespace pxl
 		Grid();
 		Grid(Grid&& other) noexcept;
 		Grid& operator=(Grid&& other) noexcept;
+		void resize(int w, int h, i16 value);
 		void set(int x, int y, i16 value);
 		void set(int index, i16 value);
 		void set(int fromx, int fromy, const Grid& otherGrid);
