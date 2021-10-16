@@ -316,7 +316,7 @@ void pxl::Batch::text(const pxl::SpriteFont& font, const String& text, const pxl
 	u32 prev = 0;
 	for (unsigned i = 0; i < text.size(); i++) 	{
 		u32 glyph = static_cast<u32>(text[i]);
-		const auto character = font.character(glyph);
+
 		if (text[i] == '\n')
 		{
 			drawPos.y += font.lineHeight();
@@ -324,13 +324,18 @@ void pxl::Batch::text(const pxl::SpriteFont& font, const String& text, const pxl
 			continue;
 		}
 
+
 		int kerning = i == 0 ? 0 : font.kerning(prev, glyph);
 		drawPos.x += kerning;
 
-		if (auto tex = character->subtexture.texture()) 		{
-			texture(character->subtexture, drawPos + character->offset, color);
+		if (const auto character = font.character(glyph))
+		{
+			if (auto tex = character->subtexture.texture())
+			{
+				texture(character->subtexture, drawPos + character->offset, color);
+			}
+			drawPos.x += character->advance;
 		}
-		drawPos.x += character->advance;
 
 		prev = glyph;
 		i += text.utf8Size(i) - 1;
