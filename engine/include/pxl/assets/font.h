@@ -49,7 +49,8 @@ namespace pxl
 		bool image(const Font::Character &ch, Color *pixels) const;
 	private:
 		void load(const String &path);
-		void* _data;
+		void* _handle;
+		u8* _data;
 		String _family_name;
 		String _style_name;
 		int _ascent;

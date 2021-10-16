@@ -1,8 +1,10 @@
 #include <pxl/assets/font.h>
 #include <pxl/utils/filestream.h>
+#include <pxl/log.h>
 
 #define STBTT_STATIC
 #define STB_TRUETYPE_IMPLEMENTATION
+
 #include <pxl/3rdparty/stb_truetype.h>
 
 using namespace pxl;
@@ -44,27 +46,29 @@ Font::Font(Font&& src) noexcept
 
 pxl::Font::~Font()
 {
-	delete (stbtt_fontinfo*)_data;
+	delete (stbtt_fontinfo*)_handle;
+	delete[] _data;
 }
 
 void Font::load(const String& path)
 {
 	FileStream stream(path, file::FileMode::ReadBinary);
 	auto length = stream.length();
-	auto data = new u8[length];
-	stream.read(data, length);
+	_data = new u8[length];
+	stream.read(_data, length);
 
-	_data = new stbtt_fontinfo();
-	auto f = (stbtt_fontinfo*)_data;
+	_handle = nullptr;
+	_handle = new stbtt_fontinfo();
+	auto f = (stbtt_fontinfo*)_handle;
 
-	stbtt_InitFont(f, data, 0);
+	stbtt_InitFont(f, _data, 0);
 
 	_family_name = getFontName(f, 1);
 	_style_name = getFontName(f, 2);
 
-	stbtt_GetFontVMetrics(f, &_ascent, &_descent, &_line_gap);
+	pxl::log::message(_style_name);
 
-	delete[]  data;
+	stbtt_GetFontVMetrics(f, &_ascent, &_descent, &_line_gap);
 }
 
 String Font::familyName() const
@@ -104,19 +108,19 @@ int Font::lineHeight() const
 
 float Font::scale(float size) const
 {
-	auto f = (stbtt_fontinfo*)_data;
+	auto f = (stbtt_fontinfo*)_handle;
 	return stbtt_ScaleForMappingEmToPixels(f, size);
 }
 
 float Font::kerning(int glyph0, int glyph1, float scale) const
 {
-	auto f = (stbtt_fontinfo*)_data;
+	auto f = (stbtt_fontinfo*)_handle;
 	return stbtt_GetGlyphKernAdvance(f, glyph0, glyph1) * scale;
 }
 
 bool Font::image(const Font::Character& ch, Color* pixels) const
 {
-	auto f = (stbtt_fontinfo*)_data;
+	auto f = (stbtt_fontinfo*)_handle;
 	if (ch.has_glyph)
 	{
 		unsigned char *ptr = (unsigned char*)pixels;
@@ -139,14 +143,14 @@ bool Font::image(const Font::Character& ch, Color* pixels) const
 
 int Font::glyph(int codepoint) const
 {
-	auto f = (stbtt_fontinfo*)_data;
+	auto f = (stbtt_fontinfo*)_handle;
 	return stbtt_FindGlyphIndex(f, codepoint);
 }
 
 Font::Character Font::character(int glyph, float scale) const
 {
 	int advance, offsetx, x0,y0,x1,y1;
-	auto f = (stbtt_fontinfo*)_data;
+	auto f = (stbtt_fontinfo*)_handle;
 	stbtt_GetGlyphHMetrics(f, glyph, &advance, &offsetx);
 	stbtt_GetGlyphBitmapBox(f, glyph, scale, scale, &x0, &y0, &x1, &y1);
 
