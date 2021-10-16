@@ -9,7 +9,7 @@ pxl::BatchInfo::BatchInfo() :
 
 void pxl::DrawCall::draw() {
 	pxl::Vec2 size = pxl::Vec2(target->width(), target->height());
-	viewport = pxl::Rect(0, 0, size.x, size.y);
+	viewport = pxl::Rect(0.0f, 0.0f, size.x, size.y);
 	assert(material);
 	pxl::graphics::render(*this);
 }
@@ -272,17 +272,17 @@ void pxl::Batch::line(const Vec2& from, const Vec2& to, int lineSize, const Colo
 void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color) {
 	pushMatrix(pxl::Mat3x2::createTransform(pos, origin, scale, rotation));
 	setTexture(texture);
-	const auto width = texture->width();
-	const auto height = texture->height();
-	pushQuad(pxl::Rect(0, 0, width, height), pxl::Rect(0, 0, 1.0f, 1.0f), color);
+	const float width = texture->width();
+	const float height = texture->height();
+	pushQuad(pxl::Rect(0.0f, 0.0f, width, height), pxl::Rect(0.0f, 0.0f, 1.0f, 1.0f), color);
 	popMatrix();
 }
 
 void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Color& color) {
 	setTexture(texture);
-	const auto width = texture->width();
-	const auto height = texture->height();
-	pushQuad(pxl::Rect(pos.x, pos.y, width, height), pxl::Rect(0, 0, 1.0f, 1.0f), color);
+	const float width = texture->width();
+	const float height = texture->height();
+	pushQuad(pxl::Rect(pos.x, pos.y, width, height), pxl::Rect(0.0f, 0.0f, 1.0f, 1.0f), color);
 }
 
 
@@ -290,16 +290,16 @@ void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos
 	pushMatrix(pxl::Mat3x2::createTransform(pos, origin, scale, rotation));
 	auto texture = subtexture.texture();
 	setTexture(texture);
-	const auto width = texture->width();
-	const auto height = texture->height();
+	const float width = texture->width();
+	const float height = texture->height();
 	auto srcRect = subtexture.rect();
-	pushQuad(pxl::Rect(0, 0, srcRect.width, srcRect.height), pxl::Rect(srcRect.x / width, srcRect.y / height, srcRect.width / width, srcRect.height / height), color);
+	pushQuad(pxl::Rect(0.0f, 0.0f, srcRect.width, srcRect.height), pxl::Rect(srcRect.x / width, srcRect.y / height, srcRect.width / width, srcRect.height / height), color);
 	popMatrix();
 }
 
 void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Color& color) {
 	auto tex = subtexture.texture();
-	texture(tex, Rect(pos.x, pos.y, subtexture.width(), subtexture.height()), subtexture.rect(), color);
+	texture(tex, Rect(pos.x, pos.y, (float)subtexture.width(), (float)subtexture.height()), subtexture.rect(), color);
 }
 
 void pxl::Batch::texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect& srcrect, const pxl::Color& color) {

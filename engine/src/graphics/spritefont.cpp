@@ -102,7 +102,7 @@ void SpriteFont::build(const String& file, int size, const CharacterRange &range
 		if (font.pixels(i, buffer))
 		{
 			auto size = font.pixelSize(i);
-			packer.add(i, size.x, size.y, buffer);
+			packer.add(i, (int)size.x, (int)size.y, buffer);
 
 			Character ch;
 			ch.advance = font.advance(i);
