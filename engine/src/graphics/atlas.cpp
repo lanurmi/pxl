@@ -90,6 +90,7 @@ void Atlas::build()
 				frame.duration = it.aseprite.frames[i].duration / 1000.0f;
 				frame.texture = subtextures[it.pack_index + i];
 				anim.frames.push_back(frame);
+				anim.duration += frame.duration;
 			}
 			sprite.animations.push_back(anim);
 		}

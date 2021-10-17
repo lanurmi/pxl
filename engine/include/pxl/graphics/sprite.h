@@ -17,6 +17,7 @@ namespace pxl
 		{
 			String name;
 			Vector<Frame> frames;
+			float duration = 0.0f;
 		};
 
 		String name;
