@@ -63,11 +63,14 @@ void World::update()
 			v.erase(c);
 #endif
 
-			auto r = (IResettable*)c;
-			r->reset();
+			pxl::log::message(pxl::String::format("Component %s destroyed from entity %hu", c->typeName().data(), it->id()));
+			
+			componentDestroyed.invoke(c);
 
-			pxl::log::message(pxl::String::format("Component %s destroyed from entity %hu", c->typeName(), it->id()));
-
+			if (auto rc = dynamic_cast<IResettable*>(c))
+			{
+				rc->reset();
+			}
 			delete c;
 		}
 		it->reset();

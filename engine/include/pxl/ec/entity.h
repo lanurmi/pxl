@@ -22,6 +22,13 @@ namespace pxl
 
 		Transform transform;
 		bool enabled = true;
+		Entity* parent = nullptr;
+
+		Mat3x2 matrix() const;
+		Mat3x2 matrix(const pxl::Vec2 &originTrans) const;
+
+		Vec2 position() const;
+		Vec2 scale() const;
 
 		u16 id() const;
 
@@ -44,6 +51,7 @@ namespace pxl
 			_id = s_unused_entity;
 			_components.clear();
 			_world = nullptr;
+			parent = nullptr;
 		}
 
 	private:

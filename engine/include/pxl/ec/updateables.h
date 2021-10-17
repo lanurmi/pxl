@@ -16,9 +16,12 @@ namespace pxl
 		const pxl::Vector<IComponent*>& get() const;
 	private:
 		void tryAddComponent(IComponent* component);
+		void tryRemoveComponent(IComponent* component);
 		pxl::Vector<IComponent*> updateables;
+		pxl::Vector<IComponent*> newUpdateables;
 		bool _sort = false;
 		World* _world;
-		ActionBindId bindId;
+		ActionBindId addBindId;
+		ActionBindId destroyBindId;
 	};
 }

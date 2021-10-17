@@ -10,7 +10,7 @@ namespace pxl
 
 
 	template<typename T>
-	class Component : public IComponent, IResettable
+	class Component : public IComponent, public IResettable
 	{
 	public:
 		Component();

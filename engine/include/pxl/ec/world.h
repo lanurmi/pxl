@@ -11,8 +11,6 @@
 
 namespace pxl
 {
-	class Entity;
-
 	class World
 	{
 	public:
@@ -42,6 +40,7 @@ namespace pxl
 		void update();
 
 		Action<IComponent*> componentAdded;
+		Action<IComponent*> componentDestroyed;
 
 	private:
 		pxl::Vector<Entity> entities;
