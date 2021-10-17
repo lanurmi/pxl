@@ -1,7 +1,7 @@
 #pragma once
 #include <pxl/types.h>
 #include <algorithm>    // std::sort
-
+#include <pxl/containers/string.h>
 namespace pxl
 {
 	class Batch;
@@ -11,8 +11,14 @@ namespace pxl
 		virtual ~IComponent() {}
 		virtual void awake() {}
 		virtual void destroy() {};
-		virtual i64 id() const = 0;
+		virtual u32 id() const = 0;
+		virtual pxl::String typeName() const = 0;
 		virtual u16 order() const = 0;
+		virtual u16 layer() const = 0;
+		virtual bool enabled() const = 0;
+
+		virtual void update() {}
+		virtual void draw(Batch &batch){}
 	};
 
 	class IResettable
@@ -21,18 +27,14 @@ namespace pxl
 		virtual void reset() = 0;
 	};
 
+	// Not sure if i like "marker" interfaces
 	class IUpdateable
 	{
-	public:
-		virtual void update() = 0;
-	private:
 	};
 
 
 	class IDrawable
 	{
-	public:
-		virtual void draw(Batch &batch) = 0;
 	};
 
 
@@ -58,45 +60,26 @@ namespace pxl
 	public:
 		static constexpr pxl::u16 updateOrder = 0;
 		static constexpr pxl::u16 drawOrder = 0;
-		static constexpr pxl::i64 id = 0;
+		static constexpr pxl::u32 id = 0;
+		static constexpr const char* type = "";
 	};
 }
 
-#define HASH(_num) \
-	if (str[_num] != '\0') \
-	{ \
-		hash ^= static_cast<pxl::i64>(str[_num]); \
-		hash *= 0x01000193; \
-	} \
-	else \
-	{ \
-		return hash; \
-	}
-
-constexpr pxl::i64 constHash(const char* str)
+constexpr pxl::u32 constHash(const char* str)
 {
-	pxl::i64 hash = 0x811c9dc5;
-	HASH(0)
-	HASH(1)
-	HASH(2)
-	HASH(3)
-	HASH(4)
-	HASH(5)
-	HASH(6)
-	HASH(7)
-	HASH(8)
-	HASH(9)
-	HASH(10)
-	HASH(11)
-	HASH(12)
-	HASH(13)
-	HASH(14)
-	HASH(15)
-	HASH(16)
-	HASH(17)
-	HASH(18)
-	HASH(19)
-	HASH(20)
+	pxl::u32 hash = 0x811c9dc5;
+	for (int i = 0; i < 20; i++)
+	{
+		if (str[i] != '\0')
+		{
+			hash ^= static_cast<pxl::u32>(str[i]);
+			hash *= 0x01000193;
+		}
+		else
+		{
+				return hash;
+		}
+	}
 	return hash;
 }
 
@@ -108,7 +91,8 @@ namespace pxl \
 	public: \
 		static constexpr pxl::u16 updateOrder = _updateOrder; \
 		static constexpr pxl::u16 drawOrder = _drawOrder; \
-		static constexpr pxl::i64 id = constHash(#_name); \
+		static constexpr pxl::u32 id = constHash(#_name); \
+		static constexpr const char*  type = #_name; \
 	}; \
 }
 

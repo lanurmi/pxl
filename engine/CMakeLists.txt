@@ -76,7 +76,9 @@ add_library(pxl
 	src/ec/component.cpp
 	src/ec/world.cpp
 	src/ec/component_interface.cpp
-)
+	src/ec/drawables.cpp
+	src/ec/updateables.cpp
+	src/ec/transform.cpp)
 
 target_include_directories(pxl
 	PUBLIC

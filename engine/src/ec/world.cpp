@@ -6,19 +6,23 @@ using namespace pxl;
 
 World::World() 
 {
-	for (int i = 0; i < s_max_entities; i++)
-	{
-		entities.push_back(Entity());
-	}
+
 }
 
 World::~World() {
 }
 
 
+void World::awake(int bufferEntities)
+{
+	for (int i = 0; i < bufferEntities; i++)
+	{
+		entities.push_back(Entity());
+	}
+}
 Entity* World::entity(const Vec2& position)
 {
-	for (u16 i = 0; i < s_max_entities; i++)
+	for (u32 i = 0; i < entities.size(); i++)
 	{
 		if (entities[i].id() == s_unused_entity)
 		{
@@ -39,6 +43,7 @@ void World::destroy(Entity* entity)
 		c->destroy();
 	}
 	entitiesToBeDestroyed.push_back(entity);
+	pxl::log::message( pxl::String::format("Added entity %hu destroylist", entity->id()) );
 
 }
 
@@ -60,6 +65,9 @@ void World::update()
 
 			auto r = (IResettable*)c;
 			r->reset();
+
+			pxl::log::message(pxl::String::format("Component %s destroyed from entity %hu", c->typeName(), it->id()));
+
 			delete c;
 		}
 		it->reset();

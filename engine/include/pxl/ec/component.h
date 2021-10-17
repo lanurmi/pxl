@@ -16,8 +16,11 @@ namespace pxl
 		Component();
 		virtual ~Component();
 
-		i64 id() const override;
+		u32 id() const override;
 		u16 order() const override;
+		u16 layer() const override;
+		pxl::String typeName() const override;
+		bool enabled() const override;
 		const Entity* entity() const;
 		Entity* entity();
 
@@ -105,14 +108,33 @@ namespace pxl
 	}
 
 	template<class T>
-	i64 Component<T>::id() const
+	u32 Component<T>::id() const
 	{
 		return ComponentInfo<T>::id;
 	}
 
 	template<typename T>
-	u16 Component<T>::order() const {
-		return 0;
+	u16 Component<T>::order() const
+	{
+		return ComponentInfo<T>::updateOrder;
+	}
+
+	template<typename T>
+	u16 Component<T>::layer() const
+	{
+		return ComponentInfo<T>::drawOrder;
+	};
+
+	template<typename T>
+	pxl::String Component<T>::typeName() const
+	{
+		return pxl::String(ComponentInfo<T>::type);
+	}
+
+	template<typename T>
+	bool Component<T>::enabled() const
+	{
+		return entity()->enabled;
 	}
 
 	template<typename T>

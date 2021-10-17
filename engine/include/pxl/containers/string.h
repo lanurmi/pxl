@@ -81,12 +81,12 @@ namespace std
 	{
 		std::size_t operator()(const pxl::String& key) const
 		{
-			std::size_t result = 2166136261U;
+			std::size_t result = 0x811c9dc5;
 			auto s = key.size();
 			for (unsigned i = 0; i < s; i++)
 			{
 				result ^= static_cast<std::size_t>(key[i]);
-				result *= 16777619U;
+				result *= 0x01000193;
 			}
 			return result;
 		}

@@ -6,18 +6,20 @@
 #include <pxl/math/vec2.h>
 #include <pxl/containers/vector.h>
 #include <pxl/types.h>
+#include <pxl/log.h>
+#include <pxl/utils/action.h>
 
 namespace pxl
 {
 	class Entity;
-
-	constexpr pxl::u16 s_max_entities = 1000;
 
 	class World
 	{
 	public:
 		World();
 		~World();
+
+		void awake(int bufferEntities = 1000);
 
 		Entity* entity(const Vec2& position);
 		void destroy(Entity* entity);
@@ -38,11 +40,14 @@ namespace pxl
 		T* get(Entity* entity);
 
 		void update();
+
+		Action<IComponent*> componentAdded;
+
 	private:
 		pxl::Vector<Entity> entities;
 		pxl::Vector<Entity*> entitiesToBeDestroyed;
 
-		pxl::Map <i32, pxl::Vector<IComponent*>> componentsByType;
+		pxl::Map <i64, pxl::Vector<IComponent*>> componentsByType;
 	};
 
 
@@ -72,7 +77,12 @@ namespace pxl
 		it->second.push_back(c);
 		entity->_components.push_back(c);
 
+		componentAdded.invoke(c);
+
 		c->awake();
+
+		pxl::log::message(pxl::String::format("Added component %s to entity %hu", ComponentInfo<T>::type, entity->id()) );
+
 		return c;
 	}
 

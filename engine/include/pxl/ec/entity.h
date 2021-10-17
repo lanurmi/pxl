@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pxl/ec/component_interface.h>
+#include <pxl/ec/transform.h>
 #include <pxl/math/vec2.h>
 #include <pxl/types.h>
 #include <assert.h>
@@ -12,11 +13,7 @@ namespace pxl
 
 	constexpr u16 s_unused_entity = 0;
 
-	class Transform {
-	public:
-		Vec2 position = Vec2::zero;
-		int facing = 1;
-	};
+
 
 	class Entity : IResettable
 	{
@@ -24,6 +21,7 @@ namespace pxl
 		Entity() : _id(s_unused_entity), _world(nullptr) {};
 
 		Transform transform;
+		bool enabled = true;
 
 		u16 id() const;
 
@@ -47,7 +45,6 @@ namespace pxl
 			_components.clear();
 			_world = nullptr;
 		}
-
 
 	private:
 		pxl::Vector<pxl::IComponent*> _components;
