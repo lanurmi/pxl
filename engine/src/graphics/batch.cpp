@@ -45,18 +45,14 @@ void pxl::Batch::clear() {
 }
 
 void pxl::Batch::pushMatrix(const Mat3x2& matrix) {
-	_matrix_stack.push_back(matrix);
+	_matrix_stack.push_back(_current_matrix);
 	_current_matrix = matrix * _current_matrix;
 }
 
 void pxl::Batch::popMatrix() {
 	assert(_matrix_stack.size() >= 1U);
+	_current_matrix = _matrix_stack.back();
 	_matrix_stack.pop_back();
-	if (_matrix_stack.empty()) 	{
-		_current_matrix = Mat3x2::identity;
-	} 	else 	{
-		_current_matrix = _matrix_stack.back();
-	}
 }
 
 void pxl::Batch::pushMaterial(const MaterialRef& material)
@@ -160,11 +156,7 @@ pxl::BatchInfo& pxl::Batch::currentBatch() {
 }
 
 const pxl::Mat3x2& pxl::Batch::currentMatrix() {
-	if (_matrix_stack.empty()) 	{
-		return pxl::Mat3x2::identity;
-	} 	else 	{
-		return _current_matrix;
-	}
+	return _current_matrix;
 }
 
 void pxl::Batch::setTexture(const TextureRef& texture) {
