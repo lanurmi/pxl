@@ -36,6 +36,11 @@ pxl::Vec2 pxl::Vec2::operator *(const float rhs) const
 	return Vec2(x * rhs, y * rhs);
 }
 
+pxl::Vec2 pxl::Vec2::operator *(const pxl::Vec2 rhs) const
+{
+	return pxl::Vec2(x * rhs.x, y * rhs.y);
+}
+
 pxl::Vec2 pxl::Vec2::operator-() const
 {
 	return Vec2(-x, -y);
