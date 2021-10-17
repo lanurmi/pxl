@@ -5,6 +5,7 @@ namespace pxl
 {
 	namespace calc
 	{
+		constexpr float DEG2RAD = 0.0174532925f;
 		constexpr float PI = 3.141592653f;
 		float approach(float start, float end, float shift);
 		Vec2 approach(const Vec2& start, const Vec2& end, float shift);
