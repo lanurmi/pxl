@@ -29,6 +29,7 @@ SOFTWARE.
 
 ## [nlohmann json](https://github.com/nlohmann/json)
 
+Lohmann, N. JSON for Modern C++ (Version 3.10.4) [Computer software]. https://github.com/nlohmann
 
 MIT License 
 
