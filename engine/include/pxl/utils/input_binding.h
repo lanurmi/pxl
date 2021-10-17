@@ -11,8 +11,11 @@ namespace pxl
 		VirtualButton();
 		VirtualButton& bind(Key key);
 		VirtualButton& bind(Button button);
+		VirtualButton& bind(Axis axis);
 		VirtualButton& setGamepadIndex(int index);
 		VirtualButton& setInputBuffer(float bufferTime);
+		VirtualButton& setAxisThreshold(float threshold);
+
 		bool pressed() const;
 		bool down() const;
 		bool released() const;
@@ -22,9 +25,11 @@ namespace pxl
 	private:
 		std::vector<Key> _key_binds;
 		std::vector<Button> _button_binds;
+		std::vector<Axis> _axis_binds;
 		int _controller_index;
 		float _buffer_timer;
 		float _buffer_time;
+		float _axis_threshold = 0.5f;
 		bool _pressed;
 		bool _released;
 		bool _down;

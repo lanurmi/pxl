@@ -29,6 +29,18 @@ pxl::VirtualButton& pxl::VirtualButton::bind(Button button)
 	return *this;
 }
 
+pxl::VirtualButton& pxl::VirtualButton::bind(Axis axis)
+{
+	_axis_binds.push_back(axis);
+	return *this;
+}
+
+pxl::VirtualButton& pxl::VirtualButton::setAxisThreshold(float threshold)
+{
+	_axis_threshold = threshold;
+	return *this;
+}
+
 void pxl::VirtualButton::update()
 {
 	bool wasDown = _down;
@@ -44,6 +56,12 @@ void pxl::VirtualButton::update()
 	{
 		_down |= pxl::gamepad::down(_controller_index, btn);
 	}
+
+	for (auto& axis : _axis_binds)
+	{
+		_down |= pxl::calc::abs(pxl::gamepad::axis(_controller_index, axis)) > _axis_threshold;
+	}
+
 	_pressed = wasDown == false && _down == true;
 	_released = wasDown == true && _down == false;
 
