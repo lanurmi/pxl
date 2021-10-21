@@ -93,15 +93,16 @@ namespace pxl {
 		Vector<Mat3x2> _matrix_stack;
 		Vector<MaterialRef> _material_stack;
 		Vector<BlendState> _blend_stack;
-		Vector<TextureSampler> _samplerStack;
+		Vector<TextureSampler> _sampler_stack;
 		Vector<BatchInfo> _batches;
 
 		Vector<Vertex> _vertices;
 		Vector<pxl::u32> _indices;
 		MeshRef _mesh;
-		ShaderRef m_defaultShader;
-		MaterialRef m_defaultMaterial;
+		MaterialRef _current_material;
 		TextureRef m_defaultTexture;
+		BlendState _current_blend;
+		TextureSampler _current_sampler;
 
 
 		BatchStatistics _stats;

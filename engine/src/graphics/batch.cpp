@@ -32,24 +32,29 @@ void pxl::Batch::clear() {
 	_batches.clear();
 	_matrix_stack.clear();
 	_material_stack.clear();
-	_samplerStack.clear();
+	_sampler_stack.clear();
 	_blend_stack.clear();
 
 
-	_samplerStack.push_back(pxl::TextureSampler::NearestClamp);
-	_blend_stack.push_back(pxl::BlendState::Normal);
+	_sampler_stack.clear();
+	_blend_stack.clear();
+
+	_current_blend = pxl::BlendState::Normal;
+	_current_sampler = pxl::TextureSampler::NearestClamp;
 
 	_current_matrix = Mat3x2::identity;
 
 	newBatch();
 }
 
-void pxl::Batch::pushMatrix(const Mat3x2& matrix) {
+void pxl::Batch::pushMatrix(const Mat3x2& matrix)
+{
 	_matrix_stack.push_back(_current_matrix);
 	_current_matrix = matrix * _current_matrix;
 }
 
-void pxl::Batch::popMatrix() {
+void pxl::Batch::popMatrix()
+{
 	assert(_matrix_stack.size() >= 1U);
 	_current_matrix = _matrix_stack.back();
 	_matrix_stack.pop_back();
@@ -58,77 +63,83 @@ void pxl::Batch::popMatrix() {
 void pxl::Batch::pushMaterial(const MaterialRef& material)
 {
 	{
+		_material_stack.push_back(_current_material);
+		_current_material = material;
 		auto& cBatch = currentBatch();
-		_material_stack.push_back(material);
-		if (cBatch.elements > 0 && cBatch.material != material)
+		if (cBatch.elements > 0 && cBatch.material != _current_material)
 		{
 			newBatch();
 		}
 	}
-	currentBatch().material = material;
+	currentBatch().material = _current_material;
 }
 
 void pxl::Batch::pushBlend(const BlendState& blend) {
 	{
+		_blend_stack.push_back(_current_blend);
+		_current_blend = blend;
 		auto& cBatch = currentBatch();
 		_blend_stack.push_back(blend);
-		if (cBatch.elements > 0 && cBatch.blend != blend)
+		if (cBatch.elements > 0 && cBatch.blend != _current_blend)
 		{
 			newBatch();
 		}
 	}
 
-	currentBatch().blend = blend;
+	currentBatch().blend = _current_blend;
 }
 
 void pxl::Batch::popBlend() {
 	{
 		auto& cBatch = currentBatch();
+		_current_blend = _blend_stack.back();
 		_blend_stack.pop_back();
-		auto& blend = _blend_stack.back();
-		if (cBatch.elements > 0 && cBatch.blend != blend)
+		if (cBatch.elements > 0 && cBatch.blend != _current_blend)
 		{
 			newBatch();
 		}
 	}
 
-	currentBatch().blend = _blend_stack.back();
+	currentBatch().blend = _current_blend;
 }
 
-void pxl::Batch::popMaterial() {
-	auto& cBatch = currentBatch();
+void pxl::Batch::popMaterial()
+{
+	_current_material = _material_stack.back();
 	_material_stack.pop_back();
-	auto mat = _material_stack.back();
-	if (cBatch.elements > 0 && cBatch.material != mat) 	{
+	auto& cBatch = currentBatch();
+	if (cBatch.elements > 0 && cBatch.material != _current_material)
+	{
 		newBatch();
 	}
-	currentBatch().material = _material_stack.back();
+	currentBatch().material = _current_material;
 }
 
 void pxl::Batch::pushSampler(const pxl::TextureSampler& sampler) {
 	{
-		_samplerStack.push_back(sampler);
+		_sampler_stack.push_back(_current_sampler);
+		_current_sampler = sampler;
 		auto& cBatch = currentBatch();
-		if (cBatch.elements > 0 && cBatch.sampler != sampler)
+		if (cBatch.elements > 0 && cBatch.sampler != _current_sampler)
 		{
 			newBatch();
 		}
 	}
-	currentBatch().sampler = sampler;
+	currentBatch().sampler = _current_sampler;
 }
 
 void pxl::Batch::popSampler()
 {
 	{
-		_samplerStack.pop_back();
+		_current_sampler = _sampler_stack.back();
+		_sampler_stack.pop_back();
 		auto& cBatch = currentBatch();
-		auto& sampler = _samplerStack.back();
-		if (cBatch.elements > 0 && cBatch.sampler != sampler)
+		if (cBatch.elements > 0 && cBatch.sampler != _current_sampler)
 		{
 			newBatch();
 		}
 	}
-	currentBatch().sampler = _samplerStack.back();
+	currentBatch().sampler = _sampler_stack.back();
 }
 
 void pxl::Batch::newBatch() {
@@ -136,16 +147,18 @@ void pxl::Batch::newBatch() {
 		BatchInfo newBatch;
 		newBatch.offset = 0;
 		newBatch.elements = 0;
-		newBatch.blend = _blend_stack.back();
-		newBatch.sampler = _samplerStack.back();
+		newBatch.blend = _current_blend;
+		newBatch.sampler = _current_sampler;
 		_batches.push_back(newBatch);
-	} 	else 	{
+	}
+	else
+	{
 		auto& cBatch = currentBatch();
 		BatchInfo newBatch;
 		newBatch.offset = (cBatch.elements + cBatch.offset);
 		newBatch.elements = 0;
-		newBatch.blend = _blend_stack.back();
-		newBatch.sampler = _samplerStack.back();
+		newBatch.blend = _current_blend;
+		newBatch.sampler = _current_sampler;
 		newBatch.flip_vertically = cBatch.flip_vertically;
 		_batches.push_back(newBatch);
 	}
@@ -162,7 +175,7 @@ const pxl::Mat3x2& pxl::Batch::currentMatrix() {
 void pxl::Batch::setTexture(const TextureRef& texture) {
 	{
 		auto& cBatch = currentBatch();
-		if (cBatch.elements > 0 && cBatch.texture != texture && cBatch.texture)
+		if (cBatch.elements > 0 && cBatch.texture != texture)
 		{
 			newBatch();
 		}
@@ -351,17 +364,14 @@ void pxl::Batch::draw(const RenderTargetRef& renderTarget, const Mat4x4& matrix)
 	auto& cBatch = currentBatch();
 	if ((_batches.size() == 1U && _batches.back().elements == 0) || _indices.empty()) return;
 
-	if (!_mesh) 	{
+	if (!_mesh)
+	{
 		_mesh = Mesh::create();
 	}
 
-	if (!m_defaultShader) 	{
-		m_defaultShader = Shader::create();
-	}
-
-	if (!m_defaultMaterial) 	{
-		assert(m_defaultShader);
-		m_defaultMaterial = Material::create(m_defaultShader);
+	if (!_current_material)
+	{
+		_current_material = Material::create( Shader::create() );
 	}
 
 	if (!m_defaultTexture) 	{
@@ -386,8 +396,8 @@ void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x
 	DrawCall drawcall;
 	drawcall.mesh = _mesh;
 
-	drawcall.material = batch.material == nullptr ? m_defaultMaterial : batch.material;
-	if (drawcall.material == m_defaultMaterial && batch.texture == nullptr) 	{
+	drawcall.material = batch.material == nullptr ? _current_material : batch.material;
+	if (drawcall.material == _current_material && batch.texture == nullptr) 	{
 		drawcall.material->setTexture(_textureUniform, m_defaultTexture);
 		drawcall.material->setSampler(_samplerUniform, batch.sampler);
 	} 	else 	{
