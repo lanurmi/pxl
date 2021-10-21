@@ -58,7 +58,7 @@ namespace pxl
 		{
 			pxl::i64 max;
 			pxl::i64 current;
-			pxl::Func update;
+			pxl::Func<> update;
 		};
 
 		class Decoder {
