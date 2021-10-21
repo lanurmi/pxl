@@ -30,6 +30,8 @@ public:
 	}
 };
 
+COMPONENT(HelloWorldComponent)
+
 
 pxl::VirtualButtonRef esc;
 pxl::TextureRef tex;
@@ -38,6 +40,8 @@ pxl::World world;
 
 void awake()
 {
+	world.awake();
+
 	auto e = world.entity(pxl::Vec2::zero);
 	auto helloComponent = e->add(HelloWorldComponent());
 	tex = pxl::Texture::create(pxl::Image("content/helloworld.png"));
@@ -51,11 +55,10 @@ void update()
 {
 	world.update();
 
-	auto hellocomponent = world.first<HelloWorldComponent>();
-	while (hellocomponent != nullptr)
+	auto& hellocomponents = world.all<HelloWorldComponent>();
+	for (auto hellcomponent : hellocomponents)
 	{
-		hellocomponent->update();
-		hellocomponent = hellocomponent->next();
+		hellcomponent->update();
 	}
 
 	if (esc->pressed())
@@ -70,11 +73,10 @@ void draw()
 	pxl::backbuffer->clear(pxl::Color::black);
 	batch.clear();
 
-	auto hello = world.first<HelloWorldComponent>();
-	while (hello != nullptr)
+	auto& hellocomponents = world.all<HelloWorldComponent>();
+	for (auto hellcomponent : hellocomponents)
 	{
-		hello->draw(batch);
-		hello = hello->next();
+		hellcomponent->draw(batch);
 	}
 
 	batch.draw(pxl::backbuffer);

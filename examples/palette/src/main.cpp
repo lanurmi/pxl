@@ -21,6 +21,8 @@ public:
 	}
 };
 
+COMPONENT(TextureDrawComponent)
+
 pxl::VirtualButtonRef esc;
 pxl::VirtualButtonRef left;
 pxl::VirtualButtonRef right;
@@ -33,6 +35,8 @@ pxl::World world;
 
 void awake()
 {
+	world.awake();
+
 	pxl::Aseprite p0("content/gb0.ase");
 	pxl::Aseprite p1("content/gb1.ase");
 	pxl::Aseprite p2("content/gb2.ase");
@@ -69,13 +73,12 @@ void update()
 	if (esc->pressed())
 	{
 		//escape pressed, close the app
-		if (auto first = world.first<TextureDrawComponent>()) {
-			world.destroy(first->entity());
-		}	
+		pxl::end();
 	}
 
 	//Switch palette
-	if (right->pressed()) {
+	if (right->pressed())
+	{
 		palette_index = pxl::calc::clamp(palette_index + 1, 0, 2);
 		palette_material->setTexture("u_palette", palettes[palette_index]);
 	}
@@ -95,12 +98,11 @@ void draw()
 	batch.clear();
 	batch.pushMaterial(palette_material);
 
-	auto c = world.first<TextureDrawComponent>();
+	auto& texturedrawcomponents = world.all<TextureDrawComponent>();
 
-	while (c != nullptr)
+	for (auto texturedrawcomponent : texturedrawcomponents)
 	{
-		c->draw(batch);
-		c = c->next();
+		texturedrawcomponent->draw(batch);
 	}
 
 	batch.draw(pxl::backbuffer);
