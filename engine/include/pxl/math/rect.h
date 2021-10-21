@@ -9,7 +9,6 @@ namespace pxl
 	struct Rect
 	{
 		Rect();
-		Rect(int rx, int ry, int rw, int rh);
 		Rect(float rx, float ry, float rw, float rh);
 		Rect(const Vec2& pos, const Vec2& size);
 		Rect(const Vec2& tl, const Vec2& tr, const Vec2& br, const Vec2& bl);

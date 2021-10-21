@@ -7,14 +7,6 @@ pxl::Rect::Rect()
 	x = y = width = height = 0;
 };
 
-pxl::Rect::Rect(int rx, int ry, int rw, int rh)
-{
-	x = (float)rx;
-	y = (float)ry;
-	width = (float)rw;
-	height = (float)rh;
-}
-
 pxl::Rect::Rect(float rx, float ry, float rw, float rh)
 {
 	x = rx;
