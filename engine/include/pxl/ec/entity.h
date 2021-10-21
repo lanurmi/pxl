@@ -29,6 +29,7 @@ namespace pxl
 
 		Vec2 position() const;
 		Vec2 scale() const;
+		float rotation() const;
 
 		u16 id() const;
 

@@ -55,3 +55,16 @@ Vec2 Entity::scale() const
 		return transform.scale;
 	}
 }
+
+float Entity::rotation() const
+{
+	if (parent != nullptr)
+	{
+		auto r = parent->rotation();
+		return r + transform.rotation;
+	}
+	else
+	{
+		return transform.rotation;
+	}
+}
