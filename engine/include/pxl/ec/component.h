@@ -10,42 +10,16 @@ namespace pxl
 
 
 	template<typename T>
-	class Component : public IComponent, public IResettable
+	class Component : public IComponent
 	{
 	public:
 		Component();
 		virtual ~Component();
-
 		u32 id() const override;
-		u16 order() const override;
-		u16 layer() const override;
 		pxl::String typeName() const override;
 		bool enabled() const override;
 		const Entity* entity() const;
 		Entity* entity();
-
-		T* next();
-		const T* next() const;
-
-		T* prev();
-		const T* prev() const;
-
-		void reset() override final
-		{
-
-			if (_prev != nullptr)
-			{
-				_prev->_next = _next;
-			}
-			if (_next != nullptr)
-			{
-				_next->_prev = _prev;
-			}
-
-			_next = nullptr;
-			_prev = nullptr;
-			_entity = nullptr;
-		}
 
 		template<typename C>
 		C* get() const;
@@ -57,14 +31,12 @@ namespace pxl
 		World* world();
 
 	private:
-		T* _next = nullptr;
-		T* _prev = nullptr;
 		Entity* _entity;
 		friend class World;
 	};
 
 	template<typename T>
-	Component<T>::Component() : _next(nullptr), _prev(nullptr), _entity(nullptr) {}
+	Component<T>::Component() : _entity(nullptr) {}
 
 	template<typename T>
 	Component<T>::~Component() {}
@@ -114,18 +86,6 @@ namespace pxl
 	}
 
 	template<typename T>
-	u16 Component<T>::order() const
-	{
-		return ComponentInfo<T>::updateOrder;
-	}
-
-	template<typename T>
-	u16 Component<T>::layer() const
-	{
-		return ComponentInfo<T>::drawOrder;
-	};
-
-	template<typename T>
 	pxl::String Component<T>::typeName() const
 	{
 		return pxl::String(ComponentInfo<T>::type);
@@ -135,29 +95,5 @@ namespace pxl
 	bool Component<T>::enabled() const
 	{
 		return entity()->enabled;
-	}
-
-	template<typename T>
-	T* Component<T>::next()
-	{
-		return _next;
-	}
-
-	template<typename T>
-	const T* Component<T>::next() const
-	{
-		return _next;
-	}
-
-	template<typename T>
-	T* Component<T>::prev()
-	{
-		return _prev;
-	}
-
-	template<typename T>
-	const T* Component<T>::prev() const
-	{
-		return _prev;
 	}
 }

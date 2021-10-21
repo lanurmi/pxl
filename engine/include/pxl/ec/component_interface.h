@@ -13,13 +13,66 @@ namespace pxl
 		virtual void destroy() {};
 		virtual u32 id() const = 0;
 		virtual pxl::String typeName() const = 0;
-		virtual u16 order() const = 0;
-		virtual u16 layer() const = 0;
 		virtual bool enabled() const = 0;
 
 		virtual void update() {}
 		virtual void draw(Batch &batch){}
+
+		void setOrder(u16 order) { _order = order; }
+		u16 order() const { return _order; }
+
+		void setLayer(u16 layer) { _layer = layer; }
+		u16 layer() const { return _layer; }
+	private:
+		u16 _order = 0;
+		u16 _layer = 0;
 	};
+
+	class IComponentList
+	{
+	public:
+		virtual void remove(IComponent* component) = 0;
+	};
+
+	using ComponentListRef = std::shared_ptr<IComponentList>;
+
+	template <typename T>
+	class ComponentList : public IComponentList
+	{
+	public:
+		void remove(IComponent* component) override;
+		void add(T* component);
+		const pxl::Vector<T*> & all() const;
+	private:
+		pxl::Vector<T*> components;
+	};
+
+	template <typename T>
+	void ComponentList<T>::remove(IComponent* component)
+	{
+		if (auto c = dynamic_cast<T*>(component))
+		{
+			// I Dont like this if def, maybe our own vector should work like stl
+#ifdef PXL_USE_STL_CONTAINERS
+			components.erase(std::remove(components.begin(), components.end(), c), components.end());
+#else
+			components.erase(c);
+#endif
+		}
+	}
+
+	template <typename T>
+	void ComponentList<T>::add(T* component)
+	{
+		components.push_back(component);
+	}
+
+	template <typename T>
+	const pxl::Vector<T*>& ComponentList<T>::all() const
+	{
+		return components;
+	}
+
 
 	class IResettable
 	{
@@ -83,26 +136,13 @@ constexpr pxl::u32 constHash(const char* str)
 	return hash;
 }
 
-#define COMPONENT_UPDATE_DRAW(_name, _updateOrder, _drawOrder) \
+#define COMPONENT(_name) \
 namespace pxl \
 {\
 	template <> class ComponentInfo<_name> \
 	{\
 	public: \
-		static constexpr pxl::u16 updateOrder = _updateOrder; \
-		static constexpr pxl::u16 drawOrder = _drawOrder; \
 		static constexpr pxl::u32 id = constHash(#_name); \
 		static constexpr const char*  type = #_name; \
 	}; \
 }
-
-
-#define COMPONENT_UPDATE(_name, _update) \
-	COMPONENT_UPDATE_DRAW(_name, _update, 0)
-
-#define COMPONENT_DRAW(_name, _draw) \
-	COMPONENT_UPDATE_DRAW(_name, 0, _draw)
-
-#define COMPONENT(_name) \
-	COMPONENT_UPDATE_DRAW(_name, 0, 0)
-

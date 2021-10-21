@@ -53,24 +53,15 @@ void World::update()
 	{
 		for (auto c : it->_components)
 		{
-			auto list = componentsByType.find(c->id());
-			auto& v = list->second;
+			auto componentList = componentListsByType.find(c->id());
+			auto& v2 = componentList->second;
+			v2->remove(c);
 
-			// I Dont like this if def, maybe our own vector should work like stl
-#ifdef PXL_USE_STL_CONTAINERS
-			v.erase( std::remove(v.begin(), v.end(), c), v.end() );
-#else
-			v.erase(c);
-#endif
 
 			pxl::log::message(pxl::String::format("Component %s destroyed from entity %hu", c->typeName().data(), it->id()));
 			
 			componentDestroyed.invoke(c);
 
-			if (auto rc = dynamic_cast<IResettable*>(c))
-			{
-				rc->reset();
-			}
 			delete c;
 		}
 		it->reset();

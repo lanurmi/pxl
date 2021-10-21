@@ -32,6 +32,9 @@ namespace pxl
 		T* first();
 
 		template<typename T>
+		const pxl::Vector<T*>& all() const;
+
+		template<typename T>
 		const T* get(Entity* entity) const;
 
 		template<typename T>
@@ -45,8 +48,7 @@ namespace pxl
 	private:
 		pxl::Vector<Entity> entities;
 		pxl::Vector<Entity*> entitiesToBeDestroyed;
-
-		pxl::Map <i64, pxl::Vector<IComponent*>> componentsByType;
+		pxl::Map<i64, ComponentListRef> componentListsByType;
 	};
 
 
@@ -57,23 +59,20 @@ namespace pxl
 
 		auto type = ComponentInfo<T>::id;
 
-		auto it = componentsByType.find(type);
-		if (it == componentsByType.end())
+		auto itt = componentListsByType.find(type);
+		if (itt == componentListsByType.end())
 		{
-			componentsByType[type] = pxl::Vector<IComponent*>();
-			it = componentsByType.find(type);
+			componentListsByType[type] = ComponentListRef(new ComponentList<T>());
+			itt = componentListsByType.find(type);
 		}
 
 		auto c = new T(std::move(component));	
-		auto back = it->second.empty() ? nullptr : (T*) it->second.data()[it->second.size() - 1];
-		if (back)
-		{
-			back->_next = c;
-			c->_prev = back;
-		}
-		c->_next = nullptr;
+
 		c->_entity = entity;
-		it->second.push_back(c);
+
+		auto list = std::dynamic_pointer_cast<ComponentList<T>>(itt->second);
+		list->add(c);
+
 		entity->_components.push_back(c);
 
 		componentAdded.invoke(c);
@@ -88,23 +87,24 @@ namespace pxl
 	template<typename T>
 	const T* World::first() const
 	{
-		auto type = ComponentInfo<T>::id;
-		auto it = componentsByType.find(type);
-		if (it == componentsByType.end()) return nullptr;
-
-		return (T*)it->second[0];
+		auto a = all<T>();
+		return a[0];
 	}
 
-	template<class T>
+	template<typename T>
 	T* World::first()
 	{
+		auto a = all<T>();
+		return a[0];
+	}
+
+	template<typename T>
+	const pxl::Vector<T*>& World::all() const
+	{
 		auto type = pxl::ComponentInfo<T>::id;
-		auto it = componentsByType.find(type);
-
-		if (it == componentsByType.end()) return nullptr;
-		if (it->second.empty()) return nullptr;
-
-		return (T*)it->second[0];
+		auto it = componentListsByType.find(type);
+		auto list = std::dynamic_pointer_cast<ComponentList<T>>(it->second);
+		return list->all();
 	}
 
 	template<typename T>
