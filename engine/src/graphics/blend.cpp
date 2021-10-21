@@ -22,6 +22,17 @@ const pxl::BlendState pxl::BlendState::Subtract = pxl::BlendState(
 	pxl::Color(255, 255, 255, 255)
 );
 
+const pxl::BlendState pxl::BlendState::Multiply = pxl::BlendState(
+	pxl::BlendOperation::Add,
+	pxl::BlendFactor::DstColor,
+	pxl::BlendFactor::OneMinusSrcAlpha,
+	pxl::BlendOperation::Add,
+	pxl::BlendFactor::DstColor,
+	pxl::BlendFactor::OneMinusSrcAlpha,
+	pxl::BlendMask::RGBA,
+	pxl::Color(255, 255, 255, 255)
+);
+
 pxl::BlendState::BlendState(BlendOperation op, BlendFactor src, BlendFactor dst) :
 	color_operation(op),
 	color_source(src),
