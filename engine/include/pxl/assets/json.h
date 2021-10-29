@@ -1,7 +1,7 @@
 #pragma once
 
-#include <pxl/3rdparty/nlohmann_json.hpp>
 #include <pxl/containers/string.h>
+#include <pxl/3rdparty/nlohmann_json.hpp>
 
 template <
     template <typename U, typename V, typename... Args> class ObjectType = std::map,
