@@ -78,7 +78,10 @@ add_library(pxl
 	src/ec/component_interface.cpp
 	src/ec/drawables.cpp
 	src/ec/updateables.cpp
-	src/ec/transform.cpp)
+	src/ec/transform.cpp
+
+	src/3rdparty/stb_vorbis.c
+)
 
 target_include_directories(pxl
 	PUBLIC
