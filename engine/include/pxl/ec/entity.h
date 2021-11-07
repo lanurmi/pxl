@@ -80,7 +80,7 @@ namespace pxl
 	template<class T>
 	const T* Entity::get() const
 	{
-		auto type = ComponentId::get<T>();
+		auto type = ComponentId::template get<T>();
 		for (auto it : _components)
 		{
 			if (it->typeId() == type) {
