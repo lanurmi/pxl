@@ -28,10 +28,14 @@ namespace pxl
 		const Character *character(int ch) const;
 		int kerning(u32 ch0, u32 ch1) const;
 		int lineHeight() const;
+		int ascent() const;
+		int descent() const;
 	private:
 		void build(const String&file, int size, const CharacterRange& range);
 		int _lineHeight;
 		int _size;
+		int _ascent;
+		int _descent;
 		Map<u32, Character> _characters;
 		Map<u64, int> _kernings;
 	};

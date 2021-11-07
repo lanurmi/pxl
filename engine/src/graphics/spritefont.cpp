@@ -60,6 +60,16 @@ public:
 		auto scale = _font.scale(_size);
 		return _font.lineHeight() * scale;
 	}
+	int ascent() const
+	{
+		auto scale = _font.scale(_size);
+		return _font.ascent() * scale;
+	}
+	int descent() const
+	{
+		auto scale = _font.scale(_size);
+		return _font.descent() * scale;
+	}
 private:
 	Font _font;
 	int _size;
@@ -76,6 +86,8 @@ SpriteFont::SpriteFont(SpriteFont&& src) noexcept
 	_lineHeight = src._lineHeight;
 	_kernings = std::move(src._kernings);
 	_characters = std::move(src._characters);
+	_ascent = src._ascent;
+	_descent = src._descent;
 }
 
 SpriteFont& SpriteFont::operator=(SpriteFont&& src) noexcept
@@ -84,6 +96,8 @@ SpriteFont& SpriteFont::operator=(SpriteFont&& src) noexcept
 	_lineHeight = src._lineHeight;
 	_characters = std::move(src._characters);
 	_kernings = std::move(src._kernings);
+	_ascent = src._ascent;
+	_descent = src._descent;
 	return *this;
 }
 
@@ -93,7 +107,8 @@ void SpriteFont::build(const String& file, int size, const CharacterRange &range
 	Color* buffer = new Color[size * size * 4];
 	SpriteFontDataTTF font(file, size);
 	_lineHeight = font.lineHeight();
-
+	_ascent = font.ascent();
+	_descent = font.descent();
 	ImagePacker packer(1024, 1024);
 
 	for (int i = range.from; i <= range.to; i++)
@@ -169,4 +184,14 @@ int SpriteFont::kerning(u32 ch0, u32 ch1) const
 int SpriteFont::lineHeight() const
 {
 	return _lineHeight;
+}
+
+int SpriteFont::ascent() const
+{
+	return _ascent;
+}
+
+int SpriteFont::descent() const
+{
+	return _descent;
 }
