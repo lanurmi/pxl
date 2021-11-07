@@ -18,10 +18,10 @@ private:
 
 class DummyAudioSource : public AudioSource {
 public:
-	OpenALAudioSource()
+	DummyAudioSource()
 	{
 	}
-	virtual ~OpenALAudioSource()
+	virtual ~DummyAudioSource()
 	{
 	}
 	void bind(AudioBufferRef)
@@ -53,7 +53,7 @@ AudioSourceRef audio::createAudioSource()
 	return nullptr;
 }
 
-AudioBufferRef audio::createAudioSource(const Audio&)
+AudioBufferRef audio::createAudioBuffer(const Audio&)
 {
 	return nullptr;
 }
