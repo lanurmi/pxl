@@ -1,5 +1,6 @@
 #include <pxl/graphics/batch.h>
 #include <pxl/backends/graphics_backend.h>
+#include <pxl/math/calc.h>
 #include <assert.h>
 
 pxl::BatchInfo::BatchInfo() :
@@ -142,8 +143,10 @@ void pxl::Batch::popSampler()
 	currentBatch().sampler = _sampler_stack.back();
 }
 
-void pxl::Batch::newBatch() {
-	if (_batches.empty()) 	{
+void pxl::Batch::newBatch()
+{
+	if (_batches.empty())
+	{
 		BatchInfo newBatch;
 		newBatch.offset = 0;
 		newBatch.elements = 0;
@@ -212,15 +215,11 @@ void pxl::Batch::rectangle(const Rect& rect, const Color& color) {
 void pxl::Batch::hollowRectangle(const Rect& rect, const Color& color, unsigned borderSize) {
 	setTexture(nullptr);
 	//tl tr
-	auto tl = rect.topLeft();
-	auto tr = rect.topRight();
-	auto bl = rect.bottomLeft();
 
-	pushQuad(Rect(tl.x, tl.y, rect.width, borderSize), pxl::Rect(0, 0, 1, 1), color);
-	pushQuad(Rect(bl.x, bl.y, rect.width, borderSize), pxl::Rect(0, 0, 1, 1), color);
-	pushQuad(Rect(tl.x, tl.y, borderSize, rect.height), pxl::Rect(0, 0, 1, 1), color);
-	pushQuad(Rect(tr.x, tr.y, borderSize, rect.height), pxl::Rect(0, 0, 1, 1), color);
-
+	pushQuad(Rect(rect.left(), rect.top(), borderSize,  rect.height), pxl::Rect(0, 0, 1, 1), color);
+	pushQuad(Rect(rect.right() - borderSize , rect.top(), borderSize, rect.width), pxl::Rect(0, 0, 1, 1), color);
+	pushQuad(Rect(rect.left(), rect.top(), rect.width, borderSize), pxl::Rect(0, 0, 1, 1), color);
+	pushQuad(Rect(rect.left(), rect.bottom() - borderSize, rect.width, borderSize), pxl::Rect(0, 0, 1, 1), color);
 }
 
 void pxl::Batch::pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Vec2& p3,
@@ -237,10 +236,15 @@ void pxl::Batch::pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const 
 
 	if (currentBatch().flip_vertically)
 	{
-		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p0, mat), t3, color));
-		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p1, mat), t2, color));
-		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p2, mat), t1, color));
-		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p3, mat), t0, color));
+		pxl::Vec2 tt0(t0.x, 1.0f - t0.y);
+		pxl::Vec2 tt1(t1.x, 1.0f - t1.y);
+		pxl::Vec2 tt2(t2.x, 1.0f - t2.y);
+		pxl::Vec2 tt3(t3.x, 1.0f - t3.y);
+
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p0, mat), tt0, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p1, mat), tt1, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p2, mat), tt2, color));
+		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p3, mat), tt3, color));
 	} 	else
 	{
 		_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p0, mat), t0, color));
@@ -251,6 +255,39 @@ void pxl::Batch::pushQuad(const Vec2& p0, const Vec2& p1, const Vec2& p2, const 
 
 	auto& cBatch = currentBatch();
 	cBatch.elements += 2;
+}
+
+void pxl::Batch::circle(const Vec2& center, float radius, int steps, const Color &centerColor, const Color &outerColor)
+{
+	Vec2 last = Vec2(center.x + radius, center.y);
+
+	for (int i = 1; i <= steps; i++)
+	{
+		const auto radians = (i / (float)steps) * pxl::calc::TAU;
+		const auto next = Vec2(center.x + pxl::calc::cos(radians) * radius, center.y + pxl::calc::sin(radians) * radius);
+
+		pushTriangle(last, next, center, pxl::Vec2::zero, pxl::Vec2::zero, pxl::Vec2::zero, outerColor, outerColor, centerColor);
+
+		last = next;
+	}
+}
+
+void pxl::Batch::pushTriangle(const Vec2& p0, const Vec2& p1, const Vec2& p2,
+	const Vec2& t0, const Vec2& t1, const Vec2& t2, const Color& color0, const Color& color1, const Color& color2) {
+	auto& mat = currentMatrix();
+	auto idx = _vertices.size();
+	_indices.push_back(idx + 0);
+	_indices.push_back(idx + 1);
+	_indices.push_back(idx + 2);
+	
+	//assert(currentBatch().flip_vertically == false);
+
+	_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p0, mat), t0, color0));
+	_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p1, mat), t1, color1));
+	_vertices.push_back(pxl::Vertex(pxl::Vec2::transform(p2, mat), t2, color2));
+
+	auto& cBatch = currentBatch();
+	cBatch.elements += 1;
 }
 
 void pxl::Batch::pushQuad(const Rect& rect, const Rect& texcoords, const Color& color) {
@@ -274,7 +311,29 @@ void pxl::Batch::line(const Vec2& from, const Vec2& to, int lineSize, const Colo
 		pxl::Vec2::zero, pxl::Vec2(1.0f, 0.0f), pxl::Vec2(1.0f, 1.0f), pxl::Vec2(0.0f, 1.0f), color);
 }
 
-void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color) {
+void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2 &srcPos, const pxl::Vec2 &srcSize, const pxl::Color& color)
+{
+	setTexture(texture);
+
+	auto tl = pos;
+	auto tr = pos + pxl::Vec2(srcSize.x, 0.0f);
+	auto br = pos + pxl::Vec2(srcSize.x, srcSize.y);
+	auto bl = pos + pxl::Vec2(0.0f, srcSize.y);
+
+	auto tw = 1.0f / texture->width();
+	auto th = 1.0f / texture->height();
+
+	auto t0 = pxl::Vec2(srcPos.x * tw, srcPos.y * th);
+
+	auto t1 = pxl::Vec2((srcPos.x + srcSize.x) * tw, srcPos.y * th);
+	auto t2 = pxl::Vec2((srcPos.x + srcSize.x) * tw, (srcPos.y + srcSize.y) * th);
+	auto t3 = pxl::Vec2(srcPos.x * tw, (srcPos.y + srcSize.y) * th);
+
+	pushQuad(tl, tr, br, bl, t0, t1, t2, t3, color);
+}
+
+void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color)
+{
 	pushMatrix(pxl::Mat3x2::createTransform(pos, origin, scale, rotation));
 	setTexture(texture);
 	const float width = texture->width();
@@ -283,7 +342,8 @@ void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, c
 	popMatrix();
 }
 
-void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Color& color) {
+void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, const pxl::Color& color)
+{
 	setTexture(texture);
 	const float width = texture->width();
 	const float height = texture->height();
@@ -291,7 +351,8 @@ void pxl::Batch::texture(const pxl::TextureRef& texture, const pxl::Vec2& pos, c
 }
 
 
-void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color) {
+void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Vec2& origin, const pxl::Vec2& scale, float rotation, const pxl::Color& color)
+{
 	pushMatrix(pxl::Mat3x2::createTransform(pos, origin, scale, rotation));
 	auto texture = subtexture.texture();
 	setTexture(texture);
@@ -302,12 +363,14 @@ void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos
 	popMatrix();
 }
 
-void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Color& color) {
+void pxl::Batch::texture(const pxl::Subtexture& subtexture, const pxl::Vec2& pos, const pxl::Color& color)
+{
 	auto tex = subtexture.texture();
 	texture(tex, Rect(pos.x, pos.y, (float)subtexture.width(), (float)subtexture.height()), subtexture.rect(), color);
 }
 
-void pxl::Batch::texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect& srcrect, const pxl::Color& color) {
+void pxl::Batch::texture(const pxl::TextureRef& texture, const Rect& dstRect, const Rect& srcrect, const pxl::Color& color)
+{
 	setTexture(texture);
 	float width = texture->width();
 	float height = texture->height();
@@ -316,8 +379,9 @@ void pxl::Batch::texture(const pxl::TextureRef& texture, const Rect& dstRect, co
 }
 
 
-void pxl::Batch::text(const pxl::SpriteFont& font, const String& text, const pxl::Vec2& pos, const pxl::Color& color) {
-	Vec2 drawPos = pos;
+void pxl::Batch::text(const pxl::SpriteFont& font, const String& text, const pxl::Vec2& pos, const pxl::Color& color)
+{
+	Vec2 drawPos = pos + pxl::Vec2(0, font.ascent() - font.descent());
 	u32 prev = 0;
 	for (unsigned i = 0; i < text.size(); i++) 	{
 		u32 glyph = static_cast<u32>(text[i]);
@@ -347,7 +411,8 @@ void pxl::Batch::text(const pxl::SpriteFont& font, const String& text, const pxl
 	}
 }
 
-const pxl::BatchStatistics& pxl::Batch::stats() const {
+const pxl::BatchStatistics& pxl::Batch::stats() const
+{
 	return _stats;
 }
 
@@ -360,7 +425,8 @@ const pxl::VertexFormat format = pxl::VertexFormat(
 );
 
 
-void pxl::Batch::draw(const RenderTargetRef& renderTarget, const Mat4x4& matrix) {
+void pxl::Batch::draw(const RenderTargetRef& renderTarget, const Mat4x4& matrix)
+{
 	auto& cBatch = currentBatch();
 	if ((_batches.size() == 1U && _batches.back().elements == 0) || _indices.empty()) return;
 
@@ -388,7 +454,8 @@ void pxl::Batch::draw(const RenderTargetRef& renderTarget, const Mat4x4& matrix)
 	}
 }
 
-void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x4& matrix, const BatchInfo& batch) {
+void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x4& matrix, const BatchInfo& batch)
+{
 	if (batch.elements == 0) return;
 
 	_stats.draw_calls++;
@@ -397,10 +464,12 @@ void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x
 	drawcall.mesh = _mesh;
 
 	drawcall.material = batch.material == nullptr ? _current_material : batch.material;
-	if (drawcall.material == _current_material && batch.texture == nullptr) 	{
+	if (drawcall.material == _current_material && batch.texture == nullptr) 
+	{
 		drawcall.material->setTexture(_textureUniform, m_defaultTexture);
 		drawcall.material->setSampler(_samplerUniform, batch.sampler);
-	} 	else 	{
+	} 	else
+	{
 		drawcall.material->setTexture(_textureUniform, batch.texture);
 		drawcall.material->setSampler(_samplerUniform, batch.sampler);
 	}
