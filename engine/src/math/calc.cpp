@@ -73,7 +73,8 @@ float pxl::calc::sqrt(float x)
 
 float pxl::calc::lerp(float from, float to, float t)
 {
-	assert(t <= 1.0f && t >= 0.0f);
+	if (from == to) return from;
+
 	return from + (to - from) * t;
 }
 
@@ -116,4 +117,36 @@ int pxl::calc::sign(int v)
 		return 1;
 	}
 	
+}
+
+
+
+
+namespace 
+{
+	pxl::random::RngEngine randomEngine;
+	pxl::i64 currentSeed;
+}
+
+pxl::random::RngEngine& pxl::random::engine()
+{
+	return randomEngine;
+}
+
+void pxl::random::seed(pxl::i64 seed)
+{
+	currentSeed = seed;
+	randomEngine = pxl::random::RngEngine(seed);
+}
+
+int pxl::random::range(int min, int max)
+{
+	assert(min < max);
+	std::uniform_int_distribution<> dst(min, max - 1);
+	return dst(randomEngine);
+}
+
+bool pxl::random::percent(int percent)
+{
+	return pxl::random::range(1, 100) <= percent;
 }
