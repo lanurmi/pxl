@@ -11,7 +11,9 @@ namespace pxl
 		Grid(int width, int height, i16 initialValue);
 		Grid();
 		Grid(Grid&& other) noexcept;
+		Grid(const Grid& other);
 		Grid& operator=(Grid&& other) noexcept;
+		Grid& operator=(const Grid& other);
 		void resize(int w, int h, i16 value);
 		void set(int x, int y, i16 value);
 		void set(int index, i16 value);

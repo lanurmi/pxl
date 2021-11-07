@@ -20,6 +20,13 @@ Grid::Grid(Grid&& other) noexcept
 	_data = std::move(other._data);
 }
 
+Grid::Grid(const Grid& other)
+{
+	_width = other._width;
+	_height = other._height;
+	_data = other._data;
+}
+
 Grid& Grid::operator=(Grid&& other) noexcept
 {
 	_width = other._width;
@@ -27,6 +34,13 @@ Grid& Grid::operator=(Grid&& other) noexcept
 	other._width = 0;
 	other._height = 0;
 	_data = std::move(other._data);
+	return *this;
+}
+
+Grid& Grid::operator=(const Grid& other)
+{
+	Grid o(other);
+	std::swap(o, *this);
 	return *this;
 }
 
