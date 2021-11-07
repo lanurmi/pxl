@@ -22,7 +22,8 @@ namespace pxl
 	using EasingFunc = float (*)(float);
 	EasingFunc easingFunc(Easing easing);
 
-	
+	float ease(float t, Easing ease);
+
 	template<typename T>
 	class Tween
 	{
@@ -63,24 +64,11 @@ namespace pxl
 	private:
 		float lerp(float v0, float v1, float t)
 		{
-			if (t == 0)
-			{
-				return v0;
-			}
-			else if (t == 1)
-			{
-				return v1;
-			}
-			else
-			{
-				return v0 + (v1 - v0) * t;
-			}
+			return pxl::calc::lerp(v0, v1, t);
 		}
 		Vec2 lerp(const Vec2& v0, const Vec2& v1, float t)
 		{
-			return Vec2(
-				lerp(v0.x, v1.x, t),
-				lerp(v0.y, v1.y, t));
+			return pxl::Vec2::lerp(v0, v1, t);
 		}
 		Color lerp(const Color& v0, const Color& v1, float t)
 		{

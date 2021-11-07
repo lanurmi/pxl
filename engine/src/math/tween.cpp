@@ -277,3 +277,9 @@ pxl::EasingFunc pxl::easingFunc(pxl::Easing easing)
 	}
 	return nullptr;
 }
+
+float pxl::ease(float t, Easing ease)
+{
+	auto f = easingFunc(ease);
+	return f(t);
+}
