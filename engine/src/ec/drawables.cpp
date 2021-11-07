@@ -20,7 +20,7 @@ void Drawables::unbind()
 	if (_world != nullptr)
 	{
 		_world->componentAdded.unbind(addBindId);
-		_world->componentAdded.unbind(destroyBindId);
+		_world->componentDestroyed.unbind(destroyBindId);
 		_world = nullptr;
 	}
 }
