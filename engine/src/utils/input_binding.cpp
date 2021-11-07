@@ -62,6 +62,15 @@ void pxl::VirtualButton::update()
 		_down |= pxl::calc::abs(pxl::gamepad::axis(_controller_index, axis)) > _axis_threshold;
 	}
 
+	if (_wait_for_release && _down)
+	{
+		return;
+	}
+	else
+	{
+		_wait_for_release = false;
+	}
+
 	_pressed = wasDown == false && _down == true;
 	_released = wasDown == true && _down == false;
 

@@ -26,6 +26,7 @@ namespace pxl
 		std::vector<Key> _key_binds;
 		std::vector<Button> _button_binds;
 		std::vector<Axis> _axis_binds;
+		bool _wait_for_release = true;
 		int _controller_index;
 		float _buffer_timer;
 		float _buffer_time;
