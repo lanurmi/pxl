@@ -140,7 +140,34 @@ void pxl::Batch::popSampler()
 			newBatch();
 		}
 	}
-	currentBatch().sampler = _sampler_stack.back();
+	currentBatch().sampler = _current_sampler;
+}
+
+void pxl::Batch::pushScissors(const Rect& scissors) {
+	{
+		_scissor_stack.push_back(_currentScissors);
+		_currentScissors = scissors;
+		auto& cBatch = currentBatch();
+		if (cBatch.elements > 0 && cBatch.scissors != _currentScissors)
+		{
+			newBatch();
+		}
+	}
+	currentBatch().scissors = _currentScissors;
+}
+
+void pxl::Batch::popScissors()
+{
+	{
+		_currentScissors = _scissor_stack.back();
+		_scissor_stack.pop_back();
+		auto& cBatch = currentBatch();
+		if (cBatch.elements > 0 && cBatch.scissors != _currentScissors)
+		{
+			newBatch();
+		}
+	}
+	currentBatch().scissors = _currentScissors;
 }
 
 void pxl::Batch::newBatch()
@@ -462,6 +489,8 @@ void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x
 	_stats.triangles += batch.elements;
 	DrawCall drawcall;
 	drawcall.mesh = _mesh;
+	drawcall.useScissors = batch.scissors.width != 0 && batch.scissors.height != 0;
+	drawcall.scissors = batch.scissors;
 
 	drawcall.material = batch.material == nullptr ? _current_material : batch.material;
 	if (drawcall.material == _current_material && batch.texture == nullptr) 

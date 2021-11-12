@@ -1258,6 +1258,22 @@ void pxl::graphics::render(const DrawCall& call)
 	// Blending
 
 	setBlendMode(call.blend);
+
+	if (call.useScissors)
+	{
+		pxl::Vec2 size(call.target->width(), call.target->height());
+		auto s = call.scissors;
+		s.y = size.y - s.y - s.height;
+		if (s.width < 0) s.width = 0;
+		if (s.height < 0) s.height = 0;
+
+		s_gl.Enable(GL_SCISSOR_TEST);
+		s_gl.Scissor((GLint)s.x, (GLint)s.y, (GLint)s.width, (GLint)s.height);
+	} 
+	else
+	{
+		s_gl.Disable(GL_SCISSOR_TEST);
+	}
 	
 
 	s_gl.BindVertexArray(mesh->getId());

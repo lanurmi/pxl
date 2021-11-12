@@ -25,6 +25,7 @@ namespace pxl {
 		MaterialRef material;
 		TextureRef texture;
 		TextureSampler sampler;
+		Rect scissors;
 		bool flip_vertically;
 	};
 
@@ -38,6 +39,8 @@ namespace pxl {
 		i64 indices_start;
 		i64 indices_count;
 		Rect viewport;
+		bool useScissors = false;
+		Rect scissors;
 		void draw();
 	};
 
@@ -64,6 +67,8 @@ namespace pxl {
 		void popSampler();
 		void popBlend();
 		void popMaterial();
+		void pushScissors(const pxl::Rect& scissors);
+		void popScissors();
 		//draw
 		void triangle(const Vec2& p0, const Vec2& p1, const Vec2& p2, const Color& color);
 		void rectangle(const Rect& rect, const Color& color);
@@ -100,6 +105,7 @@ namespace pxl {
 		Vector<MaterialRef> _material_stack;
 		Vector<BlendState> _blend_stack;
 		Vector<TextureSampler> _sampler_stack;
+		Vector<Rect> _scissor_stack;
 		Vector<BatchInfo> _batches;
 
 		Vector<Vertex> _vertices;
@@ -109,6 +115,7 @@ namespace pxl {
 		TextureRef m_defaultTexture;
 		BlendState _current_blend;
 		TextureSampler _current_sampler;
+		Rect _currentScissors;
 
 
 		BatchStatistics _stats;
