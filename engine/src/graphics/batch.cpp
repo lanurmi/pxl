@@ -217,7 +217,7 @@ void pxl::Batch::hollowRectangle(const Rect& rect, const Color& color, unsigned 
 	//tl tr
 
 	pushQuad(Rect(rect.left(), rect.top(), borderSize,  rect.height), pxl::Rect(0, 0, 1, 1), color);
-	pushQuad(Rect(rect.right() - borderSize , rect.top(), borderSize, rect.width), pxl::Rect(0, 0, 1, 1), color);
+	pushQuad(Rect(rect.right() - borderSize , rect.top(), borderSize, rect.height), pxl::Rect(0, 0, 1, 1), color);
 	pushQuad(Rect(rect.left(), rect.top(), rect.width, borderSize), pxl::Rect(0, 0, 1, 1), color);
 	pushQuad(Rect(rect.left(), rect.bottom() - borderSize, rect.width, borderSize), pxl::Rect(0, 0, 1, 1), color);
 }
