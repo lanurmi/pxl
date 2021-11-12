@@ -4,3 +4,6 @@ url=https://github.com/kuujoo/SDL.git
 [submodule "engine/libs/openal-soft"]
 	path = engine/libs/openal-soft
 	url = https://github.com/kuujoo/openal-soft.git
+[submodule "engine/libs/imgui"]
+	path = engine/libs/imgui
+	url = https://github.com/kuujoo/imgui.git
