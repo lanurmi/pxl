@@ -25,6 +25,8 @@ Font::Font(Font&& src) noexcept
 	_ascent = src._ascent;
 	_descent = src._descent;
 	_line_gap = src._line_gap;
+	_handle = src._handle;
+	src._handle = nullptr;
 	src._data = nullptr;
 }
 
