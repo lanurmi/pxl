@@ -497,7 +497,8 @@ void pxl::Batch::drawBatch(const RenderTargetRef& renderTarget, const pxl::Mat4x
 	{
 		drawcall.material->setTexture(_textureUniform, m_defaultTexture);
 		drawcall.material->setSampler(_samplerUniform, batch.sampler);
-	} 	else
+	} 	
+	else
 	{
 		drawcall.material->setTexture(_textureUniform, batch.texture);
 		drawcall.material->setSampler(_samplerUniform, batch.sampler);

@@ -2,7 +2,7 @@
 #include <pxl/math/calc.h>
 #define STBI_NO_STDIO
 #define STBI_ONLY_ZLIB
-#include <pxl/3rdparty/stb_image.h>
+#include <stb/stb_image.h>
 #include <assert.h>
 using namespace pxl;
 using namespace file;

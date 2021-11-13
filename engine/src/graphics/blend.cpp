@@ -11,6 +11,17 @@ const pxl::BlendState pxl::BlendState::Normal = pxl::BlendState(
 	pxl::Color(255,255,255,255)
 );
 
+const pxl::BlendState pxl::BlendState::NormalNonPremultiplied = pxl::BlendState(
+	pxl::BlendOperation::Add,
+	pxl::BlendFactor::SrcAlpha,
+	pxl::BlendFactor::OneMinusSrcAlpha,
+	pxl::BlendOperation::Add,
+	pxl::BlendFactor::SrcAlpha,
+	pxl::BlendFactor::OneMinusSrcAlpha,
+	pxl::BlendMask::RGBA,
+	pxl::Color(255, 255, 255, 255)
+);
+
 const pxl::BlendState pxl::BlendState::Subtract = pxl::BlendState(
 	pxl::BlendOperation::ReverseSubtract,
 	pxl::BlendFactor::One,

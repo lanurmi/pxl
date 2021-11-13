@@ -1,7 +1,7 @@
 #include <pxl/assets/audioformats.h>
 #include <pxl/types.h>
 #include <pxl/log.h>
-#include <pxl/3rdparty/stb_vorbis.h>
+#include <stb/stb_vorbis.h>
 
 
 namespace

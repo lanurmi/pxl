@@ -25,6 +25,16 @@ pxl::Vec2 pxl::mouse::position()
 	return s_mouseState.position;
 }
 
+int pxl::mouse::wheelx()
+{
+	return 0;
+}
+
+int pxl::mouse::wheely()
+{
+	return 0;
+
+}
 pxl::Vec2 pxl::mouse::drawPosition()
 {
 	return s_mouseState.draw_position;

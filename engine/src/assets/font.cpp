@@ -5,7 +5,7 @@
 #define STBTT_STATIC
 #define STB_TRUETYPE_IMPLEMENTATION
 
-#include <pxl/3rdparty/stb_truetype.h>
+#include <stb/stb_truetype.h>
 
 using namespace pxl;
 

@@ -65,7 +65,7 @@
 //
 // See end of file for full version history.
 
-#include <pxl/3rdparty/stb_vorbis.h>
+#include "stb_vorbis.h"
 #ifndef STB_VORBIS_HEADER_ONLY
 
 // global configuration settings (e.g. set these in the project/makefile),

@@ -51,6 +51,7 @@ namespace pxl
 		static const BlendState Normal;
 		static const BlendState Subtract;
 		static const BlendState Multiply;
+		static const BlendState NormalNonPremultiplied;
 
 		BlendOperation color_operation;
 		BlendFactor color_source;

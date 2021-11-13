@@ -7,7 +7,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_compile_options("$<$<CONFIG:DEBUG>:-DPXLDEBUG>")
 
-add_library(pxl
+set(PXL_PLATFORM_SDL true CACHE BOOL "Use SDL2 Platform Backend")
+set(PXL_GRAPHICS_OPENGL true CACHE BOOL "Use OpenGL Graphics Backend")
+set(PXL_AUDIO_OPENAL true CACHE BOOL "Use OpenAL audio Backend")
+set(PXL_AUDIO_DUMMY false CACHE BOOL "Use OpenAL audio Backend")
+set(PXL_PLATFORM_DUMMY_WIN32 false CACHE BOOL "Use Dummy WIN32 Platform Backend")
+set(PXL_STL_CONTAINERS true CACHE BOOL "Use STL containers")
+set(PXL_VIDEO_FFMPEG false CACHE BOOL "Use FFMPEG video Backend")
+set(PXL_VIDEO_DUMMY true CACHE BOOL "Use Dummy video Backend")
+set(PXL_IMGUI true CACHE BOOL "Use IMGUI")
+
+
+set(SOURCEFILES 
 
 	src/engine.cpp
 	src/config.cpp
@@ -80,8 +91,25 @@ add_library(pxl
 	src/ec/updateables.cpp
 	src/ec/transform.cpp
 
-	src/3rdparty/stb_vorbis.c
+	
 )
+
+set(SOURCEFILES ${SOURCEFILES} libs/stb/stb_vorbis.c)
+
+
+if (PXL_IMGUI)
+	set(SOURCEFILES ${SOURCEFILES} 
+			src/ui/imgui_impl_pxl.cpp
+			libs/imgui/imgui.cpp
+			libs/imgui/imgui_demo.cpp
+			libs/imgui/imgui_draw.cpp
+			libs/imgui/imgui_tables.cpp
+			libs/imgui/imgui_widgets.cpp
+	)
+
+endif()
+
+add_library(pxl ${SOURCEFILES} )
 
 target_include_directories(pxl
 	PUBLIC
@@ -89,15 +117,11 @@ target_include_directories(pxl
 	PRIVATE
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
+target_include_directories(pxl PUBLIC "libs/")
 
-set(PXL_PLATFORM_SDL true CACHE BOOL "Use SDL2 Platform Backend")
-set(PXL_GRAPHICS_OPENGL true CACHE BOOL "Use OpenGL Graphics Backend")
-set(PXL_AUDIO_OPENAL true CACHE BOOL "Use OpenAL audio Backend")
-set(PXL_AUDIO_DUMMY false CACHE BOOL "Use OpenAL audio Backend")
-set(PXL_PLATFORM_DUMMY_WIN32 false CACHE BOOL "Use Dummy WIN32 Platform Backend")
-set(PXL_STL_CONTAINERS true CACHE BOOL "Use STL containers")
-set(PXL_VIDEO_FFMPEG false CACHE BOOL "Use FFMPEG video Backend")
-set(PXL_VIDEO_DUMMY true CACHE BOOL "Use Dummy video Backend")
+if (PXL_IMGUI)
+	target_compile_definitions(pxl PUBLIC PXL_IMGUI)
+endif()
 
 if (PXL_STL_CONTAINERS)
 	target_compile_definitions(pxl PUBLIC PXL_USE_STL_CONTAINERS)
@@ -110,6 +134,7 @@ endif()
 if (PXL_GRAPHICS_OPENGL)
 	target_compile_definitions(pxl PUBLIC PXL_GRAPHICS_OPENGL)
 endif()
+
 
 set(LIBS "")
 

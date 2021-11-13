@@ -5,7 +5,7 @@
 #define STBI_ONLY_JPEG
 #define STBI_ONLY_PNG
 
-#include <pxl/3rdparty/stb_image.h>
+#include <stb/stb_image.h>
 
 using namespace pxl;
 
