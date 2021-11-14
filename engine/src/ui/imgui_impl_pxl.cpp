@@ -99,61 +99,6 @@ namespace
 		io.Fonts->ClearTexData();
 	}
 
-
-	void ImGui_ImplPXL_Draw(ImDrawData* data)
-	{
-		if (data->TotalVtxCount <= 0) return;
-
-		while (g_mesh.size() < data->CmdListsCount)
-		{
-			g_mesh.push_back(pxl::Mesh::create());
-		}
-
-		if (g_material == nullptr)
-		{
-			g_material = Material::create(Shader::create());
-		}
-		
-		float l = data->DisplayPos.x;
-		float r = data->DisplayPos.x + data->DisplaySize.x;
-		float t = data->DisplayPos.y;
-		float b = data->DisplayPos.y + data->DisplaySize.y;
-
-		auto matrix = Mat4x4::createOrthoOffcenter(l, r, b, t, 0.01f, 1000.0f);
-		g_material->setFloat("u_matrix", &matrix.m11, 16);
-		g_material->setSampler("u_texture_sampler", pxl::TextureSampler::LinearClamp);
-		int offset = 0;
-		for (int cl = 0; cl < data->CmdListsCount; cl++)
-		{
-			auto cmdList = data->CmdLists[cl];
-
-			g_mesh[cl]->setIndexData(pxl::IndexFormat::UInt16, cmdList->IdxBuffer.Data, cmdList->IdxBuffer.size() );
-			g_mesh[cl]->setVertexData(vertexFormat, cmdList->VtxBuffer.Data, cmdList->VtxBuffer.size());
-
-			for (int c = 0; c < cmdList->CmdBuffer.Size; c++)
-			{
-				auto drawCommand = cmdList->CmdBuffer[c];
-				DrawCall call;
-				call.mesh = g_mesh[cl];
-				call.material = g_material;
-				
-				if (drawCommand.TextureId != nullptr)
-				{
-					auto texture = textures[(pxl::Texture*)drawCommand.TextureId].lock();
-					g_material->setTexture("u_texture", texture);
-				}
-
-				call.blend = pxl::BlendState::NormalNonPremultiplied;
-				call.target = pxl::backbuffer;
-				call.scissors = pxl::Rect(drawCommand.ClipRect.x, drawCommand.ClipRect.y, drawCommand.ClipRect.z - drawCommand.ClipRect.x, drawCommand.ClipRect.w - drawCommand.ClipRect.y);
-				call.useScissors = true;
-				call.indices_count = drawCommand.ElemCount;
-				call.indices_start = drawCommand.IdxOffset;
-
-				call.draw();
-			}
-		}
-	}
 }
 
 bool pxl::ImGUI_ImplPXL_awake()
@@ -208,10 +153,54 @@ void pxl::ImGUI_ImplPXL_update()
 }
 
 
-void pxl::ImGUI_ImplPXL_draw()
+void pxl::ImGUI_ImplPXL_draw(const pxl::RenderTargetRef& target)
 {
-	auto drawData = ImGui::GetDrawData();
-	ImGui_ImplPXL_Draw(drawData);
+	auto data = ImGui::GetDrawData();
+	if (data->TotalVtxCount <= 0) return;
+
+	while (g_mesh.size() < data->CmdListsCount)
+	{
+		g_mesh.push_back(pxl::Mesh::create());
+	}
+
+	if (g_material == nullptr)
+	{
+		g_material = Material::create(Shader::create());
+	}
+
+	auto l = data->DisplayPos.x;
+	auto r = data->DisplayPos.x + data->DisplaySize.x;
+	auto t = data->DisplayPos.y;
+	auto b = data->DisplayPos.y + data->DisplaySize.y;
+	auto matrix = Mat4x4::createOrthoOffcenter(l, r, b, t, 0.01f, 1000.0f);
+	g_material->setFloat("u_matrix", &matrix.m11, 16);
+	g_material->setSampler("u_texture_sampler", pxl::TextureSampler::LinearClamp);
+	int offset = 0;
+	for (int cl = 0; cl < data->CmdListsCount; cl++)
+	{
+		auto cmdList = data->CmdLists[cl];
+		g_mesh[cl]->setIndexData(pxl::IndexFormat::UInt16, cmdList->IdxBuffer.Data, cmdList->IdxBuffer.size());
+		g_mesh[cl]->setVertexData(vertexFormat, cmdList->VtxBuffer.Data, cmdList->VtxBuffer.size());
+		for (int c = 0; c < cmdList->CmdBuffer.Size; c++)
+		{
+			auto drawCommand = cmdList->CmdBuffer[c];
+			DrawCall call;
+			call.mesh = g_mesh[cl];
+			call.material = g_material;
+			if (drawCommand.TextureId != nullptr)
+			{
+				auto texture = textures[(pxl::Texture*)drawCommand.TextureId].lock();
+				g_material->setTexture("u_texture", texture);
+			}
+			call.blend = pxl::BlendState::NormalNonPremultiplied;
+			call.target = target;
+			call.scissors = pxl::Rect(drawCommand.ClipRect.x, drawCommand.ClipRect.y, drawCommand.ClipRect.z - drawCommand.ClipRect.x, drawCommand.ClipRect.w - drawCommand.ClipRect.y);
+			call.useScissors = true;
+			call.indices_count = drawCommand.ElemCount;
+			call.indices_start = drawCommand.IdxOffset;
+			call.draw();
+		}
+	}
 }
 
 #endif
