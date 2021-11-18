@@ -80,7 +80,6 @@ void pxl::Batch::pushBlend(const BlendState& blend) {
 		_blend_stack.push_back(_current_blend);
 		_current_blend = blend;
 		auto& cBatch = currentBatch();
-		_blend_stack.push_back(blend);
 		if (cBatch.elements > 0 && cBatch.blend != _current_blend)
 		{
 			newBatch();
