@@ -3,7 +3,7 @@
 #include <pxl/graphics/texture.h>
 #include <pxl/graphics/shader.h>
 #include <pxl/graphics/mesh.h>
-#include <pxl/graphics/batch.h>
+#include <pxl/graphics/drawcall.h>
 #include <pxl/graphics/rendertarget.h>
 
 namespace pxl

@@ -8,13 +8,6 @@ pxl::BatchInfo::BatchInfo() :
 }
 
 
-void pxl::DrawCall::draw() {
-	pxl::Vec2 size = pxl::Vec2(target->width(), target->height());
-	viewport = pxl::Rect(0.0f, 0.0f, size.x, size.y);
-	assert(material);
-	pxl::graphics::render(*this);
-}
-
 pxl::Batch::Batch() : _textureUniform("u_texture"), _samplerUniform("u_texture_sampler") {
 	clear();
 }

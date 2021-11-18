@@ -56,6 +56,7 @@ set(SOURCEFILES
 	src/graphics/sprite.cpp
 	src/graphics/tileset.cpp
 	src/graphics/spritefont.cpp
+	src/graphics/drawcall.cpp
 
 	src/audio/audiosource.cpp
 	src/audio/audiobuffer.cpp
