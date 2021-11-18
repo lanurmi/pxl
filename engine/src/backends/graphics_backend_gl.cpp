@@ -674,10 +674,6 @@ public:
 			updateSampling();
 		}
 	}
-	void bind(int slot, const pxl::TextureSampler& sampler)
-	{
-
-	}
 private:
 	void updateSampling()
 	{
