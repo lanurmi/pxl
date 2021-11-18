@@ -658,7 +658,7 @@ public:
 		s_gl.BindTexture(GL_TEXTURE_2D, _id);
 		s_gl.TexImage2D(GL_TEXTURE_2D, 0, _gl_internal_format, _width, _height, 0, _gl_format, _gl_type, data);
 	}
-	bool isRenderTarget() const
+	bool isRenderTarget() const override
 	{
 		return _renderTarget;
 	}
