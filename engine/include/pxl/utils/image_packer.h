@@ -41,3 +41,4 @@ namespace pxl
 		Vector<Result> _result;
 	};
 }
+

@@ -63,3 +63,4 @@ void Drawables::tryRemoveComponent(IComponent* component)
 #endif
 	}
 }
+

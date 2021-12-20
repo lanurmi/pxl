@@ -63,3 +63,4 @@ void pxl::imageproc::boxfilter(const pxl::Image& src, pxl::Image& dst, const pxl
 		}
 	}
 }
+

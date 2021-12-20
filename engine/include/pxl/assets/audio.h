@@ -26,3 +26,4 @@ namespace pxl
 		short *_data;
 	};
 }
+

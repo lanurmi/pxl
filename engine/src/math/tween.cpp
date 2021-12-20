@@ -283,3 +283,4 @@ float pxl::ease(float t, Easing ease)
 	auto f = easingFunc(ease);
 	return f(t);
 }
+

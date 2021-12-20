@@ -33,3 +33,4 @@ pxl::TextureRef pxl::Texture::create(const pxl::Image& image)
 pxl::Texture::Texture()
 {
 }
+

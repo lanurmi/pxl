@@ -20,3 +20,4 @@ const pxl::Vector<pxl::UniformInfo>& pxl::Shader::uniforms() const
 {
 	return _uniforms;
 }
+

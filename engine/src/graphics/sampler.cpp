@@ -21,3 +21,4 @@ bool pxl::TextureSampler::operator!=(const pxl::TextureSampler& sampler) const
 {
 	return sampler.filter != filter || sampler.wrap_x != wrap_x || sampler.wrap_y != wrap_y;
 }
+

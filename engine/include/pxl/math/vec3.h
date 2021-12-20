@@ -18,3 +18,4 @@ namespace pxl
 		static Vec3 cross(const Vec3& a, const Vec3& b);
 	};
 }
+

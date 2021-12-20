@@ -72,3 +72,4 @@ int Tileset::size() const
 {
 	return _size;
 }
+

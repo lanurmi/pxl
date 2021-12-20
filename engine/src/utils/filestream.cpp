@@ -61,3 +61,4 @@ bool FileStream::readable() const
 {
 	return _file.get() != nullptr;
 }
+

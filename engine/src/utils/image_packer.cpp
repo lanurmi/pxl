@@ -189,3 +189,4 @@ void ImagePacker::clear()
 {
 	_result.clear();
 }
+

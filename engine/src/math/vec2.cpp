@@ -194,3 +194,4 @@ const pxl::Vec2 pxl::Vec2::up_left = pxl::Vec2(-DIAG, -DIAG);
 const pxl::Vec2 pxl::Vec2::down_right = pxl::Vec2(DIAG, DIAG);
 const pxl::Vec2 pxl::Vec2::down_left = pxl::Vec2(-DIAG, DIAG);
 #undef DIAG
+

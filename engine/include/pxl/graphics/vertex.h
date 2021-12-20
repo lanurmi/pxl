@@ -15,3 +15,4 @@ namespace pxl
 		Color color;
 	};
 }
+

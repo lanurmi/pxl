@@ -33,3 +33,4 @@ namespace pxl
 		Color* _pixels;
 	};
 }
+

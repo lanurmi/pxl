@@ -129,3 +129,4 @@ pxl::Mat3x2 pxl::Mat3x2::multiply(const pxl::Mat3x2& a, const pxl::Mat3x2& b)
 		a.m31 * b.m11 + a.m32 * b.m21 + b.m31,
 		a.m31 * b.m12 + a.m32 * b.m22 + b.m32);
 }
+

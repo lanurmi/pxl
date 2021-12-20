@@ -17,3 +17,4 @@ namespace pxl
 	void begin(const Config& config);
 	void end();
 }
+

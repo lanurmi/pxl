@@ -84,3 +84,4 @@ bool pxl::BlendState::operator!=(const BlendState& rhs) const
 {
 	return !(*this == rhs);
 }
+

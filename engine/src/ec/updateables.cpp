@@ -70,3 +70,4 @@ void Updateables::tryRemoveComponent(IComponent* component)
 #endif
 	}
 }
+

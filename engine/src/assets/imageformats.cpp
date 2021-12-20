@@ -77,3 +77,4 @@ Color* imageformats::decode(FileStream& stream, int* w, int* h) {
 		return loadJPEG(stream, w, h);
 	}
 }
+

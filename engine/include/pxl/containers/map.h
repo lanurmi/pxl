@@ -10,3 +10,4 @@ namespace pxl
 	template<class T>
 	using Set = std::unordered_set<T>;
 }
+

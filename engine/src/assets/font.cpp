@@ -136,3 +136,4 @@ Font::Character Font::character(int glyph, float scale) const
 	ch.has_glyph = (ch.width > 0 && ch.height > 0 && stbtt_IsGlyphEmpty(f, glyph) == 0);
 	return ch;
 }
+

@@ -151,3 +151,4 @@ namespace pxl
 		void render_cel(Cel* cel, Frame* frame);
 	};
 }
+

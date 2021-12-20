@@ -283,3 +283,4 @@ bool operator==(const char* str0, const String& str1)
 {
 	return str1 == str0;
 }
+

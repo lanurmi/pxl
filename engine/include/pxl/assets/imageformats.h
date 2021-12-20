@@ -10,3 +10,4 @@ namespace pxl
 		pxl::Color* decode(FileStream& stream, int* w, int* h);
 	}
 }
+

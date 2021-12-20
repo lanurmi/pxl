@@ -177,3 +177,4 @@ pxl::Mat4x4 pxl::Mat4x4::operator*(const pxl::Mat4x4& rhs)
 
 	return m;
 }
+

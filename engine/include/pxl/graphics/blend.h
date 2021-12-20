@@ -75,3 +75,4 @@ namespace pxl
 		bool operator!=(const BlendState& rhs) const;
 	};
 }
+

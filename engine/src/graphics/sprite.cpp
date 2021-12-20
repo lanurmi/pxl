@@ -25,3 +25,4 @@ int Sprite::indexOfAnimation(const String& name) const
 	}
 	return -1;
 }
+

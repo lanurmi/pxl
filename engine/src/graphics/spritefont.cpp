@@ -195,3 +195,4 @@ int SpriteFont::descent() const
 {
 	return _descent;
 }
+

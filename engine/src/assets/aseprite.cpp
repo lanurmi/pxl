@@ -453,3 +453,4 @@ void Aseprite::render_cel(Cel * cel, Frame * frame)
 		assert(0 && "Aseprite blendmodes aren't implemented");
 	}
 }
+

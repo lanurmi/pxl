@@ -28,3 +28,4 @@ namespace pxl
 		int indexOfAnimation(const String& name) const;
 	};
 }
+

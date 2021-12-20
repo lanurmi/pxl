@@ -19,3 +19,4 @@ namespace pxl
 		void error(const String& error);
 	};
 }
+

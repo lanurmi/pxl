@@ -7,3 +7,4 @@ void pxl::DrawCall::draw() {
 	assert(material);
 	pxl::graphics::render(*this);
 }
+

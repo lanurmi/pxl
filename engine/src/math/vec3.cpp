@@ -39,3 +39,4 @@ pxl::Vec3 pxl::Vec3::cross(const pxl::Vec3& a, const pxl::Vec3& b)
 		a.z * b.x - a.x * b.z,
 		a.x * b.y - a.y * b.x);
 }
+

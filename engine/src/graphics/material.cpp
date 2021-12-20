@@ -239,3 +239,4 @@ pxl::TextureSampler pxl::Material::sampler(int slot, int index) const
 
 	return TextureSampler();
 }
+

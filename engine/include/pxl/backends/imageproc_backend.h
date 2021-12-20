@@ -9,3 +9,4 @@ namespace pxl
 		void boxfilter(const Image& src, Image& dst, const Rect& rect, int size);
 	}
 }
+

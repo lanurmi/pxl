@@ -36,3 +36,4 @@ namespace pxl
 		static Mat3x2 multiply(const Mat3x2& a, const Mat3x2& b);
 	};
 }
+

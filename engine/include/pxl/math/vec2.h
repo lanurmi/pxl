@@ -60,3 +60,4 @@ namespace pxl
 		static const Vec2 down_left;
 	};
 }
+

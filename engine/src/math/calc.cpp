@@ -150,3 +150,4 @@ bool pxl::random::percent(int percent)
 {
 	return pxl::random::range(1, 100) <= percent;
 }
+

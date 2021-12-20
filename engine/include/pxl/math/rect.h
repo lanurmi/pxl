@@ -49,3 +49,4 @@ namespace pxl
 		static Rect transform(const Rect& vec, const Mat3x2& matrix);
 	};
 }
+

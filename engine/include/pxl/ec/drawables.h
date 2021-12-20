@@ -23,3 +23,4 @@ namespace pxl
 		ActionBindId destroyBindId;
 	};
 }
+

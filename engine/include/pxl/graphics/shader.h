@@ -62,3 +62,4 @@ namespace pxl
 		Vector<UniformInfo> _uniforms;
 	};
 }
+

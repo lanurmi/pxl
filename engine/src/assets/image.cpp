@@ -146,3 +146,4 @@ void pxl::Image::preMultiply()
 		(_pixels + i)->preMultiply();
 	}
 }
+

@@ -73,3 +73,4 @@ const u16* Audio::data() const {
 int Audio::size() const {
 	return _size;
 }
+
