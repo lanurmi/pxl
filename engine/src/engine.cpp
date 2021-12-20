@@ -67,10 +67,8 @@ void pxl::begin(const pxl::Config& config)
 	};
 //#endif
 
-	if (config.awake)
-	{
-		config.awake();
-	}
+	config.awake.invoke();
+
 	while (!s_end)
 	{
 
@@ -113,7 +111,7 @@ void pxl::begin(const pxl::Config& config)
 					continue;
 				}
 
-				config.update();
+				config.update.invoke();
 			}
 		}
 		else
@@ -129,19 +127,17 @@ void pxl::begin(const pxl::Config& config)
 				continue;
 			}
 
-			config.update();
+			config.update.invoke();
 		}
 
 
-		config.draw();
+		config.draw.invoke();
 		pxl::platform::present();
 
 		fps.update();
 	}
-	if (config.destroy)
-	{
-		config.destroy();
-	}
+	config.destroy.invoke();
+
 	pxl::audio::destroy();
 	pxl::graphics::destroy();
 	pxl::platform::destroy();

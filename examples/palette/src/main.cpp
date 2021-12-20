@@ -121,9 +121,9 @@ int main()
 	config.target_framerate = 60;
 	config.width = 1280;
 	config.height = 720;
-	config.awake = std::bind(awake);
-	config.update = std::bind(update);
-	config.draw = std::bind(draw);
+	config.awake += std::bind(awake);
+	config.update += std::bind(update);
+	config.draw += std::bind(draw);
 
 	// start
 	pxl::begin(config);

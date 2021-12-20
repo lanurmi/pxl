@@ -1,6 +1,7 @@
 #pragma once
 #include <pxl/types.h>
 #include <pxl/containers/string.h>
+#include <pxl/utils/action.h>
 
 namespace pxl
 {
@@ -14,9 +15,9 @@ namespace pxl
 		int target_framerate;
 		bool fixed_update;
 		bool vertical_sync;
-		Func<> awake;
-		Func<> update;
-		Func<> draw;
-		Func<> destroy;
+		Action<> awake;
+		Action<> update;
+		Action<> draw;
+		Action<> destroy;
 	};
 }
