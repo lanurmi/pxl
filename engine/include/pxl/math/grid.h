@@ -2,6 +2,7 @@
 
 #include <pxl/types.h>
 #include <pxl/containers/vector.h>
+#include <pxl/assets/json.h>
 
 namespace pxl
 {
@@ -23,10 +24,12 @@ namespace pxl
 		i16 get(int index) const;
 		int width() const;
 		int height() const;
+
+
+		PXL_JSON_SERIALIZE(Grid, _width, _height, _data);
 	private:
 		int _width;
 		int _height;
 		Vector<i16> _data;
 	};
 }
-
