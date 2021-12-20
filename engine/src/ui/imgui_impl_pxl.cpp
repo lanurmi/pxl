@@ -24,7 +24,7 @@ namespace
 	pxl::Map<pxl::Texture*, pxl::TextureWeakRef> textures;
 	pxl::MaterialRef g_material;
 
-	pxl::Vector<Key> keys;
+	pxl::Vector<int> keys;
 
 	const pxl::VertexFormat vertexFormat = pxl::VertexFormat(
 		{
@@ -66,12 +66,18 @@ namespace
 
 		io.MousePos = ImVec2(mouse::position().x - platform::position().x, mouse::position().y - platform::position().y);
 
+		for(auto k : keys)
+		{
+			io.KeysDown[k] = keyboard::down((pxl::Key)k);
+		}
 		// Keyboard
 		io.KeyShift = keyboard::down(Key::LeftShift);
 		io.KeyCtrl = keyboard::down(Key::LeftControl);
 		io.KeyAlt = keyboard::down(Key::LeftAlt);
 		io.KeySuper = keyboard::down(Key::LeftOS);
 
+		auto& inputText = pxl::keyboard::text();
+		io.AddInputCharactersUTF8(inputText.data());
 
 		for (int i = 0; i < 22; i++)
 		{
@@ -108,28 +114,28 @@ bool pxl::ImGUI_ImplPXL_awake()
 	
 	io.BackendRendererName = "PXL";
 
-	io.KeyMap[ImGuiKey_Tab] = (int)Key::Tab;
-	io.KeyMap[ImGuiKey_LeftArrow] = (int)Key::Left;
-	io.KeyMap[ImGuiKey_RightArrow] = (int)Key::Right;
-	io.KeyMap[ImGuiKey_UpArrow] = (int)Key::Up;
-	io.KeyMap[ImGuiKey_DownArrow] = (int)Key::Down;
-	io.KeyMap[ImGuiKey_PageUp] = (int)Key::PageUp;
-	io.KeyMap[ImGuiKey_PageDown] = (int)Key::PageDown;
-	io.KeyMap[ImGuiKey_Home] = (int)Key::Home;
-	io.KeyMap[ImGuiKey_End] = (int)Key::End;
-	io.KeyMap[ImGuiKey_Insert] = (int)Key::Insert;
-	io.KeyMap[ImGuiKey_Delete] = (int)Key::Delete;
-	io.KeyMap[ImGuiKey_Backspace] = (int)Key::Backspace;
-	io.KeyMap[ImGuiKey_Space] = (int)Key::Space;
-	io.KeyMap[ImGuiKey_Enter] = (int)Key::Enter;
-	io.KeyMap[ImGuiKey_Escape] = (int)Key::Escape;
-	io.KeyMap[ImGuiKey_KeyPadEnter] = (int)Key::KeypadEnter;
-	io.KeyMap[ImGuiKey_A] = (int)Key::A;
-	io.KeyMap[ImGuiKey_C] = (int)Key::C;
-	io.KeyMap[ImGuiKey_V] = (int)Key::V;
-	io.KeyMap[ImGuiKey_X] = (int)Key::X;
-	io.KeyMap[ImGuiKey_Y] = (int)Key::Y;
-	io.KeyMap[ImGuiKey_Z] = (int)Key::Z;
+	keys.push_back( io.KeyMap[ImGuiKey_Tab] = (int)Key::Tab );
+	keys.push_back(io.KeyMap[ImGuiKey_LeftArrow] = (int)Key::Left );
+	keys.push_back(io.KeyMap[ImGuiKey_RightArrow] = (int)Key::Right );
+	keys.push_back(io.KeyMap[ImGuiKey_UpArrow] = (int)Key::Up );
+	keys.push_back(io.KeyMap[ImGuiKey_DownArrow] = (int)Key::Down );
+	keys.push_back(io.KeyMap[ImGuiKey_PageUp] = (int)Key::PageUp );
+	keys.push_back(io.KeyMap[ImGuiKey_PageDown] = (int)Key::PageDown );
+	keys.push_back(io.KeyMap[ImGuiKey_Home] = (int)Key::Home );
+	keys.push_back(io.KeyMap[ImGuiKey_End] = (int)Key::End );
+	keys.push_back(io.KeyMap[ImGuiKey_Insert] = (int)Key::Insert );
+	keys.push_back(io.KeyMap[ImGuiKey_Delete] = (int)Key::Delete );
+	keys.push_back(io.KeyMap[ImGuiKey_Backspace] = (int)Key::Backspace );
+	keys.push_back(io.KeyMap[ImGuiKey_Space] = (int)Key::Space );
+	keys.push_back(io.KeyMap[ImGuiKey_Enter] = (int)Key::Enter );
+	keys.push_back(io.KeyMap[ImGuiKey_Escape] = (int)Key::Escape );
+	keys.push_back(io.KeyMap[ImGuiKey_KeyPadEnter] = (int)Key::KeypadEnter );
+	keys.push_back(io.KeyMap[ImGuiKey_A] = (int)Key::A );
+	keys.push_back(io.KeyMap[ImGuiKey_C] = (int)Key::C );
+	keys.push_back(io.KeyMap[ImGuiKey_V] = (int)Key::V );
+	keys.push_back(io.KeyMap[ImGuiKey_X] = (int)Key::X );
+	keys.push_back(io.KeyMap[ImGuiKey_Y] = (int)Key::Y );
+	keys.push_back(io.KeyMap[ImGuiKey_Z] = (int)Key::Z );
 
 	ImGUI_ImplPXL_BuildFontAtlas();
 
