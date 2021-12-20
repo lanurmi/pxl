@@ -1,9 +1,20 @@
 #pragma once
 
 #include <functional>
+#include <string>
+
+using namespace std;
 
 namespace pxl
 {
+#ifdef PXL_USE_STL_CONTAINERS
+	using String = basic_string<char, char_traits<char>, allocator<char>>;
+	namespace string
+	{
+		unsigned utf8Size(const pxl::String& str, unsigned index);
+		String format(const char* fmt, ...);
+	}
+#else
 	class String {
 	public:
 		String();
@@ -11,6 +22,7 @@ namespace pxl
 		String(String&& str) noexcept;
 		String(const char* str);
 		String(const char* str, unsigned length);
+		String(unsigned length, char c);
 		~String();
 
 		char& operator[](unsigned index);
@@ -22,7 +34,7 @@ namespace pxl
 		bool operator!=(const String& str) const;
 		bool operator!=(const char* str) const;
 
-		bool operator < (const String & str) const;
+		bool operator < (const String& str) const;
 
 		String& operator=(const String& str);
 		String& operator=(String&& str) noexcept;
@@ -40,8 +52,13 @@ namespace pxl
 		char* data();
 		const char* data() const;
 
+		char* c_str();
+		const char* c_str() const;
+
+
 
 		void resize(unsigned size);
+		void resize(unsigned size, char c);
 		void reserve(unsigned length);
 
 		void clear();
@@ -55,7 +72,12 @@ namespace pxl
 		String& push_back(const char* str, int size);
 		String& push_back(char c);
 
-		static String format(const char *fmt, ...);
+		String& append(const char* str, int size);
+
+		char& back();
+		const char& back() const;
+
+		static String format(const char* fmt, ...);
 		static String fromInt(int num);
 
 		using value_type = char;
@@ -63,13 +85,17 @@ namespace pxl
 	private:
 		void set(const char* from, unsigned size);
 		void set(const char* from);
-		char* _data;
-		unsigned _size;
-		unsigned _capasity;
+		char* _data = nullptr;
+		unsigned _size = 0;
+		unsigned _capasity = 0;
 		static char s_empty_data[1];
 	};
 
 }
+#endif
+}
+
+#ifndef PXL_USE_STL_CONTAINERS
 
 pxl::String operator+(const char* str0, const pxl::String & str1);
 bool operator==(const char* str0, const pxl::String& str1);
@@ -93,3 +119,4 @@ namespace std
 	};
 }
 
+#endif

@@ -79,7 +79,7 @@ namespace pxl
 
 		c->awake();
 
-		pxl::log::message(pxl::String::format("Added component %s to entity %hu", ComponentInfo<T>::type, entity->id()) );
+		pxl::log::message(pxl::string::format("Added component %s to entity %hu", ComponentInfo<T>::type, entity->id()) );
 
 		return c;
 	}

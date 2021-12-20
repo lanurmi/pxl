@@ -4,6 +4,49 @@
 #include <cstdio>
 #include <cmath>
 
+unsigned pxl::string::utf8Size(const pxl::String& str, unsigned index) {
+	auto ch = str[index];
+
+	if ((ch & 0xFE) == 0xFC) {
+		return 6;
+	}
+	else if ((ch & 0xFC) == 0xF8) {
+		return 5;
+	}
+	else if ((ch & 0xF8) == 0xF0) {
+		return 4;
+	}
+	else if ((ch & 0xF0) == 0xE0) {
+		return 3;
+	}
+	else if ((ch & 0xE0) == 0xC0) {
+		return 2;
+	}
+	return 1;
+}
+
+pxl::String pxl::string::format(const char* fmt, ...)
+{
+	pxl::String str;
+
+	va_list args;
+	va_start(args, fmt);
+	int size = vsnprintf(NULL, 0, fmt, args);
+	va_end(args);
+
+	str.reserve(size + 1);
+	str.resize(size);
+
+	va_start(args, fmt);
+	vsnprintf(str.data(), size + 1, fmt, args);
+	va_end(args);
+
+	str.data()[size] = '\0';
+	return str;
+}
+
+#ifndef PXL_USE_STL_CONTAINERS
+
 using namespace pxl;
 
 char String::s_empty_data[1] = { '\0' };
@@ -36,6 +79,10 @@ String::String(const char* str) : _data(s_empty_data), _size(0), _capasity(0)
 String::String(const char* str, unsigned length) : _data(s_empty_data), _size(0), _capasity(0)
 {
 	set(str, length);
+}
+
+String::String(unsigned length, char c) {
+	resize(length, c);
 }
 
 String::~String() {
@@ -133,6 +180,14 @@ const char* String::data() const {
 	return _data;
 }
 
+char* String::c_str() {
+	return _data;
+}
+
+const char* String::c_str() const {
+	return _data;
+}
+
 bool String::empty() const {
 	return _size == 0;
 }
@@ -185,6 +240,21 @@ String& String::push_back(char c)
 	return *this;
 }
 
+String& String::append(const char* str, int size)
+{
+	return push_back(str, size);
+}
+
+char& String::back()
+{
+	return _data[_size - 1];
+}
+
+const char& String::back() const
+{
+	return _data[_size - 1];
+}
+
 String String::format(const char* fmt, ...)
 {
 	String str;
@@ -215,6 +285,18 @@ String String::fromInt(int num)
 void String::resize(unsigned size)
 {
 	reserve(size);
+	_size = size;
+	_data[size] = '\0';
+}
+
+void String::resize(unsigned size, char c) {
+	auto oldSize = _size;
+	reserve(size);
+
+	for (; oldSize < size; oldSize++)
+	{
+		_data[oldSize] = c;
+	}
 	_size = size;
 	_data[size] = '\0';
 }
@@ -284,3 +366,4 @@ bool operator==(const char* str0, const String& str1)
 	return str1 == str0;
 }
 
+#endif

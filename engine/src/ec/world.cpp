@@ -43,7 +43,7 @@ void World::destroy(Entity* entity)
 		c->destroy();
 	}
 	entitiesToBeDestroyed.push_back(entity);
-	pxl::log::message( pxl::String::format("Added entity %hu destroylist", entity->id()) );
+	pxl::log::message( pxl::string::format("Added entity %hu destroylist", entity->id()) );
 
 }
 
@@ -58,7 +58,7 @@ void World::update()
 			v2->remove(c);
 
 
-			pxl::log::message(pxl::String::format("Component %s destroyed from entity %hu", c->typeName().data(), it->id()));
+			pxl::log::message(pxl::string::format("Component %s destroyed from entity %hu", c->typeName().c_str(), it->id()));
 			
 			componentDestroyed.invoke(c);
 

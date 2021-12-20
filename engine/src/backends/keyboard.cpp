@@ -46,7 +46,7 @@ const pxl::String &pxl::keyboard::text() {
 }
 
 void pxl::keyboard::onText(const char* text) {
-	s_keyboardState.inputText.push_back(text);
+	s_keyboardState.inputText.append(text);
 }
 
 bool pxl::keyboard::down(Key key)

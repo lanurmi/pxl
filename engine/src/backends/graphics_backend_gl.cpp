@@ -803,7 +803,7 @@ public:
 				addUniformInfo(tex_uniform);
 
 				pxl::UniformInfo sampler_uniform;
-				sampler_uniform.name = pxl::String(name).push_back("_sampler");
+				sampler_uniform.name = pxl::String(name).append("_sampler");
 				sampler_uniform.buffer_index = 0;
 				sampler_uniform.array_length = size;
 				sampler_uniform.type = pxl::UniformType::Sampler2D;
