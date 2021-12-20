@@ -574,6 +574,15 @@ void Decoder_ffmpeg::flushDecoder()
 
 bool Decoder_ffmpeg::seek(int seekFrame)
 {
+	if (seekFrame < 1) return false;
+
+	auto fileInfo = info();
+
+	if (seekFrame > fileInfo.frames)
+	{
+		return false;
+	}
+
 	flushDecoder();
 	pxl::i64 targetTime = dtsToTime[seekFrame];
 	if (av_seek_frame(formatCtx, videoStreamId, targetTime, AVSEEK_FLAG_BACKWARD) < 0)
