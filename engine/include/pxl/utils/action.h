@@ -19,7 +19,7 @@ namespace pxl
 			bind(func);
 			return *this;
 		}
-		void invoke(Args... args)
+		void invoke(Args... args) const
 		{
 			for (auto b : funcs)
 			{
