@@ -1,5 +1,6 @@
 #pragma once
 #include <pxl/types.h>
+#include <pxl/containers/string.h>
 
 namespace pxl
 {
@@ -176,7 +177,11 @@ namespace pxl
 	namespace keyboard
 	{
 		bool down(Key key);
+		const pxl::String &text();
+
+		void resetText(); // called by platform
 		void onKeyDown(Key key); // called by platform
 		void onKeyUp(Key key); // called by platform
+		void onText(const char* text); // called by platform
 	}
 }

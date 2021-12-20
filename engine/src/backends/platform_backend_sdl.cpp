@@ -95,6 +95,8 @@ bool pxl::platform::update()
 	SDL_GetGlobalMouseState(&mx, &my);
 	pxl::mouse::onMousePosition(pxl::Vec2(mx, my));
 
+	pxl::keyboard::resetText();
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
@@ -234,6 +236,9 @@ bool pxl::platform::update()
 				}
 				pxl::gamepad::onAxis(index, axis, value);
 			}
+		}
+		else if (event.type == SDL_TEXTINPUT) {
+			pxl::keyboard::onText(event.text.text);
 		}
 	}
 	return true;
