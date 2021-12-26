@@ -93,6 +93,11 @@ bool file::exists(const String& path)
 	return std::filesystem::is_regular_file(path.data());
 }
 
+bool file::del(const String& path)
+{
+	return std::filesystem::remove(path);
+}
+
 file::FileRef file::File::open(const String& file, file::FileMode mode)
 {
 	String smode = "";
@@ -107,6 +112,10 @@ file::FileRef file::File::open(const String& file, file::FileMode mode)
 		{
 			smode = "r";
 			break;
+		}
+		case file::FileMode::Write:
+		{
+			smode = "w";
 		}
 	}
 	FILE *ptr = fopen(file.data(), smode.data());
@@ -125,6 +134,11 @@ file::FileRef file::File::open(const String& file, file::FileMode mode)
 bool directory::exists(const String& path)
 {
 	return std::filesystem::is_directory(path.data());
+}
+
+bool directory::create(const String& path)
+{
+	return std::filesystem::create_directory(path);
 }
 
 Vector<String> directory::files(const String& path, const String& extension)

@@ -16,6 +16,7 @@ namespace pxl
 	namespace file
 	{
 		bool exists(const String& path);
+		bool del(const String& path);
 
 		class File;
 		using FileRef = std::shared_ptr<File>;
@@ -23,7 +24,8 @@ namespace pxl
 		enum class FileMode
 		{
 			ReadBinary,
-			Read
+			Read,
+			Write
 		};
 		class File
 		{
@@ -48,5 +50,6 @@ namespace pxl
 	{
 		Vector<String> files(const String& path, const String& extension = "");
 		bool exists(const String& path);
+		bool create(const String& path);
 	}
 }
