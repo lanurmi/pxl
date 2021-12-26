@@ -63,13 +63,13 @@ void Grid::set(int index, i16 value)
 	_data[index] = value;
 }
 
-void  Grid::set(int fromx, int fromy, const Grid& otherGrid)
+void  Grid::set(int tox, int toy, const Grid& otherGrid)
 {
-	int dsty = fromy;
+	int dsty = toy;
 
 	for (int j = 0; j < otherGrid.height(); j++)
 	{
-		int dstx = fromx;
+		int dstx = tox;
 		for (int i = 0; i < otherGrid.width(); i++)
 		{
 			set(dstx, dsty, otherGrid.get(i, j));
