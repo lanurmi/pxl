@@ -142,7 +142,7 @@ bool pxl::Rect::contains(const Vec2& pt) const
 
 bool pxl::Rect::overlaps(const pxl::Rect& rect) const
 {
-	return x + width >= rect.x && y + height >= rect.y && x < rect.x + rect.width && y < rect.y + rect.height;
+	return x + width > rect.x && y + height > rect.y && x < rect.x + rect.width && y < rect.y + rect.height;
 }
 
 pxl::Rect pxl::Rect::intersection(const pxl::Rect& rect) const
