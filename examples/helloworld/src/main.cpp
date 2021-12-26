@@ -13,14 +13,13 @@ public:
 	pxl::TextureRef texture;
 	void update() override
 	{
-		auto mousePosition = pxl::mouse::drawPosition();
-		auto windowPosition = pxl::platform::position();
+		auto mousePosition = pxl::mouse::localPosition();
 		auto windowSize = pxl::platform::drawSize();
-		if (mousePosition.x > windowPosition.x &&
-			mousePosition.y > windowPosition.y &&
-			mousePosition.x < windowPosition.x + windowSize.x &&
-			mousePosition.y < windowPosition.y + windowSize.y) {
-			entity()->transform.position = mousePosition - windowPosition - pxl::Vec2(texture->width() / 2.0f, texture->height() / 2.0f);
+		if (mousePosition.x > 0 &&
+			mousePosition.y > 0 &&
+			mousePosition.x < windowSize.x &&
+			mousePosition.y < windowSize.y) {
+			entity()->transform.position = mousePosition - pxl::Vec2(texture->width() / 2.0f, texture->height() / 2.0f);
 		}
 	}
 	void draw(pxl::Batch& batch) override

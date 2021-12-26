@@ -35,6 +35,11 @@ pxl::VirtualButton& pxl::VirtualButton::bind(Axis axis)
 	return *this;
 }
 
+VirtualButton& pxl::VirtualButton::bind(MouseButton mouse) {
+	_mouse_binds.push_back(mouse);
+	return *this;
+}
+
 pxl::VirtualButton& pxl::VirtualButton::setAxisThreshold(float threshold)
 {
 	_axis_threshold = threshold;
@@ -47,10 +52,16 @@ void pxl::VirtualButton::update()
 	_pressed = false;
 	_down = false;
 	_released = false;
+
 	for (auto& key : _key_binds)
 	{
 		_down |= pxl::keyboard::down(key);
-	} 
+	}
+
+	for (auto& mb : _mouse_binds)
+	{
+		_down |= pxl::mouse::down(mb);
+	}
 
 	for (auto& btn : _button_binds)
 	{

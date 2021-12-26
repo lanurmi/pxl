@@ -92,10 +92,12 @@ static int getGamepadIndex(SDL_JoystickID joystickId)
 bool pxl::platform::update()
 {
 	int mx, my;
+
 	SDL_GetGlobalMouseState(&mx, &my);
 	pxl::mouse::onMousePosition(pxl::Vec2(mx, my));
 
-	pxl::keyboard::resetText();
+	pxl::keyboard::onText(nullptr);
+	pxl::mouse::onWheel(0, 0);
 
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -138,6 +140,10 @@ bool pxl::platform::update()
 				btn = MouseButton::Middle;
 			}
 			pxl::mouse::onButtonUp(btn);
+		}
+		else if (event.type == SDL_MOUSEWHEEL)
+		{
+			pxl::mouse::onWheel(event.wheel.x, event.wheel.y);
 		}
 		else if (event.type == SDL_CONTROLLERDEVICEADDED)
 		{

@@ -20,6 +20,7 @@ namespace pxl
 		bool down(MouseButton button);
 		bool released(MouseButton button);
 		Vec2 position();
+		Vec2 localPosition();
 		Vec2 drawPosition();
 		int wheelx();
 		int wheely();
@@ -27,6 +28,7 @@ namespace pxl
 		void onButtonDown(MouseButton key); // called by platform
 		void onButtonUp(MouseButton key); // called by platform
 		void onMousePosition(const pxl::Vec2& position); // called by platform
+		void onWheel(int x, int y); // called by platform;
 	};
 }
 

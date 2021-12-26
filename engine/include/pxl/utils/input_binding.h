@@ -2,6 +2,7 @@
 #include <pxl/types.h>
 #include <pxl/backends/keyboard.h>
 #include <pxl/backends/gamepad.h>
+#include <pxl/backends/mouse.h>
 
 namespace pxl
 {
@@ -12,6 +13,7 @@ namespace pxl
 		VirtualButton& bind(Key key);
 		VirtualButton& bind(Button button);
 		VirtualButton& bind(Axis axis);
+		VirtualButton& bind(MouseButton axis);
 		VirtualButton& setGamepadIndex(int index);
 		VirtualButton& setInputBuffer(float bufferTime);
 		VirtualButton& setAxisThreshold(float threshold);
@@ -26,6 +28,7 @@ namespace pxl
 		std::vector<Key> _key_binds;
 		std::vector<Button> _button_binds;
 		std::vector<Axis> _axis_binds;
+		std::vector<MouseButton> _mouse_binds;
 		bool _wait_for_release = true;
 		int _controller_index;
 		float _buffer_timer;
@@ -49,6 +52,7 @@ namespace pxl
 		VirtualButton _positive;
 	};
 	using VirtualButtonRef = std::shared_ptr<VirtualButton>;
+	using VirtualButtonWeakRef = std::weak_ptr<VirtualButton>;
 	using VirtualAxisRef = std::shared_ptr<VirtualAxis>;
 
 	namespace bindings
