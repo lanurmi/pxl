@@ -14,7 +14,7 @@ namespace pxl
 		void set(const Rect& rect);
 		TextureRef texture() const;
 		Rect rect() const;
-		Rect texturecoordinates() const;
+		Rect textureCoordinates() const;
 		int width() const;
 		int height() const;
 	private:

@@ -32,6 +32,11 @@ Rect Subtexture::rect() const
 	return _rect;
 }
 
+Rect Subtexture::textureCoordinates() const
+{
+	return pxl::Rect(_rect.x / _texture->width(), _rect.y / _texture->width(), _rect.width / _texture->width(), _rect.height / _texture->height());
+}
+
 int Subtexture::width() const
 {
 	return _rect.width;
