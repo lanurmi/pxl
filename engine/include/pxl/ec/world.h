@@ -21,6 +21,7 @@ namespace pxl
 
 		Entity* entity(const Vec2& position);
 		void destroy(Entity* entity);
+		void destroy();
 
 		template<typename T>
 		T* add(Entity* entity, T&& component);
@@ -95,7 +96,14 @@ namespace pxl
 	T* World::first()
 	{
 		auto a = all<T>();
-		return a[0];
+		if (a.empty())
+		{
+			return nullptr;
+		}
+		else
+		{
+			return a[0];
+		}
 	}
 
 	template<typename T>
@@ -103,6 +111,11 @@ namespace pxl
 	{
 		auto type = pxl::ComponentInfo<T>::id;
 		auto it = componentListsByType.find(type);
+		if (it == componentListsByType.end())
+		{
+			static pxl::Vector<T*> empty;
+			return empty;
+		}
 		auto list = std::dynamic_pointer_cast<ComponentList<T>>(it->second);
 		return list->all();
 	}

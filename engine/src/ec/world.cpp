@@ -20,6 +20,7 @@ void World::awake(int bufferEntities)
 		entities.push_back(Entity());
 	}
 }
+
 Entity* World::entity(const Vec2& position)
 {
 	for (u32 i = 0; i < entities.size(); i++)
@@ -37,7 +38,6 @@ Entity* World::entity(const Vec2& position)
 
 void World::destroy(Entity* entity)
 {
-
 	for (auto c : entity->_components)
 	{
 		c->destroy();
@@ -45,6 +45,16 @@ void World::destroy(Entity* entity)
 	entitiesToBeDestroyed.push_back(entity);
 	pxl::log::message( pxl::string::format("Added entity %hu destroylist", entity->id()) );
 
+}
+
+void  World::destroy() {
+	for (auto& e : entities)
+	{
+		if (e.id() != s_unused_entity)
+		{
+			destroy(&e);
+		}
+	}
 }
 
 void World::update()
