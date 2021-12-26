@@ -131,3 +131,8 @@ const Tileset* Atlas::tileset(const String& name) const
 		return nullptr;
 	}
 }
+
+TextureRef Atlas::texture() const
+{
+	return _page;
+}

@@ -21,6 +21,7 @@ namespace pxl
 		void build();
 		const Sprite *sprite(const String &name) const;
 		const Tileset* tileset(const String& name) const;
+		TextureRef texture() const;
 	private:
 		struct Info
 		{
