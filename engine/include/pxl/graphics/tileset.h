@@ -14,8 +14,12 @@ namespace pxl
 		const Subtexture &tile(i16 index) const;
 		int size() const;
 		const Vector<Subtexture> &tiles() const { return _tiles;}
+		int widthInTiles() const;
+		int heightInTiles() const;
 	private:
 		void createTiles(const TextureRef &texture, const Rect& area, int tilesize);
+		int _width;
+		int _height;
 		Vector<Subtexture> _tiles;
 		int _size;
 	};

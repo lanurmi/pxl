@@ -22,13 +22,19 @@ Tileset::Tileset(Tileset&& other) noexcept
 {
 	_tiles = std::move(other._tiles);
 	_size = other._size;
+	_width = other._width;
+	_height = other._height;
 }
 
 Tileset& Tileset::operator=(Tileset&& other) noexcept
 {
 	_tiles = std::move(other._tiles);
 	_size = other._size;
+	_width = other._width;
+	_height = other._height;
 	other._size = 0;
+	other._width = 0;
+	other._height = 0;
 	return *this;
 }
 
@@ -52,6 +58,9 @@ void Tileset::createTiles(const TextureRef& texture, const Rect& area, int tiles
 		}
 	}
 	_size = tilesize;
+
+	_width = area.width / tilesize;
+	_height = area.height / tilesize;
 }
 
 const Subtexture& Tileset::tile(i16 index) const
@@ -73,3 +82,13 @@ int Tileset::size() const
 	return _size;
 }
 
+
+int Tileset::widthInTiles() const
+{
+	return _width;
+}
+
+int Tileset::heightInTiles() const
+{
+	return _height;
+}
