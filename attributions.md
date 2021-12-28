@@ -56,7 +56,7 @@ SOFTWARE.
 
 ## [stb](https://github.com/nothings/stb)
 
-## [Dear ImGUI](https://github.com/ocornut/imgui)
+## [Dear ImGui](https://github.com/ocornut/imgui)
 The MIT License (MIT)
 
 Copyright (c) 2014-2021 Omar Cornut
