@@ -45,6 +45,13 @@ pxl::String pxl::string::format(const char* fmt, ...)
 	return str;
 }
 
+bool pxl::string::startsWith(const pxl::String& str, const pxl::String& test)
+{
+	if (test.size() > str.size()) return false;
+
+	return strncmp(str.c_str(), test.c_str(), test.size()) == 0;
+}
+
 #ifndef PXL_USE_STL_CONTAINERS
 
 using namespace pxl;

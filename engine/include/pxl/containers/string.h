@@ -13,6 +13,7 @@ namespace pxl
 	{
 		unsigned utf8Size(const pxl::String& str, unsigned index);
 		String format(const char* fmt, ...);
+		bool startsWith(const pxl::String& str, const pxl::String& test);
 	}
 #else
 	class String {
