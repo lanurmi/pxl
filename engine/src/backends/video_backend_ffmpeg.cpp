@@ -4,9 +4,7 @@
 #include <pxl/backends/platform_backend.h>
 #include <pxl/containers/map.h>
 #include <pxl/math/calc.h>
-
-#include <thread>
-#include <future>
+#include <pxl/log.h>
 
 extern "C"
 {
@@ -78,85 +76,25 @@ namespace
 class Frame_ffmpeg : public pxl::video::Frame
 {
 public:
-	Frame_ffmpeg(const pxl::Image& image, pxl::i64 frame) : frameNum(frame)
+	Frame_ffmpeg(const pxl::Image& image, pxl::i64 frame) : image(image), frameNum(frame)
 	{
-		images.reserve(15);
-		images.push_back(image);
 	}
-	Frame_ffmpeg(pxl::Image&& image, pxl::i64 frame) : frameNum(frame)
+	Frame_ffmpeg(pxl::Image&& image, pxl::i64 frame) : image(image), frameNum(frame)
 	{
-		images.reserve(15);
-		images.push_back(image);
 	}
 	~Frame_ffmpeg()
 	{
-		m_levelFuture.wait();
 	}
 	const pxl::Image& rgba() const override
 	{
-		return images[0];
+		return image;
 	}
 	pxl::i64 frame() const override
 	{
 		return frameNum;
 	}
-	const pxl::Image& fitRgba(int width, int height) const
-	{
-		if (width >= images[0].width() && height > images[0].height()) return images[0];
 
-		if (m_levelFuture.valid())
-		{
-			m_levelFuture.wait();
-			m_levelFuture.get();
-		}
-
-		for (unsigned i = 0; i < images.size(); i++)
-		{
-			if (images[i].width() < width && images[i].height() < height)
-			{
-				return images[i];
-			}
-		}
-
-		return images.back();
-	}
-	void buildScaleLevelsAsync() {
-		m_levelFuture = std::async(std::launch::async, &Frame_ffmpeg::buildLevels, this);
-	}
-private:
-	bool buildLevels()
-	{
-		int algorithm = SWS_AREA;
-
-		for (int j = 10; j > 0; j--)
-		{
-			const auto src = images.back();
-
-			if (src.width() % 2 != 0 || src.height() % 2 != 0) break;
-
-			auto context = sws_getContext(
-				src.width(), src.height(), AVPixelFormat::AV_PIX_FMT_RGBA,
-				src.width() / 2, src.height() / 2, AVPixelFormat::AV_PIX_FMT_RGBA,
-				algorithm, nullptr, nullptr, nullptr);
-
-			pxl::Image dst(src.width() / 2, src.height() / 2);
-
-			const pxl::u8* const srcPtr[] = { &src.pixels()->r };
-			const int srcStride[] = { src.width() * 4 };
-
-			pxl::u8* const dstPtr[] = { &dst.pixels()->r };
-			const int dstStride[] = { dst.width() * 4 };
-
-			sws_scale(context, &srcPtr[0], srcStride, 0, src.height(), &dstPtr[0], dstStride);
-			sws_freeContext(context);
-
-			images.push_back(std::move(dst));
-		}
-
-		return !images.empty();
-	}
-	mutable std::future<bool> m_levelFuture;
-	pxl::Vector<pxl::Image> images;
+	pxl::Image image;
 	pxl::i64 frameNum;
 };
 
@@ -165,9 +103,11 @@ class Encoder_ffmpeg : public pxl::video::Encoder
 public:
 	Encoder_ffmpeg(const pxl::video::EncoderInfo& info);
 	~Encoder_ffmpeg();
+	bool isOk() const override;
 	void add(const pxl::video::FrameRef& image) override;
 	void save() override;
 private:
+	bool m_ok = false;
 	pxl::video::EncoderInfo info;
 	AVFrame* getYuv(const pxl::Image& image);
 	AVCodecContext* codecCtx;
@@ -196,25 +136,33 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 	format = av_guess_format(nullptr, info.file.data(), nullptr);
 	if (format == nullptr)
 	{
+		pxl::log::error("[video encoder] Could not guess format");
 		assert(0);
+		return;
 	}
 	if (avformat_alloc_output_context2(&formatContext, format, nullptr, info.file.data()) < 0)
 	{
+		pxl::log::error("[video encoder] Could not allocate context");
 		assert(0);
+		return;
 	}
 
 
 	AVCodec* codec = avcodec_find_encoder(pxlToFFmpeg(info.codec));
 	if (!codec)
 	{
+		pxl::log::error("[video encoder] Could not find encoder");
 		assert(0);
+		return;
 	}
 
 	stream = avformat_new_stream(formatContext, codec);
 
 	if (!stream)
 	{
+		pxl::log::error("[video encoder] Could not open stream");
 		assert(0);
+		return;
 	}
 
 	codecCtx = avcodec_alloc_context3(codec);
@@ -261,20 +209,26 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 
 	if (avcodec_open2(codecCtx, codec, nullptr) < 0)
 	{
+		pxl::log::error("[video encoder] Could not open video codec");
 		assert(0);
+		return;
 	}
 
 	if (!(format->flags & AVFMT_NOFILE))
 	{
 		if ((avio_open(&formatContext->pb, info.file.data(), AVIO_FLAG_WRITE)) < 0)
 		{
+			pxl::log::error("[video encoder] Could not open output context");
 			assert(0);
+			return;
 		}
 	}
 
 	if (avformat_write_header(formatContext, nullptr) < 0)
 	{
+		pxl::log::error("[video encoder] Could not write header");
 		assert(0);
+		return;
 	}
 
 	pts = 0;
@@ -287,6 +241,8 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 	{
 		assert(0);
 	}
+
+	m_ok = true;
 }
 
 Encoder_ffmpeg::~Encoder_ffmpeg()
@@ -294,8 +250,6 @@ Encoder_ffmpeg::~Encoder_ffmpeg()
 
 	av_frame_free(&frame);
 	av_free(frame);
-
-
 
 	av_frame_free(&frameRgba);
 	av_free(frameRgba);
@@ -353,6 +307,11 @@ void Encoder_ffmpeg::add(const pxl::video::FrameRef& frame)
 	}
 	av_packet_unref(&packet);
 	pts++;
+}
+
+bool Encoder_ffmpeg::isOk() const
+{
+	return m_ok;
 }
 
 AVFrame* Encoder_ffmpeg::getYuv(const pxl::Image& image)
@@ -645,7 +604,6 @@ pxl::video::FrameRef Decoder_ffmpeg::currentFrame()
 	sws_freeContext(sws_ctx);
 
 	auto ffmpegFrame = new Frame_ffmpeg(std::move(img), currentFrameNum);
-	ffmpegFrame->buildScaleLevelsAsync();
 
 	return  pxl::video::FrameRef(ffmpegFrame);
 }

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <memory>
 #include <pxl/containers/string.h>
 #include <pxl/assets/image.h>
@@ -36,7 +37,6 @@ namespace pxl
 			Frame& operator=(Frame&&) = delete;
 			virtual ~Frame() {}
 			virtual const pxl::Image& rgba() const = 0;
-			virtual const pxl::Image& fitRgba(int width, int height) const = 0;
 			virtual pxl::i64 frame() const = 0;
 		protected:
 			Frame() {}
@@ -51,6 +51,7 @@ namespace pxl
 			Encoder& operator=(const Encoder&) = delete;
 			Encoder& operator=(Encoder&&) = delete;
 			virtual ~Encoder() {}
+			virtual bool isOk() const = 0;
 			virtual void add(const FrameRef& image) = 0;
 			virtual void save() = 0;
 		protected:
