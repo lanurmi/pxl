@@ -9,4 +9,9 @@ pxl::video::DecoderRef pxl::video::createDecoder() {
 	return nullptr;
 }
 
+pxl::video::FrameRef createFrame(const pxl::Image&, pxl::i64)
+{
+	return nullptr;
+}
+
 #endif

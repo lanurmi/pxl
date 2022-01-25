@@ -25,7 +25,24 @@ namespace pxl
 			int gop_size;
 			pxl::String file;
 			Codec codec;
+			bool seekToPts;
 		};
+
+		class Frame
+		{
+		public:
+			Frame(const Frame&) = delete;
+			Frame& operator=(const Frame&) = delete;
+			Frame& operator=(Frame&&) = delete;
+			virtual ~Frame() {}
+			virtual const pxl::Image& rgba() const = 0;
+			virtual const pxl::Image& fitRgba(int width, int height) const = 0;
+			virtual pxl::i64 frame() const = 0;
+		protected:
+			Frame() {}
+		};
+
+		using FrameRef = std::shared_ptr<Frame>;
 
 		class Encoder
 		{
@@ -33,11 +50,11 @@ namespace pxl
 			Encoder(const Encoder&) = delete;
 			Encoder& operator=(const Encoder&) = delete;
 			Encoder& operator=(Encoder&&) = delete;
-			virtual ~Encoder(){}
-			virtual void add(const pxl::Image& image) = 0;
+			virtual ~Encoder() {}
+			virtual void add(const FrameRef& image) = 0;
 			virtual void save() = 0;
 		protected:
-			Encoder(){}
+			Encoder() {}
 		};
 
 		struct EncoderInfo
@@ -52,7 +69,7 @@ namespace pxl
 			Codec codec = Codec::MPEG4;
 		};
 		using EncoderRef = std::shared_ptr<Encoder>;
-		EncoderRef createEncoder(const EncoderInfo &info);
+		EncoderRef createEncoder(const EncoderInfo& info);
 
 		struct Progress
 		{
@@ -68,10 +85,10 @@ namespace pxl
 			Decoder& operator=(Decoder&&) = delete;
 
 			virtual ~Decoder() {};
-			virtual void open(const pxl::String &file) = 0;
+			virtual void open(const pxl::String& file) = 0;
 			virtual void close() = 0;
-			virtual void calculateFrames(Progress &progress) = 0;
-			virtual pxl::Image currentFrameImage() = 0;
+			virtual void calculateFrames(Progress& progress) = 0;
+			virtual FrameRef currentFrame() = 0;
 			virtual pxl::i64 currentFrameNumber() const = 0;
 			virtual void flushDecoder() = 0;
 			virtual bool seek(int seekFrame) = 0;
@@ -83,5 +100,6 @@ namespace pxl
 
 		using DecoderRef = std::shared_ptr<Decoder>;
 		DecoderRef createDecoder();
+		FrameRef createFrame(const pxl::Image& image, pxl::i64 frame);
 	}
 }

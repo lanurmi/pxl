@@ -3,39 +3,46 @@
 #include <pxl/backends/video_backend.h>
 #include <pxl/backends/platform_backend.h>
 #include <pxl/containers/map.h>
+#include <pxl/math/calc.h>
+
+#include <thread>
+#include <future>
 
 extern "C"
 {
-	#ifndef __STDC_CONSTANT_MACROS
-	#define __STDC_CONSTANT_MACROS
-	#endif
+#ifndef __STDC_CONSTANT_MACROS
+#define __STDC_CONSTANT_MACROS
+#endif
 
-	#include <libavcodec/avcodec.h>
-	#include <libavutil/imgutils.h>
-	#include <libavutil/avstring.h>
-	#include <libavutil/time.h>
-	#include <libavutil/opt.h>
-	#include <libavformat/avformat.h>
-	#include <libswscale/swscale.h>
-	#include <libswresample/swresample.h>
+#include <libavcodec/avcodec.h>
+#include <libavutil/imgutils.h>
+#include <libavutil/avstring.h>
+#include <libavutil/time.h>
+#include <libavutil/opt.h>
+#include <libavformat/avformat.h>
+#include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
 }
 
 namespace
 {
 	bool s_ffmpeg_inited = false;
-	
+
 	struct FrameInfo
 	{
+		pxl::i64 packetDts;
+		pxl::i64 packetPts;
 		pxl::i64 pts;
 		pxl::i64 dts;
+		bool key;
 		int frameNumber;
 	};
 
 	AVCodecID pxlToFFmpeg(pxl::video::Codec codec)
 	{
 		switch (codec) {
-			case pxl::video::Codec::MPEG4: return AV_CODEC_ID_MPEG4;
-			case pxl::video::Codec::H264: return AV_CODEC_ID_H264;
+		case pxl::video::Codec::MPEG4: return AV_CODEC_ID_MPEG4;
+		case pxl::video::Codec::H264: return AV_CODEC_ID_H264;
 		}
 
 		assert(0);
@@ -50,14 +57,115 @@ namespace
 		assert(0);
 		return pxl::video::Codec::MPEG4;
 	}
+
+	void initFFMpeg()
+	{
+		if (!s_ffmpeg_inited)
+		{
+			av_register_all();
+			avcodec_register_all();
+			av_log_set_level(AV_LOG_QUIET);
+			s_ffmpeg_inited = true;
+		}
+	}
+	bool isEncoderSupported(pxl::video::Codec codec)
+	{
+		auto c = avcodec_find_encoder(pxlToFFmpeg(codec));
+		return c != nullptr;
+	}
 }
+
+class Frame_ffmpeg : public pxl::video::Frame
+{
+public:
+	Frame_ffmpeg(const pxl::Image& image, pxl::i64 frame) : frameNum(frame)
+	{
+		images.reserve(15);
+		images.push_back(image);
+	}
+	Frame_ffmpeg(pxl::Image&& image, pxl::i64 frame) : frameNum(frame)
+	{
+		images.reserve(15);
+		images.push_back(image);
+	}
+	~Frame_ffmpeg()
+	{
+		m_levelFuture.wait();
+	}
+	const pxl::Image& rgba() const override
+	{
+		return images[0];
+	}
+	pxl::i64 frame() const override
+	{
+		return frameNum;
+	}
+	const pxl::Image& fitRgba(int width, int height) const
+	{
+		if (width >= images[0].width() && height > images[0].height()) return images[0];
+
+		if (m_levelFuture.valid())
+		{
+			m_levelFuture.wait();
+			m_levelFuture.get();
+		}
+
+		for (unsigned i = 0; i < images.size(); i++)
+		{
+			if (images[i].width() < width && images[i].height() < height)
+			{
+				return images[i];
+			}
+		}
+
+		return images.back();
+	}
+	void buildScaleLevelsAsync() {
+		m_levelFuture = std::async(std::launch::async, &Frame_ffmpeg::buildLevels, this);
+	}
+private:
+	bool buildLevels()
+	{
+		int algorithm = SWS_AREA;
+
+		for (int j = 10; j > 0; j--)
+		{
+			const auto src = images.back();
+
+			if (src.width() % 2 != 0 || src.height() % 2 != 0) break;
+
+			auto context = sws_getContext(
+				src.width(), src.height(), AVPixelFormat::AV_PIX_FMT_RGBA,
+				src.width() / 2, src.height() / 2, AVPixelFormat::AV_PIX_FMT_RGBA,
+				algorithm, nullptr, nullptr, nullptr);
+
+			pxl::Image dst(src.width() / 2, src.height() / 2);
+
+			const pxl::u8* const srcPtr[] = { &src.pixels()->r };
+			const int srcStride[] = { src.width() * 4 };
+
+			pxl::u8* const dstPtr[] = { &dst.pixels()->r };
+			const int dstStride[] = { dst.width() * 4 };
+
+			sws_scale(context, &srcPtr[0], srcStride, 0, src.height(), &dstPtr[0], dstStride);
+			sws_freeContext(context);
+
+			images.push_back(std::move(dst));
+		}
+
+		return !images.empty();
+	}
+	mutable std::future<bool> m_levelFuture;
+	pxl::Vector<pxl::Image> images;
+	pxl::i64 frameNum;
+};
 
 class Encoder_ffmpeg : public pxl::video::Encoder
 {
 public:
 	Encoder_ffmpeg(const pxl::video::EncoderInfo& info);
 	~Encoder_ffmpeg();
-	void add(const pxl::Image& image) override;
+	void add(const pxl::video::FrameRef& image) override;
 	void save() override;
 private:
 	pxl::video::EncoderInfo info;
@@ -74,13 +182,6 @@ private:
 };
 
 Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info) {
-	if (!s_ffmpeg_inited)
-	{
-		av_register_all();
-		avcodec_register_all();
-		av_log_set_level(AV_LOG_QUIET);
-		s_ffmpeg_inited = true;
-	}
 
 	codecCtx = nullptr;
 	frame = nullptr;
@@ -104,7 +205,7 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 
 
 	AVCodec* codec = avcodec_find_encoder(pxlToFFmpeg(info.codec));
-	if (!codec) 
+	if (!codec)
 	{
 		assert(0);
 	}
@@ -129,7 +230,7 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 	stream->avg_frame_rate = av_d2q(info.framerate, 100);
 
 	avcodec_parameters_to_context(codecCtx, stream->codecpar);
-	codecCtx->time_base = av_inv_q( av_d2q(info.framerate, 100) );
+	codecCtx->time_base = av_inv_q(av_d2q(info.framerate, 100));
 
 	codecCtx->max_b_frames = info.b_frames;
 	codecCtx->gop_size = info.gop_size;
@@ -143,8 +244,9 @@ Encoder_ffmpeg::Encoder_ffmpeg(const pxl::video::EncoderInfo& info) : info(info)
 	if (stream->codecpar->codec_id == AV_CODEC_ID_H264)
 	{
 		codecCtx->profile = FF_PROFILE_H264_MAIN;
+		codecCtx->gop_size = info.gop_size;
 	}
-	else if(stream->codecpar->codec_id == AV_CODEC_ID_MPEG4)
+	else if (stream->codecpar->codec_id == AV_CODEC_ID_MPEG4)
 	{
 		codecCtx->mb_decision = FF_MB_DECISION_RD; // -mbd rd
 		codecCtx->flags |= AV_CODEC_FLAG_4MV; // -flags +mv4 ???
@@ -214,9 +316,9 @@ Encoder_ffmpeg::~Encoder_ffmpeg()
 	codecCtx = nullptr;
 }
 
-void Encoder_ffmpeg::add(const pxl::Image& image) 
+void Encoder_ffmpeg::add(const pxl::video::FrameRef& frame)
 {
-	auto yuvFrame = getYuv(image);
+	auto yuvFrame = getYuv(frame->rgba());
 
 	yuvFrame->pts = pts * (pxl::i64)stream->time_base.den / (stream->time_base.num * info.framerate);
 	auto ret = avcodec_send_frame(codecCtx, yuvFrame);
@@ -237,13 +339,13 @@ void Encoder_ffmpeg::add(const pxl::Image& image)
 		if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
 		{
 			break;
-		} 	
+		}
 		else if (ret < 0)
 		{
 			assert(0);
 		}
 
-		if(codecCtx->coded_frame->key_frame) {
+		if (codecCtx->coded_frame->key_frame) {
 			packet.flags |= AV_PKT_FLAG_KEY;
 		}
 
@@ -356,9 +458,17 @@ void Encoder_ffmpeg::save()
 	}
 }
 
-pxl::video::EncoderRef pxl::video::createEncoder(const EncoderInfo &info)
+pxl::video::EncoderRef pxl::video::createEncoder(const EncoderInfo& info)
 {
-	return std::make_shared<Encoder_ffmpeg>(info);
+	initFFMpeg();
+	if (isEncoderSupported(info.codec))
+	{
+		return std::make_shared<Encoder_ffmpeg>(info);
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 class Decoder_ffmpeg : public pxl::video::Decoder
@@ -366,10 +476,10 @@ class Decoder_ffmpeg : public pxl::video::Decoder
 public:
 	Decoder_ffmpeg();
 	~Decoder_ffmpeg();
-	void open(const pxl::String &file) override;
+	void open(const pxl::String& file) override;
 	void close() override;
-	void calculateFrames(pxl::video::Progress &progress) override;
-	pxl::Image currentFrameImage() override;
+	void calculateFrames(pxl::video::Progress& progress) override;
+	pxl::video::FrameRef currentFrame() override;
 	pxl::i64 currentFrameNumber() const override;
 	void flushDecoder() override;
 	bool seek(int seekFrame)  override;
@@ -388,21 +498,14 @@ private:
 	pxl::Vector<int> videoStreamIds;
 	pxl::Vector<int> audioStreamIds;
 	int videoStreamId;
-	pxl::i64 currentFrame;
+	pxl::i64 currentFrameNum;
 	FrameInfo currentFrameInfo;
-	pxl::Map<pxl::i64, pxl::i64> dtsToTime;
+	pxl::Map<pxl::i64, pxl::i64> frameToDts;
 	pxl::String file;
 };
 
 Decoder_ffmpeg::Decoder_ffmpeg() : seekTarget(-1), seekTargetFrame(0),
-formatCtx(nullptr), codecCtxOrig(nullptr), codecCtx(nullptr), frame(nullptr), frameRgba(nullptr), buffer(nullptr), videoStreamId(-1), currentFrame(0) {
-	if (!s_ffmpeg_inited)
-	{
-		av_register_all();
-		avcodec_register_all();
-		av_log_set_level(AV_LOG_QUIET);
-		s_ffmpeg_inited = true;
-	}
+formatCtx(nullptr), codecCtxOrig(nullptr), codecCtx(nullptr), frame(nullptr), frameRgba(nullptr), buffer(nullptr), videoStreamId(-1), currentFrameNum(0) {
 }
 
 Decoder_ffmpeg::~Decoder_ffmpeg()
@@ -505,7 +608,7 @@ void Decoder_ffmpeg::close()
 	formatCtx = nullptr;
 }
 
-pxl::Image Decoder_ffmpeg::currentFrameImage()
+pxl::video::FrameRef Decoder_ffmpeg::currentFrame()
 {
 	struct SwsContext* sws_ctx = nullptr;
 	sws_ctx = sws_getContext(
@@ -532,6 +635,7 @@ pxl::Image Decoder_ffmpeg::currentFrameImage()
 	);
 
 	pxl::Image img(codecCtx->width, codecCtx->height);
+
 	auto pxlPtr = img.pixels();
 	const uint8_t* srcData[] = { frameRgba->data[0], frameRgba->data[1], frameRgba->data[2], frameRgba->data[3] };
 	pxl::u8* dst[] = { &pxlPtr->r, nullptr, nullptr, nullptr };
@@ -539,12 +643,16 @@ pxl::Image Decoder_ffmpeg::currentFrameImage()
 	av_image_copy(dst, linesizes, srcData, frameRgba->linesize, AV_PIX_FMT_RGBA, codecCtx->width, codecCtx->height);
 
 	sws_freeContext(sws_ctx);
-	return img;
+
+	auto ffmpegFrame = new Frame_ffmpeg(std::move(img), currentFrameNum);
+	ffmpegFrame->buildScaleLevelsAsync();
+
+	return  pxl::video::FrameRef(ffmpegFrame);
 }
 
 pxl::i64 Decoder_ffmpeg::currentFrameNumber() const
 {
-	return currentFrame;
+	return currentFrameNum;
 }
 
 void Decoder_ffmpeg::flushDecoder()
@@ -569,7 +677,7 @@ void Decoder_ffmpeg::flushDecoder()
 		}
 	}
 	avcodec_flush_buffers(codecCtx);
-	currentFrame = 0;
+	currentFrameNum = 0;
 }
 
 bool Decoder_ffmpeg::seek(int seekFrame)
@@ -584,13 +692,15 @@ bool Decoder_ffmpeg::seek(int seekFrame)
 	}
 
 	flushDecoder();
-	pxl::i64 targetTime = dtsToTime[seekFrame];
+	pxl::i64 targetTime = frameToDts[pxl::calc::max(seekFrame - (codecCtx->delay + codecCtx->gop_size + 1), 0)];
+
+
 	if (av_seek_frame(formatCtx, videoStreamId, targetTime, AVSEEK_FLAG_BACKWARD) < 0)
 	{
 		assert(0);
 		return false;
 	}
-	seekTarget = targetTime;
+	seekTarget = frameToDts[seekFrame];
 	seekTargetFrame = seekFrame;
 	return true;
 }
@@ -600,13 +710,18 @@ pxl::video::FileInfo Decoder_ffmpeg::info() const
 	pxl::video::FileInfo info;
 	info.duration = formatCtx->duration / AV_TIME_BASE;
 	info.frames = formatCtx->streams[videoStreamId]->nb_frames;
+	if (!frameToDts.empty())
+	{
+		info.frames = frameToDts.size() - 1U;
+	}
 	info.framerate = av_q2d(formatCtx->streams[videoStreamId]->r_frame_rate);
 	info.width = codecCtx->width;
 	info.height = codecCtx->height;
 	info.bitrate = codecCtx->bit_rate;
 	info.gop_size = codecCtx->gop_size;
 	info.file = file;
-	info.codec = ffmpegToPxl( formatCtx->streams[videoStreamId]->codecpar->codec_id);
+	info.codec = ffmpegToPxl(formatCtx->streams[videoStreamId]->codecpar->codec_id);
+	info.seekToPts = formatCtx->iformat->flags & AVFMT_SEEK_TO_PTS;
 	return info;
 }
 
@@ -644,22 +759,24 @@ bool Decoder_ffmpeg::decode(FrameInfo* fillInfo)
 				}
 
 				if (seekTarget != -1 && seekTarget != frame->pkt_dts) continue;
-				
 				if (seekTarget != -1)
 				{
 					seekTarget = -1;
-					currentFrame = seekTargetFrame;
+					currentFrameNum = seekTargetFrame;
 					seekTargetFrame = -1;
 				}
 				else
 				{
-					currentFrame++;
+					currentFrameNum++;
 				}
 
 				if (fillInfo != nullptr)
 				{
 					fillInfo->dts = frame->pkt_dts;
 					fillInfo->pts = frame->pts;
+					fillInfo->packetDts = packet.dts;
+					fillInfo->packetPts = packet.pts;
+					fillInfo->key = frame->key_frame;
 				}
 				done = true;
 				break;
@@ -677,31 +794,41 @@ bool Decoder_ffmpeg::decode(FrameInfo* fillInfo)
 	return done;
 }
 
-void Decoder_ffmpeg::calculateFrames(pxl::video::Progress &progress)
+void Decoder_ffmpeg::calculateFrames(pxl::video::Progress& progress)
 {
 	progress.max = formatCtx->streams[videoStreamId]->nb_frames;
 	FrameInfo info;
 	info.pts = 0;
 	info.dts = 0;
+	info.packetDts = 0;
+	info.packetPts = 0;
 	info.frameNumber = 0;
-
+	frameToDts[0] = 0;
 	while (decode(&info))
 	{
 		info.frameNumber++;
-		dtsToTime[info.frameNumber] = info.dts;
+		frameToDts[info.frameNumber] = info.dts;
 		progress.current = info.frameNumber;
-		if(progress.update != nullptr)
+		if (progress.update != nullptr)
 		{
 			progress.update();
 		}
 	}
 
-	seek(1);
+	flushDecoder();
 }
+
+
 
 pxl::video::DecoderRef pxl::video::createDecoder()
 {
+	initFFMpeg();
 	return std::make_shared<Decoder_ffmpeg>();
+}
+
+pxl::video::FrameRef pxl::video::createFrame(const pxl::Image& image, pxl::i64 frame)
+{
+	return std::make_shared<Frame_ffmpeg>(image, frame);
 }
 
 #endif
