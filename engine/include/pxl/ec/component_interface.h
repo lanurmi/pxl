@@ -52,12 +52,7 @@ namespace pxl
 	{
 		if (auto c = dynamic_cast<T*>(component))
 		{
-			// I Dont like this if def, maybe our own vector should work like stl
-#ifdef PXL_USE_STL_CONTAINERS
 			components.erase(std::remove(components.begin(), components.end(), c), components.end());
-#else
-			components.erase(c);
-#endif
 		}
 	}
 

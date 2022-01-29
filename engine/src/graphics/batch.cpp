@@ -426,7 +426,7 @@ void pxl::Batch::text(const pxl::SpriteFont& font, const String& text, const pxl
 		}
 
 		prev = glyph;
-		i += pxl::string::utf8Size(text, i - 1);
+		i += pxl::String::utf8Size(text, i - 1);
 	}
 }
 

@@ -63,11 +63,7 @@ void Updateables::tryRemoveComponent(IComponent* component)
 	if (auto d = dynamic_cast<IUpdateable*>(component) != nullptr)
 	{
 		// I Dont like this if def, maybe our own vector should work like stl
-#ifdef PXL_USE_STL_CONTAINERS
 		updateables.erase(std::remove(updateables.begin(), updateables.end(), component), updateables.end());
-#else
-		v.erase(c);
-#endif
 	}
 }
 

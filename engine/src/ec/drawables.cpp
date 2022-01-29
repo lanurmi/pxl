@@ -55,12 +55,7 @@ void Drawables::tryRemoveComponent(IComponent* component)
 {
 	if (auto d = dynamic_cast<IDrawable*>(component) != nullptr)
 	{
-		// I Dont like this if def, maybe our own vector should work like stl
-#ifdef PXL_USE_STL_CONTAINERS
 		drawables.erase(std::remove(drawables.begin(), drawables.end(), component), drawables.end());
-#else
-		v.erase(c);
-#endif
 	}
 }
 

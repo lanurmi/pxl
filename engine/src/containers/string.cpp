@@ -4,56 +4,6 @@
 #include <cstdio>
 #include <cmath>
 
-unsigned pxl::string::utf8Size(const pxl::String& str, unsigned index) {
-	auto ch = str[index];
-
-	if ((ch & 0xFE) == 0xFC) {
-		return 6;
-	}
-	else if ((ch & 0xFC) == 0xF8) {
-		return 5;
-	}
-	else if ((ch & 0xF8) == 0xF0) {
-		return 4;
-	}
-	else if ((ch & 0xF0) == 0xE0) {
-		return 3;
-	}
-	else if ((ch & 0xE0) == 0xC0) {
-		return 2;
-	}
-	return 1;
-}
-
-pxl::String pxl::string::format(const char* fmt, ...)
-{
-	pxl::String str;
-
-	va_list args;
-	va_start(args, fmt);
-	int size = vsnprintf(NULL, 0, fmt, args);
-	va_end(args);
-
-	str.reserve(size + 1);
-	str.resize(size);
-
-	va_start(args, fmt);
-	vsnprintf(str.data(), size + 1, fmt, args);
-	va_end(args);
-
-	str.data()[size] = '\0';
-	return str;
-}
-
-bool pxl::string::startsWith(const pxl::String& str, const pxl::String& test)
-{
-	if (test.size() > str.size()) return false;
-
-	return strncmp(str.c_str(), test.c_str(), test.size()) == 0;
-}
-
-#ifndef PXL_USE_STL_CONTAINERS
-
 using namespace pxl;
 
 char String::s_empty_data[1] = { '\0' };
@@ -124,6 +74,10 @@ bool String::operator!=(const char* str) const {
 
 bool String::operator<(const String& str) const {
 	return strcmp(data(), str.data()) == -1;
+}
+
+bool String::operator<(const char* str) const {
+	return strcmp(data(), str) == -1;
 }
 
 String& String::operator=(const String& str) {
@@ -203,34 +157,23 @@ unsigned String::size() const {
 	return _size;
 }
 
-unsigned String::utf8Size(unsigned index) const {
-	auto ch = _data[index];
-
-	if ((ch & 0xFE) == 0xFC) 	{
-		return 6;
-	} 	else if ((ch & 0xFC) == 0xF8) 	{
-		return 5;
-	} 	else if ((ch & 0xF8) == 0xF0) 	{
-		return 4;
-	} 	else if ((ch & 0xF0) == 0xE0) 	{
-		return 3;
-	} 	else if ((ch & 0xE0) == 0xC0) 	{
-		return 2;
-	}
-
-	return 1;
+String& String::push_back(const String& str)
+{
+	return append(str.data(), str.size());
 }
 
-String& String::push_back(const String& str) {
-	return push_back(str.data(), str.size());
+String& String::push_back(const char* str)
+{
+	return append(str);
 }
 
-String& String::push_back(const char* str) {
-	auto size = strlen(str);
-	return push_back(str, size);
+String& String::push_back(char c)
+{
+	return append(c);
 }
 
-String& String::push_back(const char* str, int size) {
+String& String::append(const char* str, int size)
+{
 	reserve(_size + size);
 	memcpy(_data + _size, str, size);
 	_size += size;
@@ -238,18 +181,20 @@ String& String::push_back(const char* str, int size) {
 	return *this;
 }
 
-String& String::push_back(char c)
+String& String::append(const char* str)
 {
-	reserve(_size + 1);
-	_data[_size] = c;
-	_size++;
-	_data[_size] = '\0';
-	return *this;
+	auto size = strlen(str);
+	return append(str, size);
 }
 
-String& String::append(const char* str, int size)
+String& String::append(const String& str)
 {
-	return push_back(str, size);
+	return push_back(str);
+}
+
+String& String::append(char c)
+{
+	return append(&c, 1);
 }
 
 char& String::back()
@@ -284,9 +229,16 @@ String String::format(const char* fmt, ...)
 
 String String::fromInt(int num)
 {
-	char data[8] = {0};
+	#define MAXDIGITS 20
+	char data[MAXDIGITS + 1] = {'\0'};
+
 	itoa(num, data, 10);
 	return String(data);
+}
+
+int String::toInt(const String& string)
+{
+	return atoi(string.data());
 }
 
 void String::resize(unsigned size)
@@ -355,10 +307,33 @@ void String::set(const char* from, unsigned size)
 	_data[size] = '\0';
 }
 
-void String::set(const char* from) {
+void String::set(const char* from)
+{
 	auto size = strlen(from);
 	set(from, size);
 
+}
+
+unsigned pxl::String::utf8Size(const pxl::String& str, unsigned index)
+{
+	auto ch = str[index];
+
+	if ((ch & 0xFE) == 0xFC) {
+		return 6;
+	}
+	else if ((ch & 0xFC) == 0xF8) {
+		return 5;
+	}
+	else if ((ch & 0xF8) == 0xF0) {
+		return 4;
+	}
+	else if ((ch & 0xF0) == 0xE0) {
+		return 3;
+	}
+	else if ((ch & 0xE0) == 0xC0) {
+		return 2;
+	}
+	return 1;
 }
 
 String operator+(const char* str0, const String& str1)
@@ -368,9 +343,7 @@ String operator+(const char* str0, const String& str1)
 	return str;
 }
 
-bool operator==(const char* str0, const String& str1)
+bool operator==(const char* str0, const pxl::String& str1)
 {
-	return str1 == str0;
+	return strcmp(str0, str1.data()) == 0;
 }
-
-#endif

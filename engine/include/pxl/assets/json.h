@@ -4,6 +4,8 @@
 #include <pxl/containers/vector.h>
 #include <pxl/containers/map.h>
 #include <pxl/types.h>
+
+#define JSON_NOEXCEPTION
 #include <nlohmann/nlohmann_json.hpp>
 
 

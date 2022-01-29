@@ -63,7 +63,7 @@ void pxl::begin(const pxl::Config& config)
 //#ifdef PXLDEBUG
 	fps.onFps = [&config](int fps)
 	{
-		pxl::platform::setTitle(pxl::string::format("%s - %d", config.title.c_str(), fps));
+		pxl::platform::setTitle(pxl::String::format("%s - %d", config.title.c_str(), fps));
 	};
 //#endif
 
