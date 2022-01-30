@@ -1,6 +1,5 @@
 #pragma once
 
-#include <pxl/containers/vector.h>
 #include <cstdint>
 #include <functional>
 #include <memory>

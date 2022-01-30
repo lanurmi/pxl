@@ -1,6 +1,7 @@
 #pragma once
 #include <pxl/types.h>
 #include <pxl/graphics/Subtexture.h>
+#include <pxl/containers/vector.h>
 
 namespace pxl
 {

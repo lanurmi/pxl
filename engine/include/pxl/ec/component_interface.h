@@ -1,7 +1,10 @@
 #pragma once
+
 #include <pxl/types.h>
 #include <algorithm>    // std::sort
 #include <pxl/containers/string.h>
+#include <pxl/containers/vector.h>
+
 namespace pxl
 {
 	class Batch;
