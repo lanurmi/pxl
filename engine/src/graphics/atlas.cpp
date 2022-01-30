@@ -101,6 +101,16 @@ void Atlas::build()
 	for (auto& it : _tilesetInfos)
 	{
 		_tilesets[it.name] = Tileset(subtextures[it.pack_index], it.size);
+
+		auto& ts = _tilesets[it.name];
+
+		for (auto& s : it.aseprite.slices)
+		{
+			if (s.frame == 0)
+			{
+				ts.addRegion(s.name, pxl::Rect(s.origin.x, s.origin.y, s.width, s.height));
+			}
+		}
 	}
 
 	_packer.clear();

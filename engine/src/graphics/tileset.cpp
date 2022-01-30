@@ -77,6 +77,48 @@ const Subtexture& Tileset::tile(i16 index) const
 	}
 }
 
+const Vector<int> Tileset::tilesInRegion(const pxl::String& region) const
+{
+	pxl::Vector<int> tiles;
+	const auto reg = getRegion(region);
+	if (reg == nullptr) return tiles;
+	assert(reg->rect.width == _width);
+	for (int j = reg->rect.y; j < reg->rect.y + reg->rect.height; j++)
+	{
+		for (int i = reg->rect.x; i < reg->rect.x + reg->rect.width; i++)
+		{
+			auto idx = j * _width + i;
+			tiles.push_back(idx);
+		}
+	}
+	return tiles;
+}
+
+pxl::i16 Tileset::tileIdInRegion(const pxl::String& region, int regiontile) const
+{
+	int c = 0;
+	const auto reg = getRegion(region);
+	assert(reg->rect.width == _width);
+	return reg->rect.y * _width + reg->rect.x;
+}
+
+const Tileset::TileRegion* Tileset::getRegion(const pxl::String& region) const
+{
+	for (auto& it : _regions)
+	{
+		if (it.name == region)
+		{
+			return &it;
+		}
+	}
+	return nullptr;
+}
+
+void Tileset::addRegion(const pxl::String& name, const pxl::Rect& rect)
+{
+	_regions.push_back(TileRegion(name, pxl::Rect( (int)rect.x / _size, (int)rect.y /_size, (int)rect.width / _size, (int)rect.height / _size)) );
+}
+
 int Tileset::size() const
 {
 	return _size;
