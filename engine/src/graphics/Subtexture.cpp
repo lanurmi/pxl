@@ -46,3 +46,14 @@ int Subtexture::height() const
 {
 	return _rect.height;
 }
+
+int Subtexture::x() const
+{
+	return _rect.x;
+}
+
+int Subtexture::y() const
+{
+	return _rect.y;
+}
+

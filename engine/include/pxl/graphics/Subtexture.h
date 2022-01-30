@@ -17,6 +17,8 @@ namespace pxl
 		Rect textureCoordinates() const;
 		int width() const;
 		int height() const;
+		int x() const;
+		int y() const;
 	private:
 		TextureRef _texture;
 		Rect _rect;
