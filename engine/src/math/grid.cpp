@@ -1,4 +1,5 @@
 #include <pxl/math/grid.h>
+#include <queue>
 
 using namespace pxl;
 
@@ -87,6 +88,26 @@ void Grid::setAll(i16 value)
 	}
 }
 
+void Grid::flipX()
+{
+	pxl::Vector<pxl::i16> n(_data.size());
+	for (int j = 0; j < _height; j++)
+	{
+		for (int i = 0; i < _width; i++)
+		{
+			auto srcx = i;
+			auto dstx = _width - 1 - i;
+
+			auto srcIdx = j * _width + srcx;
+			auto dstIdx = j * _width + dstx;
+
+			n[dstIdx] = get(srcIdx);
+		}
+	}
+
+	std::swap(n, _data);
+}
+
 i16 Grid::get(int x, int y) const
 {
 	auto idx = y * _width + x;
@@ -106,4 +127,34 @@ int Grid::width() const
 int Grid::height() const
 {
 	return _height;
+}
+
+void Grid::floodFill(int x, int y, pxl::i16 fromValue, pxl::i16 toValue)
+{
+	assert(fromValue != toValue);
+
+	struct Point {
+		Point(int x, int y) : x(x), y(y) {}
+		Point() : x(0), y(0) {}
+		int x;
+		int y;
+	};
+	std::queue<Point> points;
+
+	points.push(Point(x, y));
+	while (!points.empty())
+	{
+		auto p = points.front();
+		points.pop();
+
+		if (get(p.x, p.y) == fromValue)
+		{
+			set(p.x, p.y, toValue);
+
+			points.push(Point(p.x + 1, p.y));
+			points.push(Point(p.x - 1, p.y));
+			points.push(Point(p.x, p.y + 1));
+			points.push(Point(p.x, p.y - 1));
+		}
+	}
 }
