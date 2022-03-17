@@ -1003,7 +1003,7 @@ public:
 	{
 		return _index_size;
 	}
-	void setIndexData(pxl::IndexFormat format, const void* indices, pxl::i64 count)
+	void setIndexData(pxl::IndexFormat format, const void* indices, pxl::i64 count) override
 	{
 		s_gl.BindVertexArray(_id);
 		if (_index_buffer == 0)
@@ -1026,7 +1026,7 @@ public:
 		s_gl.BufferData(GL_ELEMENT_ARRAY_BUFFER, _index_size * count, indices, GL_DYNAMIC_DRAW);
 		s_gl.BindVertexArray(0);
 	}
-	void setVertexData(const pxl::VertexFormat& format, const void* vertices, pxl::i64 count)
+	void setVertexData(const pxl::VertexFormat& format, const void* vertices, pxl::i64 count) override
 	{
 		s_gl.BindVertexArray(_id);
 		if (_vertex_buffer == 0)

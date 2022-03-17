@@ -18,7 +18,7 @@ namespace
 		{
 			return pxl::platform::drawSize().y;
 		}
-		void clear(const pxl::Color& color) 
+		void clear(const pxl::Color& color) override
 		{
 			pxl::graphics::clearBackbuffer(color);
 		}

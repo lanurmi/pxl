@@ -9,11 +9,11 @@ namespace
 {
 	class CoutLogger : public pxl::log::ILogger {
 	public:
-		void message(const String &message)
+		void message(const String &message) override
 		{
 			std::cout << message << std::endl;
 		}
-		void error(const String &message)
+		void error(const String &message) override
 		{
 			std::cout << message << std::endl;
 		}

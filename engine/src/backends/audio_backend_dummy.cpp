@@ -24,7 +24,7 @@ public:
 	virtual ~DummyAudioSource()
 	{
 	}
-	void bind(AudioBufferRef)
+	void bind(AudioBufferRef) override
 	{
 	}
 	void setGain(float) override
